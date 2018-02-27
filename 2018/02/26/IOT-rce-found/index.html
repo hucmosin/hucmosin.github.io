@@ -177,7 +177,7 @@
             </div>
             <h2 class="post-title">IOT中NTP的RCE漏洞探寻</h2>
             <div class="post-meta">
-                本文总共4821个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+                本文总共4820个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
             </div>
         </div>
         <div class="post-content markdown-body">
@@ -185,8 +185,7 @@
 <p>在对某些厂家的IOT网关设备进行检测时，发现了一个RCE漏洞，这些漏洞存在于大多数网关设备中，漏洞点位于更新ntp中。这些漏洞的利用是需要条件的，那就是首先得登录(当然不排除有未授权的情况发生)，个人感觉这个漏洞比较好玩，所以，就发出来分享一下。</p>
 <p>当然，如果你想测试这个漏洞，最好找以前的版本，现在最新的版本大多数都已修复，祝君好运!</p>
 <p><strong>漏洞分析</strong></p>
-<p>这里以烽火某型号家庭网关为例</p>
-<p>在NTP文件中，首先获取这几个参数的传入，</p>
+<p>这里以烽火某型号家庭网关为例<br>在NTP文件中，首先获取这几个参数的传入，</p>
 <p><img src="/allimage/iotntprce/1.jpg" alt="1"></p>
 <p>随后把参数传入了ntpdate文件 , bin/ntpdate   ntpserver地址</p>
 <p><img src="/allimage/iotntprce/2.jpg" alt="2"></p>
