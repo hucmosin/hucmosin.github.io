@@ -1,0 +1,457 @@
+<!DOCTYPE HTML>
+<html class="no-js" lang="zh-CN">
+<!--
+//                            _ooOoo_
+//                           o8888888o
+//                           88" . "88
+//                           (| -_- |)
+//                            O\ = /O
+//                        ____/`---'\____
+//                      .   ' \\| |// `.
+//                       / \\||| : |||// \
+//                     / _||||| -:- |||||- \
+//                       | | \\\ - /// | |
+//                     | \_| ''\---/'' | |
+//                      \ .-\__ `-` ___/-. /
+//                   ___`. .' /--.--\ `. . __
+//                ."" '< `.___\_<|>_/___.' >'"".
+//               | | : `- \`.;`\ _ /`;.`/ - ` : | |
+//                 \ \ `-. \_ __\ /__ _/ .-` / /
+//         ======`-.____`-.___\_____/___.-`____.-'======
+//                            `=---='
+//                 拦截插件累计拦截逗比攻击"1381438"次！
+//         .............................................
+//                  佛祖保佑             永无BUG
+//          佛曰:
+//                  写字楼里写字间，写字间里程序员；
+//                  程序人员写程序，又拿程序换酒钱。
+//                  酒醒只在网上坐，酒醉还来网下眠；
+//                  酒醉酒醒日复日，网上网下年复年。
+//                  但愿老死电脑间，不愿鞠躬老板前；
+//                  奔驰宝马贵者趣，公交自行程序员。
+//                  别人笑我忒疯癫，我笑自己命太贱；
+//                  不见满街漂亮妹，哪个归得程序员？
+-->
+<head>
+    <!--[if lte IE 9]>
+<meta http-equiv="refresh" content="0;url=http://github.com/hucmosin/warn.html">
+<![endif]-->
+<meta charset="utf-8">
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+<meta http-equiv="mobile-agent" content="format=html5; url=http://github.com/hucmosin">
+<meta name="author" content="Mosin">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/SimpleStyle.min.css">
+
+<link rel="shortcut icon" href="/images/favicon.png">
+
+
+<title>译-内存加载dll - Mosin&#39; Blog</title>
+
+<meta name="keywords" content="技术">
+
+<meta name="description " content="Learning, summarizing, thinking, feeling and knowledge management">
+</head>
+<body>
+<div id="nav">
+    <nav class="nav-menu">
+        <a class="site-name current" href="/" title="聊">聊</a>
+        <a class="site-index current" href="/"><i class="fa fa-home"></i><span>Home</span></a>
+        <a href="/archives" title="Archives"><i class="fa fa-archives"></i><span>Archives</span></a>
+        <!-- custom single page of menus -->
+        
+        
+        <a href="/help" title="帮助">
+            <i class="fa fa-question-circle"></i>
+            <span>帮助</span>
+        </a>
+        
+    </nav>
+</div>
+
+<div class="nav-user">
+    <a class="btn-search" href="#"><i class="fa fa-search"></i></a>
+    <a class="btn-read-mode" href="#"><i class="fa fa-sun-o"></i></a>
+    <a class="btn-weixin-mp" href="javascript:"><i class="fa fa-weixin"></i></a>
+</div>
+<div id="wrapper" class="clearfix">
+    <div id="body">
+        <div class="main" id="main">
+            <div id="cover">
+    <div class="cover-img"></div>
+    <div class="cover-info">
+        
+        <h1 class="cover-siteName">Mosin&#39;s Blog</h1>
+        <h3 class="cover-siteTitle">聊技术，谈情怀</h3>
+        <p class="cover-siteDesc">一个关注技术与人文的IT博客</p>
+        <div class="cover-sns">
+            
+            <div class="btn btn-github">
+                <a href="https://github.com/hucmosin" target="_blank" title="github" ref="friend">
+                    <i class="fa fa-github"></i>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+</div>
+            <div class="page-title">
+    <ul>
+        <li><a href="/">最新</a></li>
+        
+            
+                <li class="">
+                    <a href="/categories/code-audit" data-name="审计">审计</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/technology" data-name="技术">技术</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-share" data-name="分享">分享</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-note" data-name="学习">学习</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/others-end" data-name="其他">其他</a>
+                </li>
+            
+        
+        <li class="page-search">
+    <form id="search" class="search-form">
+        <label for="s" class="sr-only">Input Search key Words Here</label>
+        <input class="search-field" type="text" name="s" class="text" placeholder="Input Search key Words Here" />
+        <button type="submit" class="search-form-submit" title="Search"><i class="fa fa-search"></i></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input"  placeholder="请输入关键字"/>   <!-- placeholder="Type something..."/>-->
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+</li>
+
+    </ul>
+</div>
+<div class="main-inner">
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+        <div class="post-header">
+            <div class="post-author clearfix">
+                <a class="avatar fleft" href="https://github.com/hucmosin" target="_blank">
+                    <img width="48" src="/images/favicon.png" alt="avatar"/>
+                </a>
+                <p><span class="label">作者</span>
+                    <a href="https://github.com/hucmosin" target="_blank">mosin</a>
+                    <span title="最后编辑于2017-11-21">2017-11-21</span>
+                </p>
+                <p>灵魂无处安放,所以选择流浪</p>
+            </div>
+            <h2 class="post-title">译-内存加载DLL</h2>
+            <div class="post-meta">
+                本文总共10486个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+            </div>
+        </div>
+        <div class="post-content markdown-body">
+            <p><strong>最近不知怎么的，喜欢上了DLL的怪异加载方式，所以就找些资料研究了一番，下面是我翻译的外国的一篇技术文章，英语不好，将就看还是可以的。</strong></p>
+<p><strong>原文地址：<a href="https://www.joachim-bauch.de/tutorials/loading-a-dll-from-memory/" target="_blank" rel="external">https://www.joachim-bauch.de/tutorials/loading-a-dll-from-memory/</a></strong></p>
+<p><strong>本文描述了一种动态链接库（DLL）如何从内存中加载，而不首先将其存储在硬盘上的技术。</strong></p>
+<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>默认的Windows API函数加载外部库到程序（LoadLibrary，LoadLibraryEx）与文件系统上的文件进行通信工作。因此不可能从内存加载dll。但有时，您需要确切的功能（例如，您不想分发大量文件或想分解程序）。这个问题的共同解决方法是写DLL到临时文件，从那里进口。当程序终止时，临时文件将被删除。</p>
+<p>在本文中，我将首先描述DLL文件是如何构造的，并将介绍一些可以从内存中完全加载DLL的代码，而不首先存储在磁盘上。</p>
+<p><strong>Windows可执行文件–PE格式</strong></p>
+<p>大多数Windows二进制文件都包含可执行代码（exe，dll，sys）共享一个由以下部分组成的通用文件格式：</p>
+<table>
+<thead>
+<tr>
+<th>DOS headerDOS stub</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PE header</td>
+</tr>
+<tr>
+<td>Section header</td>
+</tr>
+<tr>
+<td>Section 1</td>
+</tr>
+<tr>
+<td>Section 2</td>
+</tr>
+<tr>
+<td>. . .</td>
+</tr>
+<tr>
+<td>Section n</td>
+</tr>
+</tbody>
+</table>
+<p>下面给出的所有结构都可以在头文件中找到Wint.h.</p>
+<p><strong>DOS header / stub</strong></p>
+<p>DOS头仅用于向后兼容性。它位于DOS  stub 之前，通常只显示一个关于程序不能从DOS模式运行的错误消息。</p>
+<p>微软定义DOS头如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _IMAGE_DOS_HEADER &#123;      // DOS .EXE header</span><br><span class="line">    WORD   e_magic;                     // Magic number</span><br><span class="line">    WORD   e_cblp;                      // Bytes on last page of file</span><br><span class="line">    WORD   e_cp;                        // Pages in file</span><br><span class="line">    WORD   e_crlc;                      // Relocations</span><br><span class="line">    WORD   e_cparhdr;                   // Size of header in paragraphs</span><br><span class="line">    WORD   e_minalloc;                  // Minimum extra paragraphs needed</span><br><span class="line">    WORD   e_maxalloc;                  // Maximum extra paragraphs needed</span><br><span class="line">    WORD   e_ss;                        // Initial (relative) SS value</span><br><span class="line">    WORD   e_sp;                        // Initial SP value</span><br><span class="line">    WORD   e_csum;                      // Checksum</span><br><span class="line">    WORD   e_ip;                        // Initial IP value</span><br><span class="line">    WORD   e_cs;                        // Initial (relative) CS value</span><br><span class="line">    WORD   e_lfarlc;                    // File address of relocation table</span><br><span class="line">    WORD   e_ovno;                      // Overlay number</span><br><span class="line">    WORD   e_res[4];                    // Reserved words</span><br><span class="line">    WORD   e_oemid;                     // OEM identifier (for e_oeminfo)</span><br><span class="line">    WORD   e_oeminfo;                   // OEM information; e_oemid specific</span><br><span class="line">    WORD   e_res2[10];                  // Reserved words</span><br><span class="line">    LONG   e_lfanew;                    // File address of new exe header</span><br><span class="line">  &#125; IMAGE_DOS_HEADER, *PIMAGE_DOS_HEADER;</span><br></pre></td></tr></table></figure>
+<p><strong>PE header</strong></p>
+<p>PE头包含有关可执行文件中用于存储代码和数据的不同部分的信息，或定义来自其他库的导入或导出此库提供的信息。</p>
+<p>它的定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _IMAGE_NT_HEADERS &#123;</span><br><span class="line">    DWORD Signature;</span><br><span class="line">    IMAGE_FILE_HEADER FileHeader;</span><br><span class="line">    IMAGE_OPTIONAL_HEADER32 OptionalHeader;</span><br><span class="line">&#125; IMAGE_NT_HEADERS32, *PIMAGE_NT_HEADERS32;</span><br></pre></td></tr></table></figure>
+<p>描述该文件的文件头，物理形式即内容、信息符号等：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _IMAGE_FILE_HEADER &#123;</span><br><span class="line">    WORD    Machine;</span><br><span class="line">    WORD    NumberOfSections;</span><br><span class="line">    DWORD   TimeDateStamp;</span><br><span class="line">    DWORD   PointerToSymbolTable;</span><br><span class="line">    DWORD   NumberOfSymbols;</span><br><span class="line">    WORD    SizeOfOptionalHeader;</span><br><span class="line">    WORD    Characteristics;</span><br><span class="line">&#125; IMAGE_FILE_HEADER, *PIMAGE_FILE_HEADER;</span><br></pre></td></tr></table></figure>
+<p>optionalheader包含了关于逻辑格式的信息库，包括所需的版本，内存的要求和输入点：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _IMAGE_OPTIONAL_HEADER &#123;</span><br><span class="line">    //</span><br><span class="line">    // Standard fields.</span><br><span class="line">    //</span><br><span class="line"></span><br><span class="line">    WORD    Magic;</span><br><span class="line">    BYTE    MajorLinkerVersion;</span><br><span class="line">    BYTE    MinorLinkerVersion;</span><br><span class="line">    DWORD   SizeOfCode;</span><br><span class="line">    DWORD   SizeOfInitializedData;</span><br><span class="line">    DWORD   SizeOfUninitializedData;</span><br><span class="line">    DWORD   AddressOfEntryPoint;</span><br><span class="line">    DWORD   BaseOfCode;</span><br><span class="line">    DWORD   BaseOfData;</span><br><span class="line"></span><br><span class="line">    //</span><br><span class="line">    // NT additional fields.</span><br><span class="line">    //</span><br><span class="line"></span><br><span class="line">    DWORD   ImageBase;</span><br><span class="line">    DWORD   SectionAlignment;</span><br><span class="line">    DWORD   FileAlignment;</span><br><span class="line">    WORD    MajorOperatingSystemVersion;</span><br><span class="line">    WORD    MinorOperatingSystemVersion;</span><br><span class="line">    WORD    MajorImageVersion;</span><br><span class="line">    WORD    MinorImageVersion;</span><br><span class="line">    WORD    MajorSubsystemVersion;</span><br><span class="line">    WORD    MinorSubsystemVersion;</span><br><span class="line">    DWORD   Win32VersionValue;</span><br><span class="line">    DWORD   SizeOfImage;</span><br><span class="line">    DWORD   SizeOfHeaders;</span><br><span class="line">    DWORD   CheckSum;</span><br><span class="line">    WORD    Subsystem;</span><br><span class="line">    WORD    DllCharacteristics;</span><br><span class="line">    DWORD   SizeOfStackReserve;</span><br><span class="line">    DWORD   SizeOfStackCommit;</span><br><span class="line">    DWORD   SizeOfHeapReserve;</span><br><span class="line">    DWORD   SizeOfHeapCommit;</span><br><span class="line">    DWORD   LoaderFlags;</span><br><span class="line">    DWORD   NumberOfRvaAndSizes;</span><br><span class="line">    IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];</span><br><span class="line">&#125; IMAGE_OPTIONAL_HEADER32, *PIMAGE_OPTIONAL_HEADER32;</span><br></pre></td></tr></table></figure>
+<p>DataDirectory 包含 (IMAGE_NUMBEROF_DIRECTORY_ENTRIES) 定义了库的逻辑组件的条目：</p>
+<table>
+<thead>
+<tr>
+<th>Index</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Exported functions</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Imported functions</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Resources</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Exception informations</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Security informations</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Base relocation table</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Debug informations</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Architecture specific data</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Global pointer</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Thread local storage</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Load configuration</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Bound imports</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Import address table</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Delay load imports</td>
+</tr>
+<tr>
+<td>14</td>
+<td>COM runtime descriptor</td>
+</tr>
+</tbody>
+</table>
+<p>为了导入DLL，我们只需要描述导入和基重定位表的条目。为了提供对导出函数的访问，需要导出条目。</p>
+<p><strong>Section header</strong></p>
+<p>ection header是PE文件头中的结构存储在OptionalHeader。微软提供了宏观的image_first_section基于PE文件头的开始地址。</p>
+<p>实际上，Section header是文件中每个部分的信息列表：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _IMAGE_SECTION_HEADER &#123;</span><br><span class="line">    BYTE    Name[IMAGE_SIZEOF_SHORT_NAME];</span><br><span class="line">    union &#123;</span><br><span class="line">            DWORD   PhysicalAddress;</span><br><span class="line">            DWORD   VirtualSize;</span><br><span class="line">    &#125; Misc;</span><br><span class="line">    DWORD   VirtualAddress;</span><br><span class="line">    DWORD   SizeOfRawData;</span><br><span class="line">    DWORD   PointerToRawData;</span><br><span class="line">    DWORD   PointerToRelocations;</span><br><span class="line">    DWORD   PointerToLinenumbers;</span><br><span class="line">    WORD    NumberOfRelocations;</span><br><span class="line">    WORD    NumberOfLinenumbers;</span><br><span class="line">    DWORD   Characteristics;</span><br><span class="line">&#125; IMAGE_SECTION_HEADER, *PIMAGE_SECTION_HEADER;</span><br></pre></td></tr></table></figure>
+<p>部分可以包含代码、数据、重新定位信息、资源、导出或导入定义等。</p>
+<p><strong>Loading the library</strong></p>
+<p>对PE装载器，首先要了解，哪些步骤需要加载的文件存储和准备的结构，他们可以从其他程序调用。</p>
+<p>当发行的Windows API调用LoadLibrary，基本上完成这些任务：</p>
+<blockquote>
+<p>1.打开给定的文件并检查DOS和PE头文件。</p>
+<p>2.尝试分配一个字节的内存块的位置，在peheader.optionalheader.imagebase 中分配peheader.optionalheader.sizeofimage。</p>
+<p>3.解析节头和复制部分到它们的地址。每一段的目的地址，相对分配的内存块的基础，存储在image_section_header结构的virtualaddress属性。</p>
+<p>4.如果分配的内存块不同的基址，在代码/数据段必须调整各种资料。这称为地址偏移。</p>
+<p>5.必须通过加载相应的库来解决库所需的导入。</p>
+<p>6.不同部分的内存区域必须根据节的特性进行保护。有些部分被标记为可放弃，因此可以安全地释放，在这一点上。这些部分通常包含在导入期间只需要的临时数据，如用于地址偏移的信息。</p>
+<p>7.现在，这个库已完全加载。它必须被通知通过dll_process_attach调用的入口点。</p>
+</blockquote>
+<p>在下面的段落中，描述了每一个步骤。</p>
+<p><strong>Allocate memory</strong></p>
+<p>所有的库加载到内存必须保留使用<code>VirtualAlloc</code>分配，由于Windows提供了保护这些内存块的功能。这需要限制对内存的访问，例如对代码或常量数据的阻塞写访问。</p>
+<p> <code>OptionalHeader</code>结构定义了库所需要的内存大小。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">memory = VirtualAlloc((LPVOID)(PEHeader-&gt;OptionalHeader.ImageBase),</span><br><span class="line"></span><br><span class="line">    PEHeader-&gt;OptionalHeader.SizeOfImage,</span><br><span class="line"></span><br><span class="line">    MEM_RESERVE,</span><br><span class="line"></span><br><span class="line">    PAGE_READWRITE);</span><br></pre></td></tr></table></figure>
+<p>如果保留内存不同于给定的地址在<code>ImageBase</code>中，下面所描述的地址重定位必须这样做。</p>
+<p><strong>Copy sections</strong></p>
+<p>一旦内存被保留，文件内容就可以复制到系统中。为了确定文件中的位置和内存中的目标区域，必须对段头进行评估。</p>
+<p>在复制数据之前，内存块必须提交:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dest = VirtualAlloc(baseAddress + section-&gt;VirtualAddress,</span><br><span class="line">    section-&gt;SizeOfRawData,</span><br><span class="line">    MEM_COMMIT,</span><br><span class="line">    PAGE_READWRITE);</span><br></pre></td></tr></table></figure>
+<p>没有文件中的数据段（如使用的变量数据段），有一个<code>sizeofrawdata</code> 为0，所以你可以使用<code>OptionalHeader</code>的<code>sizeofinitializeddata</code>或<code>sizeofuninitializeddata</code>。必须选择一个标志<code>IMAGE_SCN_CNT_INITIALIZED_DATA</code> 和<code>IMAGE_SCN_CNT_UNINITIALIZED_DATA</code>，这可能是在这一节的特点中确定的。</p>
+<p><strong>Base relocation</strong></p>
+<p>在一个库中的代码/数据段的内存地址存储相对于在<code>OptionalHeader</code>基址定义的地址。如果不能将库导入到这个内存地址，则引用必须进行调整=重新定位。文件格式可以通过保存这些参考信息的重定位表，可在<code>OptionalHeader</code>的<code>DataDirectory</code>目录的第五个条目中。</p>
+<p>这张表由一系列这样的结构组成。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _IMAGE_BASE_RELOCATION &#123;</span><br><span class="line">    DWORD   VirtualAddress;</span><br><span class="line">    DWORD   SizeOfBlock;</span><br><span class="line">&#125; IMAGE_BASE_RELOCATION;</span><br></pre></td></tr></table></figure>
+<p>它包含每个在（sizeofblock–image_sizeof_base_relocation）/ 2的16位，高4位定义重定位类型，低12位定义偏移相对于<code>virtualaddress</code>的地址。</p>
+<p>这是乎是使用DLL唯一的类型</p>
+<blockquote>
+<p>IMAGE_REL_BASED_ABSOLUTE</p>
+<p>不是系统重定位，用于填充</p>
+<p>IMAGE_REL_BASED_HIGHLOW</p>
+<p>添加基地址在ImageBase中并在内存中找到32位偏移地址</p>
+</blockquote>
+<p><strong>Resolve imports</strong></p>
+<p>在<code>OptionalHeader</code>的<code>DataDirectory</code>目录条目1中指定导入符号的库的列表。</p>
+<p>此列表中的每个条目定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _IMAGE_IMPORT_DESCRIPTOR &#123;</span><br><span class="line">    union &#123;</span><br><span class="line">        DWORD   Characteristics;            // 0 for terminating null import descriptor</span><br><span class="line">        DWORD   OriginalFirstThunk;         // RVA to original unbound IAT (PIMAGE_THUNK_DATA)</span><br><span class="line">    &#125;;</span><br><span class="line">    DWORD   TimeDateStamp;                  // 0 if not bound,</span><br><span class="line">                                            // -1 if bound, and real date\time stamp</span><br><span class="line">                                            //     in IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT (new BIND)</span><br><span class="line">                                            // O.W. date/time stamp of DLL bound to (Old BIND)</span><br><span class="line"></span><br><span class="line">    DWORD   ForwarderChain;                 // -1 if no forwarders</span><br><span class="line">    DWORD   Name;</span><br><span class="line">    DWORD   FirstThunk;                     // RVA to IAT (if bound this IAT has actual addresses)</span><br><span class="line">&#125; IMAGE_IMPORT_DESCRIPTOR;</span><br></pre></td></tr></table></figure>
+<p>名称条目描述了偏移以null结尾的字符串的库的名称（例如Kernel32. DLL）。</p>
+<p><code>originalfirstthunk</code>切入点参考列表的函数名从外部库导入。<code>FirstThunk</code>指向一个地址列表，得到指针输入符号。</p>
+<p>当我们解析导入时，我们并行遍历两个列表，导入第一个列表中由名称定义的函数，并将指针存储到第二个列表中的符号中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">nameRef = (DWORD *)(baseAddress + importDesc-&gt;OriginalFirstThunk);</span><br><span class="line">symbolRef = (DWORD *)(baseAddress + importDesc-&gt;FirstThunk);</span><br><span class="line">for (; *nameRef; nameRef++, symbolRef++)</span><br><span class="line">&#123;</span><br><span class="line">    PIMAGE_IMPORT_BY_NAME thunkData = (PIMAGE_IMPORT_BY_NAME)(codeBase + *nameRef);</span><br><span class="line">    *symbolRef = (DWORD)GetProcAddress(handle, (LPCSTR)&amp;thunkData-&gt;Name);</span><br><span class="line">    if (*funcRef == 0)</span><br><span class="line">    &#123;</span><br><span class="line">        handleImportError();</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Protect memory</strong></p>
+<p>每个部分在其特性项中指定权限标志。这些标志可以是一个或一个组合。</p>
+<blockquote>
+<p>image_scn_mem_execute</p>
+<p>该部分包含可以执行的数据。</p>
+<p>image_scn_mem_read</p>
+<p>该部分包含可读的数据。</p>
+<p>image_scn_mem_write</p>
+<p>该部分包含的是可写的数据。</p>
+</blockquote>
+<p>这些标志必须映射到保护标志。</p>
+<blockquote>
+<p>PAGE_NOACCESS</p>
+<p>PAGE_WRITECOPY</p>
+<p>PAGE_READONLY</p>
+<p>PAGE_READWRITE</p>
+<p>PAGE_EXECUTE</p>
+<p>PAGE_EXECUTE_WRITECOPY</p>
+<p> PAGE_EXECUTE_READ</p>
+<p>PAGE_EXECUTE_READWRITE</p>
+</blockquote>
+<p>现在，功能函数<code>virtualprotect</code>可以用来限制访问存储器。如果程序试图以未经授权的方式访问它，则由windows引发异常。</p>
+<p>除了上面的部分标志外，还可以添加以下内容：</p>
+<blockquote>
+<p>image_scn_mem_discardable</p>
+<p>本节中的数据可以在导入后释放。通常这是为重新定位数据指定的。</p>
+<p>image_scn_mem_not_cached</p>
+<p>本节中的数据不能被Windows缓存。添加标志位page_nocache以上保护标志。</p>
+</blockquote>
+<p><strong>Notify library</strong></p>
+<p>最后一件事就是调用DLL的入口点（由<code>addressofentrypoint</code>定义），因此，通知与库有关进程的连接。</p>
+<p>入口点的函数定义为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typedef BOOL (WINAPI *DllEntryProc)(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved);</span><br></pre></td></tr></table></figure>
+<p>所以我们需要执行的最后一个代码是:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DllEntryProc entry = (DllEntryProc)(baseAddress + PEHeader-&gt;OptionalHeader.AddressOfEntryPoint);</span><br><span class="line">(*entry)((HINSTANCE)baseAddress, DLL_PROCESS_ATTACH, 0);</span><br></pre></td></tr></table></figure>
+<p>之后，我们可以将导出的函数与任何常规库一起使用。</p>
+<p><strong>Exported functions</strong></p>
+<p>如果您希望访问库导出的函数，则需要查找指向符号的入口点，即要调用的函数的名称。</p>
+<p>在<code>OptionalHeader</code>的<code>DataDirectory</code>目录0号条目中包含导出函数的信息。</p>
+<p>它的定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _IMAGE_EXPORT_DIRECTORY &#123;</span><br><span class="line">    DWORD   Characteristics;</span><br><span class="line">    DWORD   TimeDateStamp;</span><br><span class="line">    WORD    MajorVersion;</span><br><span class="line">    WORD    MinorVersion;</span><br><span class="line">    DWORD   Name;</span><br><span class="line">    DWORD   Base;</span><br><span class="line">    DWORD   NumberOfFunctions;</span><br><span class="line">    DWORD   NumberOfNames;</span><br><span class="line">    DWORD   AddressOfFunctions;     // RVA from base of image</span><br><span class="line">    DWORD   AddressOfNames;         // RVA from base of image</span><br><span class="line">    DWORD   AddressOfNameOrdinals;  // RVA from base of image</span><br><span class="line">&#125; IMAGE_EXPORT_DIRECTORY, *PIMAGE_EXPORT_DIRECTORY;</span><br></pre></td></tr></table></figure>
+<p>首先要做的是将函数的名称映射到导出符号的序号。因此，就由<code>AddressOfNames</code>和<code>addressofnameordinals</code>并行直到你找到所需的名称的数组。</p>
+<p>现在你可以用序数来读取地址通过评估的<code>addressoffunctions</code> n元数组。</p>
+<p><strong>Freeing the library</strong></p>
+<p>若要释放自定义加载库，请执行步骤</p>
+<p>进入DLL退出函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DllEntryProc entry = (DllEntryProc)(baseAddress + PEHeader-&gt;OptionalHeader.AddressOfEntryPoint);</span><br><span class="line">(*entry)((HINSTANCE)baseAddress, DLL_PROCESS_ATTACH, 0);</span><br></pre></td></tr></table></figure>
+<p>释放导入的外部库。</p>
+<p>空闲分配内存。</p>
+<p><strong>MemoryModule</strong></p>
+<p>存储器模块是一个C-libary，可以用来从内存加载DLL。</p>
+<p>该接口非常类似于加载库的标准方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">typedef void *HMEMORYMODULE;</span><br><span class="line"></span><br><span class="line">HMEMORYMODULE MemoryLoadLibrary(const void *);</span><br><span class="line">FARPROC MemoryGetProcAddress(HMEMORYMODULE, const char *);</span><br><span class="line">void MemoryFreeLibrary(HMEMORYMODULE);</span><br></pre></td></tr></table></figure>
+<p><strong>下载</strong></p>
+<p>最新的开发版本GitHub:<a href="http://github.com/fancycode/memorymodule">http://github.com/fancycode/memorymodule</a></p>
+
+        </div>
+		<!--dashang-->
+        
+        <div class="post-tags">Tags：
+            
+            <a href="/tags/技术/">技术</a>
+            
+        </div>
+        
+    </article>
+    
+    <p>本文内容仅作为作者个人兴趣与观点,若有不恰当之处，望不吝赐教</p>
+    
+    
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        </div><!-- end #main-->
+    </div><!-- end #body -->
+    <footer class="footer">
+    <div class="footer-inner">
+        <p>
+            <a href="/about"  title="About">About</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <!-- 自定义链接 -->
+            <a href="/help" title="help" >帮助</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <a href="/links" title="友情链接">友情链接</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+        </p>
+        <p>
+            Blog by <a href="https://github.com/hucmosin" style="font-weight: bold">Coding Pages</a>
+        </p>
+        
+    </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/InsightSearch.js"></script>
+<script src="/js/SimpleCore.js"></script>
+
+</div>
+<div class="fixed-btn">
+    <a class="btn-gotop" href="javascript:"> <i class="fa fa-angle-up"></i></a>
+</div>
+<script>
+    $(function () {
+        SimpleCore.init({
+            buildingTime: '10/20/2017',
+            current: $('.post-tags').length > 0 ? 'post' : 'archive',
+            wxMpImg: '/images/weixin-mp.png',
+        });
+    });
+</script>
+</body>
+</html>

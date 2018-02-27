@@ -1,0 +1,460 @@
+<!DOCTYPE HTML>
+<html class="no-js" lang="zh-CN">
+<!--
+//                            _ooOoo_
+//                           o8888888o
+//                           88" . "88
+//                           (| -_- |)
+//                            O\ = /O
+//                        ____/`---'\____
+//                      .   ' \\| |// `.
+//                       / \\||| : |||// \
+//                     / _||||| -:- |||||- \
+//                       | | \\\ - /// | |
+//                     | \_| ''\---/'' | |
+//                      \ .-\__ `-` ___/-. /
+//                   ___`. .' /--.--\ `. . __
+//                ."" '< `.___\_<|>_/___.' >'"".
+//               | | : `- \`.;`\ _ /`;.`/ - ` : | |
+//                 \ \ `-. \_ __\ /__ _/ .-` / /
+//         ======`-.____`-.___\_____/___.-`____.-'======
+//                            `=---='
+//                 拦截插件累计拦截逗比攻击"1381438"次！
+//         .............................................
+//                  佛祖保佑             永无BUG
+//          佛曰:
+//                  写字楼里写字间，写字间里程序员；
+//                  程序人员写程序，又拿程序换酒钱。
+//                  酒醒只在网上坐，酒醉还来网下眠；
+//                  酒醉酒醒日复日，网上网下年复年。
+//                  但愿老死电脑间，不愿鞠躬老板前；
+//                  奔驰宝马贵者趣，公交自行程序员。
+//                  别人笑我忒疯癫，我笑自己命太贱；
+//                  不见满街漂亮妹，哪个归得程序员？
+-->
+<head>
+    <!--[if lte IE 9]>
+<meta http-equiv="refresh" content="0;url=http://github.com/hucmosin/warn.html">
+<![endif]-->
+<meta charset="utf-8">
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+<meta http-equiv="mobile-agent" content="format=html5; url=http://github.com/hucmosin">
+<meta name="author" content="Mosin">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/SimpleStyle.min.css">
+
+<link rel="shortcut icon" href="/images/favicon.png">
+
+
+<title>某商城系统几处漏洞分析 - Mosin&#39; Blog</title>
+
+<meta name="keywords" content="审计">
+
+<meta name="description " content="Learning, summarizing, thinking, feeling and knowledge management">
+</head>
+<body>
+<div id="nav">
+    <nav class="nav-menu">
+        <a class="site-name current" href="/" title="聊">聊</a>
+        <a class="site-index current" href="/"><i class="fa fa-home"></i><span>Home</span></a>
+        <a href="/archives" title="Archives"><i class="fa fa-archives"></i><span>Archives</span></a>
+        <!-- custom single page of menus -->
+        
+        
+        <a href="/help" title="帮助">
+            <i class="fa fa-question-circle"></i>
+            <span>帮助</span>
+        </a>
+        
+    </nav>
+</div>
+
+<div class="nav-user">
+    <a class="btn-search" href="#"><i class="fa fa-search"></i></a>
+    <a class="btn-read-mode" href="#"><i class="fa fa-sun-o"></i></a>
+    <a class="btn-weixin-mp" href="javascript:"><i class="fa fa-weixin"></i></a>
+</div>
+<div id="wrapper" class="clearfix">
+    <div id="body">
+        <div class="main" id="main">
+            <div id="cover">
+    <div class="cover-img"></div>
+    <div class="cover-info">
+        
+        <h1 class="cover-siteName">Mosin&#39;s Blog</h1>
+        <h3 class="cover-siteTitle">聊技术，谈情怀</h3>
+        <p class="cover-siteDesc">一个关注技术与人文的IT博客</p>
+        <div class="cover-sns">
+            
+            <div class="btn btn-github">
+                <a href="https://github.com/hucmosin" target="_blank" title="github" ref="friend">
+                    <i class="fa fa-github"></i>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+</div>
+            <div class="page-title">
+    <ul>
+        <li><a href="/">最新</a></li>
+        
+            
+                <li class="">
+                    <a href="/categories/code-audit" data-name="审计">审计</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/technology" data-name="技术">技术</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-share" data-name="分享">分享</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-note" data-name="学习">学习</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/others-end" data-name="其他">其他</a>
+                </li>
+            
+        
+        <li class="page-search">
+    <form id="search" class="search-form">
+        <label for="s" class="sr-only">Input Search key Words Here</label>
+        <input class="search-field" type="text" name="s" class="text" placeholder="Input Search key Words Here" />
+        <button type="submit" class="search-form-submit" title="Search"><i class="fa fa-search"></i></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input"  placeholder="请输入关键字"/>   <!-- placeholder="Type something..."/>-->
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+</li>
+
+    </ul>
+</div>
+<div class="main-inner">
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+        <div class="post-header">
+            <div class="post-author clearfix">
+                <a class="avatar fleft" href="https://github.com/hucmosin" target="_blank">
+                    <img width="48" src="/images/favicon.png" alt="avatar"/>
+                </a>
+                <p><span class="label">作者</span>
+                    <a href="https://github.com/hucmosin" target="_blank">mosin</a>
+                    <span title="最后编辑于2018-01-04">2018-01-04</span>
+                </p>
+                <p>灵魂无处安放,所以选择流浪</p>
+            </div>
+            <h2 class="post-title">某商城系统几处漏洞分析</h2>
+            <div class="post-meta">
+                本文总共10131个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+            </div>
+        </div>
+        <div class="post-content markdown-body">
+            <p>先知发布的文章，博客同步下。</p>
+<p>新年新气象。。。。</p>
+<h3 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h3><p>前段时间在测试某商城系统时,发现使用了某通用CMS，本着学习的态度，于是下载下来对源码进行分析。</p>
+<p>因为自己懒得搭环境，喜欢实战环境，所以直接找官方Demo，因为漏洞提交至今未修复，为了不涉及某商城系统，故对截图进行了打码。</p>
+<h3 id="0x01-漏洞分析"><a href="#0x01-漏洞分析" class="headerlink" title="0x01 漏洞分析"></a>0x01 漏洞分析</h3><p><strong>远程代码执行</strong></p>
+<p>打开源码包，看到这个，struts2架构，远古时期，包都不用解，一看就知道ST2-16。</p>
+<p><img src="/allimage/egimage/9.png" alt="1111"><br>不搭环境，直接官网Demo</p>
+<p><img src="/allimage/egimage/1.jpg" alt="1"></p>
+<p><strong>任意文件上传</strong></p>
+<p>struts2架构，相关页面关联信息都写在了xml里面，找起来方便</p>
+<p>我们看看上传页面的前端文件upload.jsp</p>
+<pre><code>&lt;script type=&quot;text/javascript&quot;&gt;
+        $(function() {
+            var appType = $(&apos;#appType&apos;).val();
+            var url = ctx + &apos;/FileUpload!save.do?appType=&apos;+appType;
+            var fileDesc = &apos;&apos;;
+            var fileExt = &apos;&apos;;
+            if(appType == &apos;magazine&apos;){
+                fileDesc = &apos;支持格式：doc/docx/pdf/rar/zip/txt.&apos;;
+                fileExt = &apos;*.doc;*.docx;*.pdf;*.rar;*.zip;*.txt&apos;;
+            }else{
+                fileDesc = &apos;支持格式:jpg/gif/jpeg/png/bmp.&apos;;
+                fileExt = &apos;*.jpg;*.gif;*.jpeg;*.png;*.bmp&apos;;
+            }
+            $(&quot;#fileupload&quot;).uploadify({
+                &apos;uploader&apos;       : ctx + &apos;/scripts/framework/uploadify/uploadify.swf&apos;,
+                &apos;script&apos;         : url,                                            //servlet的路径或者.jsp 
+                &apos;cancelImg&apos;      : ctx + &apos;/scripts/framework/uploadify/cancel.png&apos;,
+                &apos;fileDataName&apos;     : &apos;fileupload&apos;,                                    //必须
+                &apos;queueID&apos;        : &apos;fileQueue&apos;,
+                &apos;auto&apos;           : false,                                         //选定文件后是否自动上传，默认false
+                &apos;multi&apos;          : false,                                         //是否允许同时上传多文件，默认false
+                &apos;simUploadLimit&apos; : 1,                                             //一次同步上传的文件数目  
+                &apos;sizeLimit&apos;      : 2000000,                                     //设置单个文件大小限制，单位为byte  
+                &apos;queueSizeLimit&apos; : 5,                                             //限制在一次队列中的次数（可选定几个文件）。默认值= 999，而一次可传几个文件有 simUploadLimit属性决定。
+                &apos;fileDesc&apos;       : fileDesc,                                     //如果配置了以下的&apos;fileExt&apos;属性，那么这个属性是必须的  
+                &apos;fileExt&apos;        : fileExt,                                        //允许的格式
+                onComplete: function (event, queueID, fileObj, response, data) {
+                    var arrTemp = response.split(&apos;,&apos;);
+                     var idStr = arrTemp[0];
+                     var picPath = arrTemp[1];
+                     if(&apos;false&apos;==idStr){
+                         idStr = &apos;&apos;;
+                         alert(&quot;文件:&quot; + fileObj.name + &quot;上传失败&quot;);
+                     }else{
+                         alert(&quot;文件:&quot; + fileObj.name + &quot;上传成功&quot;);
+
+                         if(&apos;Good&apos;== appType || &apos;GoodAlbum&apos; == appType || &apos;magazine&apos; == appType || &apos;Packaging&apos; == appType || &apos;Promote&apos; == appType || &apos;promotionActivity&apos;==appType || &apos;gift&apos;==appType || &apos;AdvertisePic&apos;==appType ||&apos;goodType&apos; ==appType ||&apos;GoodBrand&apos;==appType || &apos;Customer&apos;==appType || &apos;costomer&apos;==appType || &apos;Ware&apos; == appType){
+                            parent.upload.close(idStr,picPath);
+                        }else if(&apos;GoodExtend&apos; == appType || &apos;Advertise&apos; == appType || &apos;magazinePic&apos; == appType || &apos;Information&apos; == appType|| &apos;GreetingCard&apos; == appType|| &apos;promotePic&apos; == appType || &apos;promotionActivityPic&apos; == appType || &apos;StoreSet&apos; == appType || &apos;giftPic&apos; == appType ){
+                            window.returnValue = picPath;
+                            window.close();
+                        }
+                     }
+                },  
+                onError: function(event, queueID, fileObj) {
+                    alert(&quot;文件:&quot; + fileObj.name + &quot;上传失败&quot;);
+                },  
+                onCancel: function(event, queueID, fileObj){
+                    //alert(&quot;取消了&quot; + fileObj.name);  
+                } 
+            });      
+
+        });
+    &lt;/script&gt;
+</code></pre><p>文件对appType进行判断，继而进行处理，对于我们来讲，appType在这里没有实质性的作用，只是选择上传的类型目录而已。<br>来看下处理上传的文件，在文件FileUploadAction.class中</p>
+<pre><code>public void save(){
+String folderPath = Static.APACHE_CONTEXT_PATH + Static.FILE_PATH;
+Date now = new Date();
+String nowStr = DateUtil.date2Str(now, &quot;yyyyMMdd&quot;);
+now = DateUtil.str2Date(nowStr, &quot;yyyyMMdd&quot;);
+
+folderPath = folderPath + &quot;/&quot; + this.appType + &quot;/&quot; + nowStr;
+
+logger.info(&quot;relativePath:&quot; + folderPath);
+String idStr = &quot;&quot;;
+String imgPath = &quot;&quot;;
+String fileName = &quot;&quot;;
+
+boolean isOk = true;
+if ((this.fileupload != null) &amp;&amp; (this.fileupload.length &gt; 0))
+{
+  logger.info(&quot;fileupload.length:&quot; + this.fileupload.length);
+
+  File savedir = new File(folderPath);
+  if (!savedir.exists()) {
+    savedir.mkdirs();
+  }
+  for (int i = 0; i &lt; this.fileupload.length; i++)
+  {
+    fileName = this.fileuploadFileName[i];
+    String postfix = fileName.substring(fileName.lastIndexOf(&quot;.&quot;) + 1);
+    logger.info(&quot;uploadFileName[&quot; + i + &quot;]=&quot; + fileName);
+
+    String id = this.fileUploadService.makeId();
+    idStr = idStr + (i == 0 ? id : new StringBuilder(&quot;,&quot;).append(id).toString());
+
+    String fileNewName = id + &quot;.&quot; + postfix;
+    File savefile = new File(savedir, fileNewName);
+    logger.info(&quot;save file:&quot; + fileNewName + &quot; to folder:&quot; + savedir.getPath());
+    try
+    {
+      FileUtils.copyFile(this.fileupload[i], savefile);
+
+      FileUpload fileUpload = new FileUpload();
+      fileUpload.setId(id);
+      fileUpload.setAppType(this.appType);
+      fileUpload.setCreateTime(now);
+      fileUpload.setPostfix(postfix);
+      fileUpload.setOriginalName(fileName);
+
+      StringBuffer relativePath = new StringBuffer();
+      relativePath.append(Static.FILE_PATH)
+        .append(&quot;/&quot;).append(this.appType)
+        .append(&quot;/&quot;).append(nowStr)
+        .append(&quot;/&quot;).append(id).append(&quot;.&quot;).append(postfix);
+      fileUpload.setRelativePath(relativePath.toString());
+      imgPath = relativePath.toString();
+      this.fileUploadService.insert(fileUpload);
+    }
+    catch (Exception e)
+    {
+      if (isOk) {
+        isOk = false;
+      }
+      logger.error(&quot;error when copyFile,savefile:&quot; + savefile, e);
+    }
+  }
+}
+else
+{
+  logger.warn(&quot;fileupload is null or fileupload.length &lt;=0&quot;);
+  isOk = false;
+}
+if (!isOk) {
+  responseFlag(isOk);
+} else if (this.appType.equals(&quot;News&quot;)) {
+  responseFlag(imgPath);
+} else if (this.appType.equals(&quot;OrderGood&quot;)) {
+  responseFlag(idStr + &apos;,&apos; + fileName);
+} else {
+  responseFlag(idStr + &apos;,&apos; + imgPath);
+}
+</code></pre><p>首先对appType和目录进行了拼接，也就是上传的路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">folderPath = folderPath + &quot;/&quot; + this.appType + &quot;/&quot; + nowStr;</span><br></pre></td></tr></table></figure>
+<p>判断文件长度大小</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if ((this.fileupload != null) &amp;&amp; (this.fileupload.length &gt; 0))</span><br></pre></td></tr></table></figure>
+<p>然后取后缀，到这里为止，文件都没有对上传的内容进行任何判断,后缀也是一样，直接读取拼接，不做判断。</p>
+<p>加之在文件中也未发现任何的登录权限验证，所以造成了前端无限制任意文件上传。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String postfix = fileName.substring(fileName.lastIndexOf(&quot;.&quot;) + 1);</span><br><span class="line">String fileNewName = id + &quot;.&quot; + postfix;</span><br></pre></td></tr></table></figure>
+<p>下面就是存储过程了，最后返回上传结果。附上传成功并getshell截图。</p>
+<p>  <img src="/allimage/egimage/2.jpg" alt="2"></p>
+<p><img src="/allimage/egimage/3.jpg" alt="3"></p>
+<p><strong>存储型XSS</strong></p>
+<p>这个系统好像通篇没有过滤XSS的脚本，不知道有没有过滤文件反正我没有看到.可以在商品收货地址或商品展示处等地方插入XSS。</p>
+<p>因为通篇XSS，所以就挑一个来说<br>在jsp文件edit_SysUser.jsp中，这个是用于修改个人信息的，<br>定位源码SysUserAction.class<br>下面是两个重要函数<br>首先edit()从jsp页面获取到登录用户的信息，对信息进行修改,save()函数接收修改的信息，对用户信息进行存储更新，在文件里面，我们没有看到任何的过滤函数存在。</p>
+<pre><code>省略无关代码......
+public String edit(){
+SysUser loginMan = getSessionUserInfo();
+if (this.sysUser == null) {
+  this.sysUser = new SysUser();
+}
+String id = this.sysUser.getId();
+if (StringUtils.isBlank(id))
+{
+  super.initModel(true, this.sysUser, loginMan);
+}
+else
+{
+  this.sysUser = ((SysUser)this.sysUserService.getModel(id));
+
+  super.initModel(false, this.sysUser, loginMan);
+}
+this.sysRoleList = this.sysRoleService.select(null);
+if (this.sysRoleList == null) {
+  this.sysRoleList = new ArrayList();
+} else {
+  for (int i = 0; i &lt; this.sysRoleList.size(); i++) {
+    if (&quot;admin&quot;.equals(((SysRole)this.sysRoleList.get(i)).getCode()))
+    {
+      this.sysRoleList.remove(i);
+      break;
+    }
+  }
+}
+return &quot;edit_SysUser&quot;;
+</code></pre><p>省略无关代码……</p>
+<pre><code>  public void save(){
+try
+{
+  String id = this.sysUser.getId();
+
+  String roleId = this.sysUser.getRoleId();
+  if (StringUtils.isNotBlank(roleId))
+  {
+    SysRole sysRole = (SysRole)this.sysRoleService.getModel(roleId);
+    this.sysUser.setRoleCode(sysRole.getCode());
+    this.sysUser.setRoleName(sysRole.getName());
+  }
+  if (StringUtils.isBlank(id)) {
+    this.sysUserService.insert(this.sysUser);
+  } else {
+    this.sysUserService.update(this.sysUser);
+  }
+  responseFlag(true);
+}
+catch (Exception e)
+{
+  responseFlag(false);
+  logger.error(&quot;error occur when save model!&quot;, e);
+}
+</code></pre><p>  }</p>
+<p> 测试结果，后台和前台</p>
+<p><img src="/allimage/egimage/6.png" alt="111111111"></p>
+<p><img src="/allimage/egimage/8.png" alt="T"></p>
+<h3 id="任意帐号密码修改"><a href="#任意帐号密码修改" class="headerlink" title="任意帐号密码修改"></a>任意帐号密码修改</h3><p>漏洞发生在app\front\action\UserManageAction.class文件中</p>
+<p>首先在重置密码处会先进行一次帐号验证，也就是邮箱地址验证是否正确，然后会返回注册手机号码（下面会用到），代码就不贴了，这个不是重点，重点是sendEmail()这个函数。</p>
+<p><img src="/allimage/egimage/10.png" alt="T1"></p>
+<p>首先会获取提交过来的手机号码和邮箱地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">this.customer = getSessionCustomerInfo();</span><br><span class="line">String toMail = this.customer.getEmail();</span><br><span class="line">String registerName = this.customer.getCode();</span><br></pre></td></tr></table></figure>
+<p>接下来,直接设置发送邮件的帐号密码，url随机数ID连接。</p>
+<p>然后就是理想的发送邮件验证重置密码连接了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">String userName = &quot;XXXXXX@126.com&quot;;</span><br><span class="line">String password = &quot;XXXXX&quot;;</span><br><span class="line">      </span><br><span class="line">String registerId = Math.random() * Math.random();</span><br><span class="line">String url = &quot;http://localhsot:8080/frontLogin.do?registerId=&quot; + registerId;</span><br><span class="line">      </span><br><span class="line">MimeMessage msg = new MimeMessage(session);</span><br><span class="line">msg.setFrom(from);</span><br><span class="line">msg.setSubject(&quot;邮箱验证&quot;);</span><br><span class="line">msg.setSentDate(new Date());</span><br><span class="line">msg.setContent(&quot;&lt;a href=&apos;&quot; + url + &quot;&apos;&gt;点击&quot; + url + &quot;&lt;/a&gt;&quot;, &quot;text/html;charset=utf-8&quot;);</span><br><span class="line">msg.setRecipient(Message.RecipientType.TO, to);</span><br><span class="line">Transport.send(msg);</span><br></pre></td></tr></table></figure>
+<p>直接构造和修改邮箱，邮箱接收到重置密码连接，转到重置密码页面即可修改密码。</p>
+<p><a href="http://www.xxx.com/sendEmail.do?customer.code=135xxxxxxx6&amp;customer.email=xxxxx@xxx.com" target="_blank" rel="external">http://www.xxx.com/sendEmail.do?customer.code=135xxxxxxx6&amp;customer.email=xxxxx@xxx.com</a></p>
+
+        </div>
+		<!--dashang-->
+        
+        <div class="post-tags">Tags：
+            
+            <a href="/tags/代码审计/">代码审计</a>
+            
+        </div>
+        
+    </article>
+    
+    <p>本文内容仅作为作者个人兴趣与观点,若有不恰当之处，望不吝赐教</p>
+    
+    
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        </div><!-- end #main-->
+    </div><!-- end #body -->
+    <footer class="footer">
+    <div class="footer-inner">
+        <p>
+            <a href="/about"  title="About">About</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <!-- 自定义链接 -->
+            <a href="/help" title="help" >帮助</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <a href="/links" title="友情链接">友情链接</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+        </p>
+        <p>
+            Blog by <a href="https://github.com/hucmosin" style="font-weight: bold">Coding Pages</a>
+        </p>
+        
+    </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/InsightSearch.js"></script>
+<script src="/js/SimpleCore.js"></script>
+
+</div>
+<div class="fixed-btn">
+    <a class="btn-gotop" href="javascript:"> <i class="fa fa-angle-up"></i></a>
+</div>
+<script>
+    $(function () {
+        SimpleCore.init({
+            buildingTime: '10/20/2017',
+            current: $('.post-tags').length > 0 ? 'post' : 'archive',
+            wxMpImg: '/images/weixin-mp.png',
+        });
+    });
+</script>
+</body>
+</html>

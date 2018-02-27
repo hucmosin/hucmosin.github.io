@@ -1,0 +1,277 @@
+<!DOCTYPE HTML>
+<html class="no-js" lang="zh-CN">
+<!--
+//                            _ooOoo_
+//                           o8888888o
+//                           88" . "88
+//                           (| -_- |)
+//                            O\ = /O
+//                        ____/`---'\____
+//                      .   ' \\| |// `.
+//                       / \\||| : |||// \
+//                     / _||||| -:- |||||- \
+//                       | | \\\ - /// | |
+//                     | \_| ''\---/'' | |
+//                      \ .-\__ `-` ___/-. /
+//                   ___`. .' /--.--\ `. . __
+//                ."" '< `.___\_<|>_/___.' >'"".
+//               | | : `- \`.;`\ _ /`;.`/ - ` : | |
+//                 \ \ `-. \_ __\ /__ _/ .-` / /
+//         ======`-.____`-.___\_____/___.-`____.-'======
+//                            `=---='
+//                 拦截插件累计拦截逗比攻击"1381438"次！
+//         .............................................
+//                  佛祖保佑             永无BUG
+//          佛曰:
+//                  写字楼里写字间，写字间里程序员；
+//                  程序人员写程序，又拿程序换酒钱。
+//                  酒醒只在网上坐，酒醉还来网下眠；
+//                  酒醉酒醒日复日，网上网下年复年。
+//                  但愿老死电脑间，不愿鞠躬老板前；
+//                  奔驰宝马贵者趣，公交自行程序员。
+//                  别人笑我忒疯癫，我笑自己命太贱；
+//                  不见满街漂亮妹，哪个归得程序员？
+-->
+<head>
+    <!--[if lte IE 9]>
+<meta http-equiv="refresh" content="0;url=http://github.com/hucmosin/warn.html">
+<![endif]-->
+<meta charset="utf-8">
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+<meta http-equiv="mobile-agent" content="format=html5; url=http://github.com/hucmosin">
+<meta name="author" content="Mosin">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/SimpleStyle.min.css">
+
+<link rel="shortcut icon" href="/images/favicon.png">
+
+
+<title>内存动态执行dll的介绍与实践应用 - Mosin&#39; Blog</title>
+
+<meta name="keywords" content="技术">
+
+<meta name="description " content="Learning, summarizing, thinking, feeling and knowledge management">
+</head>
+<body>
+<div id="nav">
+    <nav class="nav-menu">
+        <a class="site-name current" href="/" title="聊">聊</a>
+        <a class="site-index current" href="/"><i class="fa fa-home"></i><span>Home</span></a>
+        <a href="/archives" title="Archives"><i class="fa fa-archives"></i><span>Archives</span></a>
+        <!-- custom single page of menus -->
+        
+        
+        <a href="/help" title="帮助">
+            <i class="fa fa-question-circle"></i>
+            <span>帮助</span>
+        </a>
+        
+    </nav>
+</div>
+
+<div class="nav-user">
+    <a class="btn-search" href="#"><i class="fa fa-search"></i></a>
+    <a class="btn-read-mode" href="#"><i class="fa fa-sun-o"></i></a>
+    <a class="btn-weixin-mp" href="javascript:"><i class="fa fa-weixin"></i></a>
+</div>
+<div id="wrapper" class="clearfix">
+    <div id="body">
+        <div class="main" id="main">
+            <div id="cover">
+    <div class="cover-img"></div>
+    <div class="cover-info">
+        
+        <h1 class="cover-siteName">Mosin&#39;s Blog</h1>
+        <h3 class="cover-siteTitle">聊技术，谈情怀</h3>
+        <p class="cover-siteDesc">一个关注技术与人文的IT博客</p>
+        <div class="cover-sns">
+            
+            <div class="btn btn-github">
+                <a href="https://github.com/hucmosin" target="_blank" title="github" ref="friend">
+                    <i class="fa fa-github"></i>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+</div>
+            <div class="page-title">
+    <ul>
+        <li><a href="/">最新</a></li>
+        
+            
+                <li class="">
+                    <a href="/categories/code-audit" data-name="审计">审计</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/technology" data-name="技术">技术</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-share" data-name="分享">分享</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-note" data-name="学习">学习</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/others-end" data-name="其他">其他</a>
+                </li>
+            
+        
+        <li class="page-search">
+    <form id="search" class="search-form">
+        <label for="s" class="sr-only">Input Search key Words Here</label>
+        <input class="search-field" type="text" name="s" class="text" placeholder="Input Search key Words Here" />
+        <button type="submit" class="search-form-submit" title="Search"><i class="fa fa-search"></i></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input"  placeholder="请输入关键字"/>   <!-- placeholder="Type something..."/>-->
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+</li>
+
+    </ul>
+</div>
+<div class="main-inner">
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+        <div class="post-header">
+            <div class="post-author clearfix">
+                <a class="avatar fleft" href="https://github.com/hucmosin" target="_blank">
+                    <img width="48" src="/images/favicon.png" alt="avatar"/>
+                </a>
+                <p><span class="label">作者</span>
+                    <a href="https://github.com/hucmosin" target="_blank">mosin</a>
+                    <span title="最后编辑于2018-02-02">2018-02-02</span>
+                </p>
+                <p>灵魂无处安放,所以选择流浪</p>
+            </div>
+            <h2 class="post-title">内存动态执行DLL的介绍与实践应用</h2>
+            <div class="post-meta">
+                本文总共5213个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+            </div>
+        </div>
+        <div class="post-content markdown-body">
+            <p><strong>本文描述了一种动态链接库（DLL）如何从内存中加载，而不首先将其存储在硬盘上的技术。</strong></p>
+<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>默认的Windows API函数加载外部库到程序（LoadLibrary，LoadLibraryEx）与文件系统上的文件进行通信工作,因此不可能从内存中加载dll。但有时，我们需要确切的功能，也就是不让文件落地磁盘，从而减小被杀毒软件检测风险。所以有了内存动态加载文件的思路出现，比较典型的就是反射DLL技术，本地内存DLL反射等技术，本文要讲的是内存加载DLL技术。</p>
+<h3 id="0x00-简介"><a href="#0x00-简介" class="headerlink" title="0x00 简介"></a>0x00 简介</h3><p>内存加载DLL技术和反射DLL技术的利用方式相近，这两种技术都是从内存中加载dll，因为文件不落地磁盘，所以杀毒软件检测有一定难度。</p>
+<p>在大多数文章中，我们看到的介绍都是比较简单的，直接给出代码，其原理解释也是比较少的，所以我们要自己定制功能就需要大量的修改代码。目前来讲，内存加载DLL技术比反射DLL技术应用少，主要是反射DLL需要的loader大小和代码量比内存加载DLL的少; 反射DLL主要加载代码在DLL中，而内存加载DLL的主要代码在loader中，所以造成了内存加载DLL的应用不如反射DLL的广，但是这样并不影响我们过杀软的检测和其功能的隐蔽性。</p>
+<h3 id="0x01-技术实现"><a href="#0x01-技术实现" class="headerlink" title="0x01 技术实现"></a>0x01 技术实现</h3><p>内存加载DLL其实并不算神秘，技术也是十几年前的，但是关注这方面的人很少。内存加载DLL可以说就是在本地重新写了一个PE装载器，把DLL加载进内存读取运行，仅此而已，但是它过查杀效果是很好的。</p>
+<p>一般地，导入加载DLL，我们需要重定位和修复DLL的导入导出表，找到我们需要调用的函数地址，加载它。</p>
+<p>详细的加载步骤如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">1. 打开给定的文件并检查DOS和PE头文件。</span><br><span class="line"></span><br><span class="line">2. 尝试分配一个字节的内存块在peheader.optionalheader.imagebase位置上。</span><br><span class="line"></span><br><span class="line">3. 解析section headers 和复制sections到它们的地址。每一段的section分配到内存块的相对地址，存储在image_section_header结构的virtualaddress属性中。</span><br><span class="line"></span><br><span class="line">4. 如果分配的内存块不同于ImageBase的基址。代码或数据段中的各种引用必须进行调整。这就是地址重定位。</span><br><span class="line"></span><br><span class="line">5. 必须通过加载相应的库来解决库所需的导入。</span><br><span class="line"></span><br><span class="line">6. 不同部分的内存区域必须根据节的特性进行保护。有些部分被标记为可以丢弃，因此可以安全地释放。在这一点上，这些部分通常包含在导入期间需要的临时数据，用于地址重定位的信息。</span><br><span class="line"></span><br><span class="line">7. 现在，这个库已完全加载。它必须被通知通过dll_process_attach调用的入口点。</span><br></pre></td></tr></table></figure>
+<p>首先，我们要把完整的DLL数据加载进内存，然后调用函数 MemoryLoadLibrary()来进行重定位操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HMEMORYMODULE MemoryLoadLibrary(const void *data)</span><br><span class="line">&#123;</span><br><span class="line">    return MemoryLoadLibraryEx(data, _LoadLibrary, _GetProcAddress, _FreeLibrary, NULL);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>MemoryLoadLibraryEx()函数返回加载后的数据和导出函数地址等。</p>
+<p>现在，我们已经找到了相关DLL的数据，我们在得到DLL的句柄后，利用函数MemoryGetProcAddress()得到DLL的导出函数，进而把程序控制权交给DLL。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">FARPROC MemoryGetProcAddress(HMEMORYMODULE module, LPCSTR name)</span><br><span class="line">&#123;</span><br><span class="line">    unsigned char *codeBase = ((PMEMORYMODULE)module)-&gt;codeBase;</span><br><span class="line">    int idx=-1;</span><br><span class="line">    DWORD i, *nameRef;</span><br><span class="line">    WORD *ordinal;</span><br><span class="line">    PIMAGE_EXPORT_DIRECTORY exports;</span><br><span class="line">    PIMAGE_DATA_DIRECTORY directory = GET_HEADER_DICTIONARY((PMEMORYMODULE)module, IMAGE_DIRECTORY_ENTRY_EXPORT);</span><br><span class="line">    if (directory-&gt;Size == 0) &#123;</span><br><span class="line">        // no export table found</span><br><span class="line">        SetLastError(ERROR_PROC_NOT_FOUND);</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    exports = (PIMAGE_EXPORT_DIRECTORY) (codeBase + directory-&gt;VirtualAddress);</span><br><span class="line">    if (exports-&gt;NumberOfNames == 0 || exports-&gt;NumberOfFunctions == 0) &#123;</span><br><span class="line">        // DLL doesn&apos;t export anything</span><br><span class="line">        SetLastError(ERROR_PROC_NOT_FOUND);</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // search function name in list of exported names</span><br><span class="line">    nameRef = (DWORD *) (codeBase + exports-&gt;AddressOfNames);</span><br><span class="line">    ordinal = (WORD *) (codeBase + exports-&gt;AddressOfNameOrdinals);</span><br><span class="line">    for (i=0; i&lt;exports-&gt;NumberOfNames; i++, nameRef++, ordinal++) &#123;</span><br><span class="line">        if (_stricmp(name, (const char *) (codeBase + (*nameRef))) == 0) &#123;</span><br><span class="line">            idx = *ordinal;</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (idx == -1) &#123;</span><br><span class="line">        // exported symbol not found</span><br><span class="line">        SetLastError(ERROR_PROC_NOT_FOUND);</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if ((DWORD)idx &gt; exports-&gt;NumberOfFunctions) &#123;</span><br><span class="line">        // name &lt;-&gt; ordinal number don&apos;t match</span><br><span class="line">        SetLastError(ERROR_PROC_NOT_FOUND);</span><br><span class="line">        return NULL;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // AddressOfFunctions contains the RVAs to the &quot;real&quot; functions</span><br><span class="line">    return (FARPROC) (codeBase + (*(DWORD *) (codeBase + exports-&gt;AddressOfFunctions + (idx*4))));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在执行完DLL后，对资源进行释放MemoryFreeLibrary()。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">void MemoryFreeLibrary(HMEMORYMODULE mod)</span><br><span class="line">&#123;</span><br><span class="line">    int i;</span><br><span class="line">    PMEMORYMODULE module = (PMEMORYMODULE)mod;</span><br><span class="line">    if (module != NULL) &#123;</span><br><span class="line">        if (module-&gt;initialized != 0) &#123;</span><br><span class="line">            // notify library about detaching from process</span><br><span class="line">            DllEntryProc DllEntry = (DllEntryProc) (module-&gt;codeBase + module-&gt;headers-&gt;OptionalHeader.AddressOfEntryPoint);</span><br><span class="line">            (*DllEntry)((HINSTANCE)module-&gt;codeBase, DLL_PROCESS_DETACH, 0);</span><br><span class="line">            module-&gt;initialized = 0;</span><br><span class="line">        &#125;</span><br><span class="line">        if (module-&gt;modules != NULL) &#123;</span><br><span class="line">            // free previously opened libraries</span><br><span class="line">            for (i=0; i&lt;module-&gt;numModules; i++) &#123;</span><br><span class="line">                if (module-&gt;modules[i] != NULL) &#123;</span><br><span class="line">                    module-&gt;freeLibrary(module-&gt;modules[i], module-&gt;userdata);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            free(module-&gt;modules);</span><br><span class="line">        &#125;</span><br><span class="line">        if (module-&gt;codeBase != NULL) &#123;</span><br><span class="line">            // release memory of library</span><br><span class="line">            VirtualFree(module-&gt;codeBase, 0, MEM_RELEASE);</span><br><span class="line">        &#125;</span><br><span class="line">        HeapFree(GetProcessHeap(), 0, module);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于篇幅问题，不可能把代码全部贴出来讲解，内存加载DLL的大概就是这个样子的。</p>
+<blockquote>
+<ol>
+<li>首先，我们读取DLL数据到内存中</li>
+<li>利用第三方函数进行DLL的重定位操作</li>
+<li>拿到内存中DLL的相关数据，比如：当前内存中DLL的地址，导出函数，DLL资源等</li>
+<li>_GetProcAddress()拿到DLL导出函数地址</li>
+<li>直接调用导出函数</li>
+<li>释放DLL资源</li>
+</ol>
+</blockquote>
+<p>详细的代码请参考地址：<a href="http://github.com/fancycode/memorymodule">http://github.com/fancycode/memorymodule</a></p>
+<p>详细的原理请参考地址：<a href="https://www.joachim-bauch.de/tutorials/loading-a-dll-from-memory/" target="_blank" rel="external">https://www.joachim-bauch.de/tutorials/loading-a-dll-from-memory/</a></p>
+<p>也可以看我翻译的这篇：<a href="http://imosin.com/2017/11/21/MemoryLoadDll/" target="_blank" rel="external">http://imosin.com/2017/11/21/MemoryLoadDll/</a></p>
+<h3 id="0x02-加载测试"><a href="#0x02-加载测试" class="headerlink" title="0x02 加载测试"></a>0x02 加载测试</h3><p>编写一个DLL，没错，就这么简单</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">extern &quot;C&quot; &#123;</span><br><span class="line"></span><br><span class="line">SAMPLEDLL_API int addNumbers(int a, int b)</span><br><span class="line">&#123;</span><br><span class="line">    return a + b;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>把DLL加载进内存并用DLLloader调用addNumbers函数</p>
+<p>执行结果</p>
+<p><img src="/allimage/memload/p4.jpg" alt="p4"></p>
+<h3 id="0x03-实际应用"><a href="#0x03-实际应用" class="headerlink" title="0x03 实际应用"></a>0x03 实际应用</h3><p>我们可以用此加载方法做一个云端木马。<br>我们在VPS上搭建一个Web服务器，在上面用一个页面放一个DLL文件的数据，然后读取数据并加载进内存。</p>
+<p>我们也可以把它用于DLL劫持利用，分解型后门的组合式调用等等。</p>
+<p>当然，我们也可以做一个RAT工具，内存加载DLL的具体应用如下<br>我们利用工具生成内存加载Loader程序</p>
+<p><img src="/allimage/memload/p1.jpg" alt="p1"></p>
+<p>另一端进行监听，当Loader连接过来时，我们发送需要调用的DLL程序过去，进而控制被攻击机器</p>
+<p><img src="/allimage/memload/p2.jpg" alt="p2"></p>
+<p>相关模块已经集成在了Purelove框架中</p>
+<p>下载地址：<a href="https://github.com/hucmosin/purelove">https://github.com/hucmosin/purelove</a></p>
+
+        </div>
+		<!--dashang-->
+        
+        <div class="post-tags">Tags：
+            
+            <a href="/tags/技术/">技术</a>
+            
+        </div>
+        
+    </article>
+    
+    <p>本文内容仅作为作者个人兴趣与观点,若有不恰当之处，望不吝赐教</p>
+    
+    
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        </div><!-- end #main-->
+    </div><!-- end #body -->
+    <footer class="footer">
+    <div class="footer-inner">
+        <p>
+            <a href="/about"  title="About">About</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <!-- 自定义链接 -->
+            <a href="/help" title="help" >帮助</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <a href="/links" title="友情链接">友情链接</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+        </p>
+        <p>
+            Blog by <a href="https://github.com/hucmosin" style="font-weight: bold">Coding Pages</a>
+        </p>
+        
+    </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/InsightSearch.js"></script>
+<script src="/js/SimpleCore.js"></script>
+
+</div>
+<div class="fixed-btn">
+    <a class="btn-gotop" href="javascript:"> <i class="fa fa-angle-up"></i></a>
+</div>
+<script>
+    $(function () {
+        SimpleCore.init({
+            buildingTime: '10/20/2017',
+            current: $('.post-tags').length > 0 ? 'post' : 'archive',
+            wxMpImg: '/images/weixin-mp.png',
+        });
+    });
+</script>
+</body>
+</html>

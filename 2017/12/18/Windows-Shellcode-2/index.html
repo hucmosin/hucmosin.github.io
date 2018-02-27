@@ -1,0 +1,404 @@
+<!DOCTYPE HTML>
+<html class="no-js" lang="zh-CN">
+<!--
+//                            _ooOoo_
+//                           o8888888o
+//                           88" . "88
+//                           (| -_- |)
+//                            O\ = /O
+//                        ____/`---'\____
+//                      .   ' \\| |// `.
+//                       / \\||| : |||// \
+//                     / _||||| -:- |||||- \
+//                       | | \\\ - /// | |
+//                     | \_| ''\---/'' | |
+//                      \ .-\__ `-` ___/-. /
+//                   ___`. .' /--.--\ `. . __
+//                ."" '< `.___\_<|>_/___.' >'"".
+//               | | : `- \`.;`\ _ /`;.`/ - ` : | |
+//                 \ \ `-. \_ __\ /__ _/ .-` / /
+//         ======`-.____`-.___\_____/___.-`____.-'======
+//                            `=---='
+//                 拦截插件累计拦截逗比攻击"1381438"次！
+//         .............................................
+//                  佛祖保佑             永无BUG
+//          佛曰:
+//                  写字楼里写字间，写字间里程序员；
+//                  程序人员写程序，又拿程序换酒钱。
+//                  酒醒只在网上坐，酒醉还来网下眠；
+//                  酒醉酒醒日复日，网上网下年复年。
+//                  但愿老死电脑间，不愿鞠躬老板前；
+//                  奔驰宝马贵者趣，公交自行程序员。
+//                  别人笑我忒疯癫，我笑自己命太贱；
+//                  不见满街漂亮妹，哪个归得程序员？
+-->
+<head>
+    <!--[if lte IE 9]>
+<meta http-equiv="refresh" content="0;url=http://github.com/hucmosin/warn.html">
+<![endif]-->
+<meta charset="utf-8">
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+<meta http-equiv="mobile-agent" content="format=html5; url=http://github.com/hucmosin">
+<meta name="author" content="Mosin">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/SimpleStyle.min.css">
+
+<link rel="shortcut icon" href="/images/favicon.png">
+
+
+<title>windows shellcode介绍(二) - Mosin&#39; Blog</title>
+
+<meta name="keywords" content="学习笔记">
+
+<meta name="description " content="Learning, summarizing, thinking, feeling and knowledge management">
+</head>
+<body>
+<div id="nav">
+    <nav class="nav-menu">
+        <a class="site-name current" href="/" title="聊">聊</a>
+        <a class="site-index current" href="/"><i class="fa fa-home"></i><span>Home</span></a>
+        <a href="/archives" title="Archives"><i class="fa fa-archives"></i><span>Archives</span></a>
+        <!-- custom single page of menus -->
+        
+        
+        <a href="/help" title="帮助">
+            <i class="fa fa-question-circle"></i>
+            <span>帮助</span>
+        </a>
+        
+    </nav>
+</div>
+
+<div class="nav-user">
+    <a class="btn-search" href="#"><i class="fa fa-search"></i></a>
+    <a class="btn-read-mode" href="#"><i class="fa fa-sun-o"></i></a>
+    <a class="btn-weixin-mp" href="javascript:"><i class="fa fa-weixin"></i></a>
+</div>
+<div id="wrapper" class="clearfix">
+    <div id="body">
+        <div class="main" id="main">
+            <div id="cover">
+    <div class="cover-img"></div>
+    <div class="cover-info">
+        
+        <h1 class="cover-siteName">Mosin&#39;s Blog</h1>
+        <h3 class="cover-siteTitle">聊技术，谈情怀</h3>
+        <p class="cover-siteDesc">一个关注技术与人文的IT博客</p>
+        <div class="cover-sns">
+            
+            <div class="btn btn-github">
+                <a href="https://github.com/hucmosin" target="_blank" title="github" ref="friend">
+                    <i class="fa fa-github"></i>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+</div>
+            <div class="page-title">
+    <ul>
+        <li><a href="/">最新</a></li>
+        
+            
+                <li class="">
+                    <a href="/categories/code-audit" data-name="审计">审计</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/technology" data-name="技术">技术</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-share" data-name="分享">分享</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-note" data-name="学习">学习</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/others-end" data-name="其他">其他</a>
+                </li>
+            
+        
+        <li class="page-search">
+    <form id="search" class="search-form">
+        <label for="s" class="sr-only">Input Search key Words Here</label>
+        <input class="search-field" type="text" name="s" class="text" placeholder="Input Search key Words Here" />
+        <button type="submit" class="search-form-submit" title="Search"><i class="fa fa-search"></i></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input"  placeholder="请输入关键字"/>   <!-- placeholder="Type something..."/>-->
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+</li>
+
+    </ul>
+</div>
+<div class="main-inner">
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+        <div class="post-header">
+            <div class="post-author clearfix">
+                <a class="avatar fleft" href="https://github.com/hucmosin" target="_blank">
+                    <img width="48" src="/images/favicon.png" alt="avatar"/>
+                </a>
+                <p><span class="label">作者</span>
+                    <a href="https://github.com/hucmosin" target="_blank">mosin</a>
+                    <span title="最后编辑于2017-12-18">2017-12-18</span>
+                </p>
+                <p>灵魂无处安放,所以选择流浪</p>
+            </div>
+            <h2 class="post-title">Windows Shellcode介绍(二)</h2>
+            <div class="post-meta">
+                本文总共7064个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+            </div>
+        </div>
+        <div class="post-content markdown-body">
+            <p><strong>如果你错过了这个系列的第一部分,在那里你可以阅读关于shellcode是什么和它是如何工作的,在本部分中,我将介绍正确地编写一个shellcode在Windows平台中:进程环境块,可移植可执行文件的格式和x86汇编的简短介绍。本文将不讨论这些概念的所有方面,但它应该足够正确理解shellcodes。</strong></p>
+<p><strong>进程环境块</strong></p>
+<p>在Windows操作系统中，PEB是内存中固定地址的每个进程可用的结构。该结构包含有关流程的有用信息，例如:可执行文件被加载到内存中的地址、模块列表(DLL)、指定进程是否被调试的标志以及其他许多。</p>
+<p>重要的是要理解，结构是要被操作系统使用的。不同的Windows系统版本之间并不一致，所以可能会随着每个新的Windows版本的发布而改变，但是一些常见的信息被保留了下来。</p>
+<p>正如我们在第一篇文章中讨论的那样，DLLs(由于ASLR)将被加载到不同的内存地址，因此我们不能在我们的代码中使用固定的内存地址。但是我们可以使用这个结构，在一个固定的内存地址中找到，以便找到DLLs在内存中的位置。</p>
+<p>如果您熟悉C / c++，那么很容易理解该结构包含哪些信息以及在哪里进行。微软官方文件显示了以下领域:</p>
+<p><img src="/allimage/shellcodew/5.png" alt="5"></p>
+<p>正如您所看到的，一些被称为“保留”的字段没有被描述，但是其他一些字段被记录。</p>
+<p>对于那些不熟悉C / C++,你必须明白这一点:一个字节意味着…一个字节,一个PVOID指针(一个内存地址),所以在x86系统上是4个字节(32位系统)和PPEB_LDR_DATA是一个指针指向一个自定义结构称为PEB_LDR_DATA。第一个字段保留了两个字节(因为Reserved1[2]是两个字节数组)，BeingDebugged标记是1个字节，后面是另一个字节(Reserved2)。Reserved3[2]是一个带有两个指针的数组(所以2 * 4字节= 8个字节)，而Ldr是一个指针- 4字节。</p>
+<p>从这个结构中，我们将使用Ldr指针，我们可以在内部结构中找到偏移12的位置(或0xC)(2字节Reserved1 + 1字节BeingDebugged + 1字节Reserved2 + 8字节Reserved3)。</p>
+<p>PEB_LDR_DATA包含以下信息:</p>
+<p><img src="/allimage/shellcodew/6.png" alt="6"></p>
+<p>我们将一如既往。我们可以在偏移20(0x14十六进制:8字节Reserved1 + 3 * 4字节Reserved2)中访问InMemoryOrderModuleList字段。该字段将提供加载dll的信息。</p>
+<p>这里的情况有点复杂。我们可以使用一个名为LDR_DATA_TABLE_ENTRY的结构来加载dll信息。官方的Microsoft文档并没有发布整个结构的内容，但是我们可以在这里找到更多的信息:</p>
+<p><img src="/allimage/shellcodew/7.png" alt="7"></p>
+<p>LIST_ENTRY结构是一个简单的双链表，包含一个指向下一个元素的指针(Flink)和一个指向前一个元素的指针(Blink)，每个元素有4个字节:</p>
+<p><img src="/allimage/shellcodew/8.png" alt="8"></p>
+<p>InMemoryOrderModuleList字段是一个指向LDR_DATA_TABLE_ENTRY结构的LIST_ENTRY字段的指针。它不是指向LDR_DATA_TABLE_ENTRY结构开头的指针，而是指向该结构的InMemoryOrderLinks字段的指针!正如您所看到的，Flink和Blink是一个LIST_ENTRY结构的指针。</p>
+<p>让我们一步一步来:</p>
+<blockquote>
+<p>1.读取PEB结构</p>
+<p>2.向Ldr指针偏移0xC</p>
+<p>3.将0x14偏移到InMemoryOrderModuleList字段</p>
+</blockquote>
+<p>此时，我们将第一个模块的InMemoryOrderLinks元素加载到内存中。这个模块是可执行文件(例如calc . exe)。我们想要浏览所有加载的dll。InMemoryOrderLinks，作为一个LIST_ENTRY结构——前4个字节是Flink指针，接下来的4个字节是Blink指针，允许我们通过前4个字节指向到第二个加载模块。我们需要再做一次，我们可以访问关于第三个加载模块的信息。</p>
+<p>InMemoryOrderModuleList列表为我们提供了以下顺序的所有加载模块的列表:</p>
+<blockquote>
+<ol>
+<li>calc.exe (the executable)</li>
+</ol>
+<ol>
+<li>ntdll.dll</li>
+</ol>
+<ol>
+<li>kernel32.dll</li>
+</ol>
+</blockquote>
+<p>正如我们在第一篇文章中讨论的那样，我们需要访问kernel32。为了访问GetProcAddress和LoadLibrary之类的函数，dll可以帮助我们调用任何Windows API函数。</p>
+<p>为了完成我们的目标，我们必须从当前的LDR_DATA_TABLE_ENTRY结构读取DllBase字段(将DLL加载到内存中的位置)。DllBase存储在结构中的偏移0x18中，但是我们必须注意到我们已经在偏移0x8(InMemoryOrderLinks字段)中，所以我们只需跳0x10字节就可以获得DllBase。</p>
+<p>这是找到kernel32所需的所有步骤的透视图。dll内存地址:</p>
+<p><img src="/allimage/shellcodew/9.png" alt="9"></p>
+<p>这张图能够展示出它的运作方式。请记住，在模块中导航是使用“Flink”指针表示的，该指针表示我们所放置的前4个字节。</p>
+<p>不要害怕这个!正如您将看到的，仅在8个(或多或少)的汇编代码行中就可以做到这一点。</p>
+<p><strong>可移植可执行文件格式</strong></p>
+<p>可移植的可执行文件是Windows系统中可执行文件和动态库(dll)使用的文件格式。该格式描述了这些文件的内容:包含PE文件使用的所有代码和数据的头和部分。</p>
+<p>在Internet上有大量的文档，但是在这里，我只想描述编写shellcode代码所需的必要信息:概述、headers头、部分和导出表。</p>
+<p>关于PE文件的一个非常简短的说明:</p>
+<p><img src="/allimage/shellcodew/10.png" alt="10"></p>
+<p>正如您在图中看到的，PE文件包含:</p>
+<blockquote>
+<p>DOS(旧的微软操作系统)头</p>
+<p>一个DOS stub—打印“这个程序不能在DOS模式下运行”的小程序。</p>
+<p>PE头(不同的有用信息)</p>
+<p>分段表(分段标题)</p>
+<p>章节sections(代码和数据部分)</p>
+</blockquote>
+<p>更详细的外观将显示在hex编辑器中打开的PE文件包含的内容:</p>
+<p><img src="/allimage/shellcodew/11.png" alt="11"></p>
+<p>这种格式相当复杂，但是我们只需要知道如何解析PE头文件以得到导出的函数。</p>
+<p>让我们从DOS头开始。DOS标头的结构如下:</p>
+<p><img src="/allimage/shellcodew/12.png" alt="12"></p>
+<p>您可以在“WinNT”中找到完整的结构和所有其他必需的结构。“C / c++编译器的头文件”。</p>
+<p>所有的PE文件(EXE或DLL)将从这个结构开始。所以，当我们在内存中找到一个模块后，在那个内存地址中我们会找到这个结构。您可以通过它的头两个字节来识别它:“MZ”，这是代表DOS头的“签名”的e_magic字段。</p>
+<p>我们唯一需要知道的是结构的e_lfanew。这个字段位于偏移0x3C中，它向我们显示了PE头的位置。</p>
+<p>PE头是一个包含以下信息的结构:</p>
+<p><img src="/allimage/shellcodew/13.png" alt="13"></p>
+<p>它包含PE签名(你可以看到一个“PE”字符串如果你打开一个PE文件的编辑器),FileHeader包含了一个结构信息,如果文件是一个可执行文件(. exe)或动态链接库文件(. dll)的话，可以看到部分代码和数据,“机器”类型(x86,x64、ARM…)和“字符串”等其他信息。</p>
+<p>OptionalHeader是一个包含更多有用信息的结构。</p>
+<p><img src="/allimage/shellcodew/14.png" alt="14"></p>
+<p>它包含如下:</p>
+<blockquote>
+<p>1.AddressOfEntryPoint——exe / dll开始执行代码的地方</p>
+<p>2.ImageBase——将DLL加载到内存中</p>
+<p>3.数据目录-诸如导入和导出的函数的信息</p>
+</blockquote>
+<p>我们只对最后一个字段DataDirectory感兴趣，因为我们需要得到导出的函数。这是一个DLL的工作方式:它包含了不同的导出函数，因此其他应用程序可以将DLL加载到内存中，找到导出的函数并调用它们。例如，“MessageBox”是从“user32”导出的函数。dll(实际上，有两个版本:ASCII和Unicode)。</p>
+<p>该结构的DataDirectory字段是一个IMAGE_DATA_DIRECTORY结构数组。IMAGE_DATA_DIRECTORY如下:</p>
+<p><img src="/allimage/shellcodew/15.png" alt="15"></p>
+<p>在OptionalHeader结构的末尾有IMAGE_DATA_DIRECTORY结构(实际上是16)。对于我们的范围来说，理解第一个是“导出目录”数据目录是很重要的。</p>
+<p>为了进入导出目录，我们只需要遵循结构的VirtualAddress字段，该字段指向导出目录的开始。DWORD表示4个字节的类型，一个字只有2个字节。如果要对元素的所有大小进行求和，直到DataDirectory数组，您将注意到，从PE头开始到DataDirectory数组的开始，有120个(0x78)字节。因此，在偏移0x78中，我们将在导出目录中找到虚拟地址(VirtualAddress字段)。</p>
+<p>导出目录为以下结构:</p>
+<p><img src="/allimage/shellcodew/16.png" alt="16"></p>
+<p>在这个结构中，我们将使用以下字段:</p>
+<blockquote>
+<p>AddressOfFunctions—“指向函数的指针”数组的地址</p>
+<p>addressofname—“指向函数名的指针”数组的地址</p>
+<p>AddressOfNameOrdinals -序数数组的地址(16位整数)</p>
+</blockquote>
+<p>让我们以一个具有三个函数的DLL为例。</p>
+<blockquote>
+<p>AddressOfFunctions=0x11223344- &gt;[0x11111111,0x22222222,0x33333333]</p>
+<p>0x11223344是一个指针，指向包含函数地址的数组:0x1111111111、0x22222222和0x33333333是函数的地址。</p>
+<p>AddressOfNames = 0x12345678 —&gt; [0xaaaaaaaa -&gt; “func0”, 0xbbbbbbbb -&gt; “func1”, 0xcccccccc -&gt; “func2”] </p>
+<p>0x12345678是一个指向函数名数组的指针:0xaaaaaaaa是一个指向“func1”字符串的指针，该字符串表示导出的函数名等等。</p>
+<p>AddressOfNameOrdinals = 0xabcdef - &gt;[0x00,0x01,0x02]</p>
+<p> 0xabcdef是一个指向一个整数数组(两个字节)的指针，代表了AddressOfFunctions数组中每个函数的偏移量。</p>
+</blockquote>
+<p>为了以其名称获取一个函数地址，我们通过解析AddressOfNames数组来检查名称。第一个函数(func0)将具有序号0，第二个函数(func1)将具有序号1和第三个函数(func2)将具有序数2。因此，如果我们正在搜索func2函数，我们将访问AddressOfFunctions数组中的元素2(从0开始)。</p>
+<p>很快，它就像这样:function_address = AddressOfFunctions[Ordinal(function_name)]。</p>
+<p>不要害怕，正如您将看到的，可以在大约15 - 20行的汇编代码中完成所有这些工作。</p>
+<p><strong>汇编语言</strong></p>
+<p>即使您可以在本文中看到在C / c++中编写shellcode代码，如果您想要正确地理解什么是做的、它是如何工作的，以及如何修改它，您应该能够理解和编写汇编代码。</p>
+<p>在本节中，我将只提供一些汇编语言的基础知识，请不要依赖本节，并阅读这篇文章，以便正确理解ASM。本文中的描述将不完整，我只是想介绍一些常见的操作，以便能够编写一个简单的shellcode代码。</p>
+<p>为了避免不同的复杂性，我将在Microsoft Visual c++ Express Edition编译器上使用内联汇编程序编写所有的示例。但是，您可能会发现更方便地使用汇编器，如MASM、NASM或YASM。</p>
+<p>让我们从“变量”开始。处理器使用不同的寄存器(把它们当作变量)来存储临时数据。它们有不同的目的，但这里我们将它们当作“全局变量”。为了更好的描述，您可以阅读本文。</p>
+<p>有一些通用寄存器:EAX、EBX、ECX、EDX、ESI和EDI。每个可以存储4个字节的数据。另外，它们的最低2字节可以称为AX、BX、CX、DX、SI和DI。最后一个字节是:AL,BL,CL,DL。下面的图片描述了这一点:</p>
+<p><img src="/allimage/shellcodew/17.png" alt="17"></p>
+<p>我们的程序的执行从地址0x12345678开始。有一个特殊的寄存器保存当前被称为EIP(指令指针)的执行地址。执行指令后，该寄存器将自动更改为下一条指令的地址。</p>
+<p>好，现在我们有了变量，看看我们能做些什么。我们可以使用多种指令来做一些有用的事情。</p>
+<p>指令说明:</p>
+<blockquote>
+<p>Mov  –赋值</p>
+<p>Add – 加法</p>
+<p>Sub – 减法</p>
+<p>Inc ——加法</p>
+<p>Dec –减法</p>
+</blockquote>
+<p>一个例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">; Comments can be specified by starting with a ;</span><br><span class="line"> </span><br><span class="line">mov EAX, 5   ; Put value 5 in the EAX</span><br><span class="line">add EAX, 2   ; Add 2 to EAX, EAX will be 7</span><br><span class="line">inc EAX      ; EAX will be 8</span><br><span class="line">mov EBX, 2   ; Store value 2 in EBX</span><br><span class="line">sub EAX, EBX ; EAX will be 6</span><br></pre></td></tr></table></figure>
+<p>C++内联汇编</p>
+<p><img src="/allimage/shellcodew/18.png" alt="18"></p>
+<p>可以放置一个断点，在这个点上，Visual c++调试器将停止，通过单击左侧的灰色行。当您启动程序时，它将在指定的断点处停止。现在，在底部你会看到一个“Watch1”窗口。这就是您可以添加寄存器名称的地方，也可以看到它们的值。添加EAX,EBX等等，然后观察它们。</p>
+<p><img src="/allimage/shellcodew/19.png" alt="19"></p>
+<p>你可以按下F11，一个接一个地执行指令，你会看到在手表窗口，如何修改这个值。或者你可以把鼠标指针放在寄存器的名称上以查看它们的值。请注意，这是非常基础的，您可以使用像Immunity 调试器这样的调试器来实现高级功能，但是要保持它的简单性，您就可以使用它。</p>
+<p>程序的控制流程将通过一些决策序列，比较两个值，以采取不同的操作。首先，你需要知道你可以使用标签。正如您将看到的，标签只是针对不同位置的代码的“名称”。你可以用“跳跃”来达到它们。</p>
+<p>有用的指令:</p>
+<blockquote>
+<p>Jmp</p>
+<p>Cmp</p>
+<p>Jz</p>
+<p>Jnz</p>
+</blockquote>
+<p>还有许多其他的跳转指令可用，但这应该足够开始了。例如，您可以尝试以下代码:</p>
+<p><img src="/allimage/shellcodew/20.png" alt="20"></p>
+<p>我们现在可以进入ASM编程的一个重要部分:堆栈。栈是内存中存储数据的地方。把它想象成一个内存空间，你可以把数据放在上面，你可以把它们放在一起，你可以从上面得到它们。</p>
+<p>有两个有用的指令可以与堆栈一起工作:</p>
+<blockquote>
+<p>Push value</p>
+<p>Pop register</p>
+<p>有两个寄存器“指向堆栈”</p>
+<p>ESP寄存器</p>
+<p>EBP寄存器</p>
+</blockquote>
+<p>当我们处理堆栈时，会发生一些重要的事情。比方说，ESP，堆栈的顶部，是值0x11223344。如果我们用“push 0xaaaaaaaa”指令来推一些数据(4个字节)，那么0xaaaaaaaa值将放在堆栈的顶部，而ESP值将减少4个字节。所以我们可以说堆栈增长到更低的地址。推送指令后，ESP将是0x11223340</p>
+<p>如果我们从堆栈中获取数据，那么一切都会发生另一种情况:从堆栈中删除数据(实际上，它仍然存在，用于优化)，而ESP值增加了4个字节。</p>
+<p>这看起来很困难，但事实并非如此。例子:</p>
+<p><img src="/allimage/shellcodew/21.png" alt="21"></p>
+<p>考虑到堆栈的数学问题，我们可以假设如果我们将0x20字节放在堆栈上(通过使用8个push指令，0x20 = 32)，我们可以通过修改ESP值轻松清除堆栈:添加ESP,0x20。这比8个pop指令简单。</p>
+<p>我们现在可以调用函数。调用函数的常用方法有两种，称为stdcall和cdecl。Windows API使用stdcall调用约定(方法)，我们只讨论这个。但是，它们是相似的，您可以在这里找到更多的信息。</p>
+<p>让我们以下面的函数为例:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int function(int x, int y)</span><br><span class="line">&#123;</span><br><span class="line">    return x + y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们要调用function(0x11,0x22)。我们需要知道以下几点:</p>
+<blockquote>
+<p>1.将参数值从右侧到左侧</p>
+<p>2.使用“调用函数”指令调用函数</p>
+<p>3.调用指令自动将下一条指令的地址在调用指令本身之后(同时ESP也会减少)</p>
+<p>4.我们可以在EAX寄存器中看到函数的结果</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#include “stdafx.h”</span><br><span class="line">int function(int x, int y)</span><br><span class="line">&#123;return x + y;&#125;</span><br><span class="line">Int main()</span><br><span class="line">&#123;</span><br><span class="line">  _asm</span><br><span class="line">   &#123; </span><br><span class="line">      Pish 0x22</span><br><span class="line">      Push 0x11</span><br><span class="line">      Call function</span><br><span class="line">      Push eax</span><br><span class="line">   &#125;</span><br><span class="line">   Return 0 ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因此，在执行这个函数之后，我们将在EAX寄存器中拥有0x33(0x11 + 0x22 = 0x33)值。</p>
+<p>这些都是基本的。但是，我们也会在我们的代码中使用一些其他的指令，如:</p>
+<blockquote>
+<p>XOR</p>
+<p>LEA</p>
+<p>LODSD</p>
+<p>XCHG</p>
+</blockquote>
+<p><strong>译者注：</strong>编写Shellcode和使用汇编语言是有点难度的，但是如果你一步一步来，它很容易理解。因为自己学习二进制也是断断续续的，所以想把好的文章和自己学习的一点心得记录下来，当学到一定程度后，一切都是那么的顺其自然。与君共勉！</p>
+<p>原文地址：<a href="https://securitycafe.ro/2015/12/14/introduction-to-windows-shellcode-development-part-2/" target="_blank" rel="external">https://securitycafe.ro/2015/12/14/introduction-to-windows-shellcode-development-part-2/</a></p>
+
+        </div>
+		<!--dashang-->
+        
+        <div class="post-tags">Tags：
+            
+            <a href="/tags/学习笔记/">学习笔记</a>
+            
+        </div>
+        
+    </article>
+    
+    <p>本文内容仅作为作者个人兴趣与观点,若有不恰当之处，望不吝赐教</p>
+    
+    
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        </div><!-- end #main-->
+    </div><!-- end #body -->
+    <footer class="footer">
+    <div class="footer-inner">
+        <p>
+            <a href="/about"  title="About">About</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <!-- 自定义链接 -->
+            <a href="/help" title="help" >帮助</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <a href="/links" title="友情链接">友情链接</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+        </p>
+        <p>
+            Blog by <a href="https://github.com/hucmosin" style="font-weight: bold">Coding Pages</a>
+        </p>
+        
+    </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/InsightSearch.js"></script>
+<script src="/js/SimpleCore.js"></script>
+
+</div>
+<div class="fixed-btn">
+    <a class="btn-gotop" href="javascript:"> <i class="fa fa-angle-up"></i></a>
+</div>
+<script>
+    $(function () {
+        SimpleCore.init({
+            buildingTime: '10/20/2017',
+            current: $('.post-tags').length > 0 ? 'post' : 'archive',
+            wxMpImg: '/images/weixin-mp.png',
+        });
+    });
+</script>
+</body>
+</html>

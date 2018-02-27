@@ -1,0 +1,429 @@
+<!DOCTYPE HTML>
+<html class="no-js" lang="zh-CN">
+<!--
+//                            _ooOoo_
+//                           o8888888o
+//                           88" . "88
+//                           (| -_- |)
+//                            O\ = /O
+//                        ____/`---'\____
+//                      .   ' \\| |// `.
+//                       / \\||| : |||// \
+//                     / _||||| -:- |||||- \
+//                       | | \\\ - /// | |
+//                     | \_| ''\---/'' | |
+//                      \ .-\__ `-` ___/-. /
+//                   ___`. .' /--.--\ `. . __
+//                ."" '< `.___\_<|>_/___.' >'"".
+//               | | : `- \`.;`\ _ /`;.`/ - ` : | |
+//                 \ \ `-. \_ __\ /__ _/ .-` / /
+//         ======`-.____`-.___\_____/___.-`____.-'======
+//                            `=---='
+//                 拦截插件累计拦截逗比攻击"1381438"次！
+//         .............................................
+//                  佛祖保佑             永无BUG
+//          佛曰:
+//                  写字楼里写字间，写字间里程序员；
+//                  程序人员写程序，又拿程序换酒钱。
+//                  酒醒只在网上坐，酒醉还来网下眠；
+//                  酒醉酒醒日复日，网上网下年复年。
+//                  但愿老死电脑间，不愿鞠躬老板前；
+//                  奔驰宝马贵者趣，公交自行程序员。
+//                  别人笑我忒疯癫，我笑自己命太贱；
+//                  不见满街漂亮妹，哪个归得程序员？
+-->
+<head>
+    <!--[if lte IE 9]>
+<meta http-equiv="refresh" content="0;url=http://github.com/hucmosin/warn.html">
+<![endif]-->
+<meta charset="utf-8">
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+<meta http-equiv="mobile-agent" content="format=html5; url=http://github.com/hucmosin">
+<meta name="author" content="Mosin">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/SimpleStyle.min.css">
+
+<link rel="shortcut icon" href="/images/favicon.png">
+
+
+<title>windows shellcode介绍(三) - Mosin&#39; Blog</title>
+
+<meta name="keywords" content="学习笔记">
+
+<meta name="description " content="Learning, summarizing, thinking, feeling and knowledge management">
+</head>
+<body>
+<div id="nav">
+    <nav class="nav-menu">
+        <a class="site-name current" href="/" title="聊">聊</a>
+        <a class="site-index current" href="/"><i class="fa fa-home"></i><span>Home</span></a>
+        <a href="/archives" title="Archives"><i class="fa fa-archives"></i><span>Archives</span></a>
+        <!-- custom single page of menus -->
+        
+        
+        <a href="/help" title="帮助">
+            <i class="fa fa-question-circle"></i>
+            <span>帮助</span>
+        </a>
+        
+    </nav>
+</div>
+
+<div class="nav-user">
+    <a class="btn-search" href="#"><i class="fa fa-search"></i></a>
+    <a class="btn-read-mode" href="#"><i class="fa fa-sun-o"></i></a>
+    <a class="btn-weixin-mp" href="javascript:"><i class="fa fa-weixin"></i></a>
+</div>
+<div id="wrapper" class="clearfix">
+    <div id="body">
+        <div class="main" id="main">
+            <div id="cover">
+    <div class="cover-img"></div>
+    <div class="cover-info">
+        
+        <h1 class="cover-siteName">Mosin&#39;s Blog</h1>
+        <h3 class="cover-siteTitle">聊技术，谈情怀</h3>
+        <p class="cover-siteDesc">一个关注技术与人文的IT博客</p>
+        <div class="cover-sns">
+            
+            <div class="btn btn-github">
+                <a href="https://github.com/hucmosin" target="_blank" title="github" ref="friend">
+                    <i class="fa fa-github"></i>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+</div>
+            <div class="page-title">
+    <ul>
+        <li><a href="/">最新</a></li>
+        
+            
+                <li class="">
+                    <a href="/categories/code-audit" data-name="审计">审计</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/technology" data-name="技术">技术</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-share" data-name="分享">分享</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-note" data-name="学习">学习</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/others-end" data-name="其他">其他</a>
+                </li>
+            
+        
+        <li class="page-search">
+    <form id="search" class="search-form">
+        <label for="s" class="sr-only">Input Search key Words Here</label>
+        <input class="search-field" type="text" name="s" class="text" placeholder="Input Search key Words Here" />
+        <button type="submit" class="search-form-submit" title="Search"><i class="fa fa-search"></i></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input"  placeholder="请输入关键字"/>   <!-- placeholder="Type something..."/>-->
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+</li>
+
+    </ul>
+</div>
+<div class="main-inner">
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+        <div class="post-header">
+            <div class="post-author clearfix">
+                <a class="avatar fleft" href="https://github.com/hucmosin" target="_blank">
+                    <img width="48" src="/images/favicon.png" alt="avatar"/>
+                </a>
+                <p><span class="label">作者</span>
+                    <a href="https://github.com/hucmosin" target="_blank">mosin</a>
+                    <span title="最后编辑于2017-12-21">2017-12-21</span>
+                </p>
+                <p>灵魂无处安放,所以选择流浪</p>
+            </div>
+            <h2 class="post-title">Windows Shellcode介绍(三)</h2>
+            <div class="post-meta">
+                本文总共15188个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+            </div>
+        </div>
+        <div class="post-content markdown-body">
+            <p>shelcode代码开发介绍的最后一部分中，我们将编写一个简单的“SwapMouseButton”shellcode代码，这是一个将会交换左右鼠标按钮的shelcode代码。我们将从一个现有的shelcode代码开始:“Allwin URLDownloadToFile + WinExec + ExitProcess shellcode”。shellcode名称告诉我们一些东西，比如它的用途:</p>
+<blockquote>
+<p>下载一个文件的URLDownloadToFile Windows API函数</p>
+<p>执行文件的WinExec(可执行文件:. exe)</p>
+<p>ExitProcess将终止运行shellcode的进程</p>
+</blockquote>
+<p>使用这个例子，我们将调用<code>SwapMouseButton</code>函数和<code>ExitProcess</code>函数。我很确定，很容易理解这些函数的作用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">BOOL WINAPI SwapMouseButton(</span><br><span class="line">  _In_ BOOL fSwap</span><br><span class="line">);</span><br><span class="line">VOID WINAPI ExitProcess(</span><br><span class="line">  _In_ UINT uExitCode</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>如您所见，每个函数只有一个参数:</p>
+<p>fSwap参数可以为真或假。如果这是真的，鼠标按钮就会被交换，否则它们将被恢复。</p>
+<p>uExitCode表示流程退出代码。每个进程必须在退出时返回一个值(如果一切正常，则为零)。这是主函数的“返回0”。</p>
+<p><strong>概述</strong></p>
+<p>我们需要调用两个函数。在c++中，我们可以做的很简单:</p>
+<p><img src="/allimage/shellcodew/22.png" alt="22"></p>
+<p>编译器知道与“user32”库链接并查找该函数。但是我们必须在代码中手动操作。我们需要手动加载“user32”库，找到“SwapMouseButton”函数的地址并调用它。</p>
+<p><img src="/allimage/shellcodew/23.png" alt="23"></p>
+<p>但是在这里，编译器知道“LoadLibrary”和“GetProcAddress”函数的地址。在shelcode代码中，我们必须以编程方式找到它们。</p>
+<p>注意，我们不需要在c++中调用“ExitProcess”函数，因为在“main”函数的“return 0”中，程序将被终止，但是从我们调用的shellcode代码中，我们可以确保程序优雅地终止，不会崩溃。</p>
+<p><strong>Shellcode概述</strong></p>
+<p>正如我们在前几部分中讨论的那样，为了生成可靠的shellcode代码，我们需要遵循一些步骤。我们知道要调用什么函数，但是首先，我们必须找到这些函数。</p>
+<p>必要的步骤如下:</p>
+<blockquote>
+<p>1.找到kernel32.dll被加载到内存中</p>
+<p>2.找到其出口表</p>
+<p>3.找到由kernel32.dll导出的GetProcAddress函数</p>
+<p>4.使用GetProcAddress查找LoadLibrary函数的地址</p>
+<p>5.使用LoadLibrary来加载user32.dll库</p>
+<p>6.在user32.dll中找到SwapMouseButton函数的地址</p>
+<p>7.调用SwapMouseButton函数</p>
+<p>8.查找ExitProcess函数的地址</p>
+<p>9.调用ExitProcess函数</p>
+</blockquote>
+<p>为了编写我们的shellcode代码，我们将使用Visual Studio 2015(您可以使用任何其他版本或汇编程序，如masm、nasm等)。在Visual Studio中，我们可以使用“__asm {}”来直接编写ASM代码。</p>
+<p>请确保您已正确阅读和理解本部分。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;stdafx.h&quot;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    __asm</span><br><span class="line">    &#123;</span><br><span class="line">        // ASM code here</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>寻找kernel32.dll的基地址</p>
+<p>正如你在下面看到的，我们可以找到kernel32.dll。使用以下代码将dll库加载到内存中:</p>
+<blockquote>
+<p>xor ecx, ecx</p>
+<p>mov eax, fs:[ecx + 0x30]  ; EAX = PEB</p>
+<p>mov eax, [eax + 0xc]      ; EAX = PEB-&gt;Ldr</p>
+<p>mov esi, [eax + 0x14]     ; ESI = PEB-&gt;Ldr.InMemOrder</p>
+<p>lodsd                     ; EAX = Second module</p>
+<p>xchg eax, esi             ; EAX = ESI, ESI = EAX</p>
+<p>lodsd                     ; EAX = Third(kernel32)</p>
+<p>mov ebx, [eax + 0x10]     ; EBX = Base address</p>
+</blockquote>
+<p>(第1 - 2行)让我们看看它是怎么做的。它将ecx寄存器设置为0并在第二个指令中使用它。但是为什么呢?还记得我们讲过避免零字节吗?“mov eax,fs:[30]”指令将在以下操作码序列中进行组装:“64 A1 30 00 00”，因此我们有空字节，而“mov eax,fs:[ecx + 0x30]”指令将被装配为“648b430”。这样就可以避免零字节。</p>
+<p>(第3 - 4行)现在我们在eax寄存器中有了PEB指针。正如我们在前面的博客文章中所看到的，在0xC偏移量中，我们可以找到Ldr，我们遵循这个指针，在0x14偏移的Ldr中，我们有“in memory order”模块列表。</p>
+<p>(第5 - 7行)我们现在计划在“InMemoryOrderLinks”上插入“program.exe”模块。在这里，第一个元素是“Flink”，一个指向下一个模块的指针。您可以看到我们将这个指针放置在esi寄存器中。“lodsd”指令将跟随esi寄存器指定的指针，我们将在eax寄存器中得到结果。这意味着在lodsd指令之后，我们将有第二个模块ntdll。在eax寄存器中。我们将这个指针放在esi中，交换eax和esi的值，并再次使用lodsd指令到达第3个模块:kernel32.dll。</p>
+<p>(第8行)在这一点上，我们在eax寄存器中，指向kernel32.dll的“InMemoryOrderLinks”。添加0x10字节将给我们提供“DllBase”指针，这是kernel32的内存地址，然后加载dll。</p>
+<p><strong>查找kernel32.dll的导出表</strong></p>
+<p>我们在内存中找到kernel32.dll。现在我们需要解析这个PE文件并找到导出表。这并不复杂。</p>
+<blockquote>
+<p>mov edx, [ebx + 0x3c] ; EDX = DOS-&gt;e_lfanew</p>
+<p>add edx, ebx          ; EDX = PE Header</p>
+<p>mov edx, [edx + 0x78] ; EDX = Offset export table</p>
+<p>add edx, ebx          ; EDX = Export table</p>
+<p>mov esi, [edx + 0x20] ; ESI = Offset names table</p>
+<p>add esi, ebx          ; ESI = Names table</p>
+<p>xor ecx, ecx          ; EXC = 0</p>
+</blockquote>
+<p>(第1 - 2行)我们知道在偏移0x3C中可以找到“e_lfanew”指针，因为ms - dos头的大小是0x40字节，最后4个字节是“e_lfanew”指针。我们将这个值添加到基地址，因为指针相对于基地址(它是一个偏移量)。</p>
+<p>(第3 - 4行)在PE标题的偏移0x78上，我们可以在导出中找到“DataDirectory”。我们知道这一点，因为在DataDirectory之前，所有PE header(签名、FileHeader和OptionalHeader)的大小正好是0x78字节，而导出是DataDirectory表中的第一个条目。再次，我们将这个值添加到edx寄存器，现在我们将它放在kernel32 . dll的导出表上。</p>
+<p>(第5 - 7行)在IMAGE_EXPORT_DIRECTORY结构中，在偏移0x20中，我们可以找到指向“AddressOfNames”的指针，这样我们就可以得到导出的函数名。这是必需的，因为我们试图通过它的名称来查找函数，即使它可能使用其他方法。我们将指针保存在esi寄存器中，并将ecx寄存器设置为0(您将看到下面的原因)。</p>
+<p><strong>查找GetProcAddress函数名</strong></p>
+<p>我们现在在“AddressOfNames”上，一个指针数组(相对于图像基，kernel3dll的地址被加载到内存中。因此，每个4字节将表示一个指向函数名的指针。我们可以找到函数名，函数名序号(GetProcAddress函数的“number”)如下:</p>
+<blockquote>
+<p>Get_Function:</p>
+<p>​            inc ecx                              ; Increment the ordinal</p>
+<p>​        lodsd                                ; Get name offset</p>
+<p>​        add eax, ebx                         ; Get function name</p>
+<p>​        cmp dword ptr[eax], 0x50746547       ; GetP</p>
+<p>​        jnz Get_Function</p>
+<p>​        cmp dword ptr[eax + 0x4], 0x41636f72 ; rocA</p>
+<p>​        jnz Get_Function</p>
+<p>​        cmp dword ptr[eax + 0x8], 0x65726464 ; ddre</p>
+<p>​        jnz Get_Function</p>
+</blockquote>
+<p>(1 - 3行)第一行“什么都不做”。它是一个标签，一个我们将跳转到的位置的名称，用来读取函数名，如下所示。在第3行，我们增加ecx寄存器，这将是函数和函数序数的计数器。</p>
+<p>(第4 - 5行)在esi寄存器中，指针指向第一个函数名。lodsd指令将在eax中放置到函数名的偏移位置(例如，“ExportedFunction”)，我们将其添加到ebx(kernel32基地址)中，以便找到正确的指针。注意，“lodsd”指令也会增加esi寄存器的值4 !这帮助我们，因为我们不需要手动增加它，我们只需要调用lodsd，以获得下一个函数名指针。</p>
+<p>(第6 - 11行)我们现在在eax中注册了一个指向输出函数名的正确指针。所以有一个包含函数名的字符串，我们需要检查这个函数是否是“GetProcAddress”。在第6行中，我们将导出的函数名与“0x50746547”进行比较，这实际上是“50 7465 47”的ascii值，意思是“PteG”。您可能会猜测它是“GetP”，即“GetProcAddress”的前四个字节，但是x86处理器使用的是little - endian方法，这意味着这些数字以其字节的相反顺序存储在内存中!因此，我们比较一下当前函数名的前四个字节是否为“GetP”。如果它们不是，jnz指令将再次跳转到我们的标签，它将继续使用下一个函数名。如果是，我们还检查下4个字节，它们必须是“rocA”和接下来的4字节“ddre”，以确保我们没有找到以“GetP”开头的其他函数。</p>
+<p><strong>寻找GetProcAddress 函数</strong></p>
+<p>此时，我们只找到了GetProcAddress函数的序号，但是我们可以使用它来查找这个函数的实际地址:</p>
+<blockquote>
+<p>mov esi, [edx + 0x24]    ; ESI = Offset ordinals</p>
+<p>add esi, ebx             ; ESI = Ordinals table</p>
+<p>mov cx, [esi + ecx * 2]  ; CX = Number of function</p>
+<p>dec ecx</p>
+<p>mov esi, [edx + 0x1c]    ; ESI = Offset address table</p>
+<p>add esi, ebx             ; ESI = Address table</p>
+<p>mov edx, [esi + ecx * 4] ; EDX = Pointer(offset)</p>
+<p>add edx, ebx             ; EDX = GetProcAddress</p>
+</blockquote>
+<p>在这一点上，我们在edx中有一个指向IMAGE_EXPORT_DIRECTORY结构的指针。在结构的偏移0x24中，我们可以找到“AddressOfNameOrdinals”偏移。在第2行中，我们将这个偏移量添加到ebx寄存器中，这是kernel32的镜像基地址。这样我们就得到了一个有效的指向序号表的指针。</p>
+<p>(第3 - 4行)esi寄存器包含指向名称序数数组的指针。该数组包含两个字节数。我们在ecx寄存器中有GetProcAddress函数的名称序号(index)，这样我们就得到了函数地址序数(index)。这将帮助我们得到函数地址。我们必须递减这个数字因为序号从0开始。</p>
+<p>(第5 - 6行)在偏移0x1c中，我们找到了“AddressOfFunctions”，该指针指向函数指针数组。我们只是添加了kernel3.dll的图像基地址,我们把它放在数组的开头。</p>
+<p>(第7 - 8行)现在我们有了ecx中“AddressOfFunctions”数组的正确索引，我们只会在AddressOfFunctions[ecx]位置找到GetProcAddress函数指针(相对于镜像基地址)。我们使用“ecx * 4”，因为每个指针有4个字节，而esi指向数组的开头。在第8行中，我们添加了image base，因此我们将在edx中使用GetProcAddress函数的指针。</p>
+<p><strong>寻找LoadLibary函数地址</strong></p>
+<p>坏消息是我们在这一点上没有做任何有用的事情。好消息是我们做的事情很复杂，现在我们可以玩得开心了!</p>
+<blockquote>
+<p>xor ecx, ecx    ; ECX = 0</p>
+<p>push ebx        ; Kernel32 base address</p>
+<p>push edx        ; GetProcAddress</p>
+<p>push ecx        ; 0</p>
+<p>push 0x41797261 ; aryA</p>
+<p>push 0x7262694c ; Libr</p>
+<p>push 0x64616f4c ; Load</p>
+<p>push esp        ; “LoadLibrary”</p>
+<p>push ebx        ; Kernel32 base address</p>
+<p>call edx        ; GetProcAddress(LL)</p>
+</blockquote>
+<p> (第1-3行)首先，我们将ecx设置为零，因为稍后我们将使用它。接下来，第2行和第3行，我们保存在堆栈上，接下来，ebx是kernel32.sll的基本地址，edx是指向GetProcAddress函数的指针。</p>
+<p>(第4 - 10行)现在我们必须进行如下调用:GetProcAddress(kernel32，“LoadLibraryA”)。我们有kernel32地址，但是我们如何使用字符串呢?我们将再次使用堆栈。我们将在堆栈上放置“LoadLibraryA \ 0”字符串。是的，字符串必须是空的，所以这就是为什么我们把ecx设置为0，在第4行，我们把它放在堆栈上。我们一次将“LoadLibraryA”字符串放在堆栈4字节上，顺序颠倒。我们先放置“aryA”，然后是“Libr”，然后是“Load”，所以堆栈上的字符串将是“LoadLibraryA”。完成了!现在，当我们把数据放在堆栈上时，esp寄存器，堆栈指针，将指向我们的“LoadLibraryA”字符串的开头。我们现在将函数参数放在堆栈上，从最后一个到第一个，所以第8行中的esp，然后是ebx，第9行上的kernel32基本地址，我们调用edx，它是GetProcAddress指针。这就是一切!</p>
+<p>注意，我们放置在堆栈“LoadLibraryA”上，而不仅仅是“LoadLibrary”。这是因为kernel32.dll不导出“LoadLibrary”函数，而是导出两个函数:“LoadLibraryA”，用于ANSI字符串参数和“LoadLibraryW”，用于Unicode字符串参数。</p>
+<p><strong>加载user32.dll库</strong></p>
+<p>我们之前找到了LoadLibrary函数地址，现在我们将使用它来加载到内存中“user32”。包含我们的SwapMouseButton函数的库。</p>
+<blockquote>
+<p>add esp, 0xc    ; pop “LoadLibraryA”</p>
+<p>pop ecx         ; ECX = 0</p>
+<p>push eax        ; EAX = LoadLibraryA</p>
+<p>push ecx</p>
+<p>mov cx, 0x6c6c  ; ll</p>
+<p>push ecx</p>
+<p>push 0x642e3233 ; 32.d</p>
+<p>push 0x72657375 ; user</p>
+<p>push esp        ; “user32.dll”</p>
+<p>call eax        ; LoadLibrary(“user32.dll”)</p>
+</blockquote>
+<p>(第1 - 3行)正如您所看到的，我们之前将“LoadLibraryA”字符串放在堆栈上。所以我们要消掉这个。最简单的方法是，我们只需将0xc(即字符串的12字节)添加到esp寄存器中，而不是三个“pops”。在第2行中，我们还在调用函数之前将堆栈上的0移除，而ecx寄存器将被设置为0。我们现在为将来的应用程序进行备份，在堆栈上使用LoadLibrary函数地址，因为您知道，在调用函数之后，返回的数据将保存在eax寄存器中。</p>
+<p>(第4 - 10行)我们想要调用“LoadLibrary”(user32 . dll)。所以我们需要再次在堆栈上放置一个字符串。现在有点棘手，因为字符串长度不是4字节的倍数，我们不能直接用几个push指令来放置它。相反，我们首先放置在堆栈上为0的ecx，我们使用CX寄存器来放置“ll”字符串。CX寄存器表示ecx寄存器的一半，是低地址的部分。我们可以把它放在堆栈上。在第7 - 8行中，我们放置“user32.dll”。现在，在esp我们有“user32.dll”字符串。我们将这个参数推到堆栈上以装载库，这也将返回到user32.dll库基地址，dll加载到内存中的地址。我们以后还需要使用它。</p>
+<p><strong>得到SwapMouseButton函数地址</strong></p>
+<p>我们加载了user32.dll库，现在我们想调用GetProcAddress来获取SwapMouseButton函数的地址。</p>
+<blockquote>
+<p>add esp, 0x10                  ; Clean stack</p>
+<p>mov edx, [esp + 0x4]           ; EDX = GetProcAddress</p>
+<p>xor ecx, ecx                   ; ECX = 0</p>
+<p>push ecx</p>
+<p>mov ecx, 0x616E6F74            ; tona</p>
+<p>push ecx</p>
+<p>sub dword ptr[esp + 0x3], 0x61 ; Remove “a”</p>
+<p>push 0x74754265                ; eBut</p>
+<p>push 0x73756F4D                ; Mous</p>
+<p>push 0x70617753                ; Swap</p>
+<p>push esp                       ; “SwapMouseButton”</p>
+<p>push eax                       ; user32.dll address</p>
+<p>call edx                       ; GetProc(SwapMouseButton)</p>
+</blockquote>
+<p>(第1 - 2行)和以前一样，我们必须清理堆栈。在第2行，我们在edx寄存器中放入我们之前保存的GetProcAddress函数地址。在函数调用之后，eax、ecx和edx可能会被修改，因为它们没有被保留。</p>
+<p>(第3 - 13行)我们要调用’GetProcAddress(user32.dll,“SwapMouseButton”)’。所以我们必须在堆栈上放置一个字符串。首先，在第3 - 4行中，我们将ecx寄存器设置为0，并将其放置在堆栈上。第二，我们在堆栈上放置“tona”。“ton”字符串表示“SwapMouseButton”字符串的最后3个字节，但我们也放置了一个“a”字符。这是一个我们可以使用的技巧，在第7行，我们将0x61从堆栈中减去，从我们放置那个“a”字符的位置。“a”是0x61，这意味着我们将“a”字符转换为NULL。现在，和以前一样，我们将其余的字符串放在堆栈上。我们push包含user32.dll基址的eax寄存器和调用GetProcAddress函数。请注意，无论你想做什么，你都可以做这件事，也许有更简单的方法来做这件事，所以就去找乐子吧!</p>
+<p><strong>调用SwapMouseButton函数</strong></p>
+<blockquote>
+<p>add esp, 0x14 ; Cleanup stack</p>
+<p>xor ecx, ecx  ; ECX = 0</p>
+<p>inc ecx       ; true</p>
+<p>push ecx      ; 1</p>
+<p>call eax      ; Swap!</p>
+</blockquote>
+<p>(1 - 5行)我知道这很无聊，但我们必须清理堆栈。我们要调用SwapMouseButton(true)，所以我们需要将“1”值push到堆栈上。我们只是将ecx寄存器设置为0并增加它。我们把它放在堆栈上，调用SwapMouseButton函数。如果您想恢复鼠标功能，请删除“inc . ecx”指令。</p>
+<p><strong>得到ExitProcess函数地址</strong></p>
+<p>我们做了一些事情，但是我们想要优雅地退出这个过程，所以我们需要在kernel32 . dll中找到ExitProcess函数。</p>
+<blockquote>
+<p>add esp, 0x4                    ; Clean stack</p>
+<p>pop edx                         ; GetProcAddress</p>
+<p>pop ebx                         ; kernel32.dll base address</p>
+<p>mov ecx, 0x61737365             ; essa</p>
+<p>push ecx</p>
+<p>sub dword ptr [esp + 0x3], 0x61 ; Remove “a”</p>
+<p>push 0x636f7250                 ; Proc</p>
+<p>push 0x74697845                 ; Exit</p>
+<p>push esp</p>
+<p>push ebx                        ; kernel32.dll base address</p>
+<p>call edx                        ; GetProc(Exec)</p>
+</blockquote>
+<p>(第1 - 3行)再次清理堆栈中的“1”值。我们也从堆栈中得到我们在开始时备份的数据、edx寄存器中的GetProcAddress函数地址和ebx寄存器中的kernel32基地址。</p>
+<p>(第4 - 11行)正如您已经熟悉的那样，我们将“ExitProcessa”字符串放在堆栈上，并用NULL字节替换最后一个“a”字符。我们将参数放在堆栈上，并调用GetProcAddress以获得ExitProcess函数地址。</p>
+<p><strong>调用ExitProcess函数</strong></p>
+<p>最后，我们调用ExitProcess函数:“ExitProcess(0)”。</p>
+<blockquote>
+<p>xor ecx, ecx ; ECX = 0</p>
+<p>push ecx     ; Return code = 0</p>
+<p>call eax     ; ExitProcess</p>
+</blockquote>
+<p>(第1 - 3行)我们必须在堆栈上清“0”，所以我们将ecx设置为0，将它放在堆栈上，并调用ExitProcess函数。</p>
+<p><strong>Shellcode</strong></p>
+<p>现在我们只需要把所有的代码段加在一起，最后的shellcode完整代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line">xor ecx, ecx</span><br><span class="line">mov eax, fs:[ecx + 0x30] ; EAX = PEB</span><br><span class="line">mov eax, [eax + 0xc]     ; EAX = PEB-&gt;Ldr</span><br><span class="line">mov esi, [eax + 0x14]    ; ESI = PEB-&gt;Ldr.InMemOrder</span><br><span class="line">lodsd                    ; EAX = Second module</span><br><span class="line">xchg eax, esi            ; EAX = ESI, ESI = EAX</span><br><span class="line">lodsd                    ; EAX = Third(kernel32)</span><br><span class="line">mov ebx, [eax + 0x10]    ; EBX = Base address</span><br><span class="line">mov edx, [ebx + 0x3c]    ; EDX = DOS-&gt;e_lfanew</span><br><span class="line">add edx, ebx             ; EDX = PE Header</span><br><span class="line">mov edx, [edx + 0x78]    ; EDX = Offset export table</span><br><span class="line">add edx, ebx             ; EDX = Export table</span><br><span class="line">mov esi, [edx + 0x20]    ; ESI = Offset namestable</span><br><span class="line">add esi, ebx             ; ESI = Names table</span><br><span class="line">xor ecx, ecx             ; EXC = 0</span><br><span class="line"></span><br><span class="line">Get_Function:</span><br><span class="line">inc ecx                              ; Increment the ordinal</span><br><span class="line">lodsd                                ; Get name offset</span><br><span class="line">add eax, ebx                         ; Get function name</span><br><span class="line">cmp dword ptr[eax], 0x50746547       ; GetP</span><br><span class="line">jnz Get_Function</span><br><span class="line">cmp dword ptr[eax + 0x4], 0x41636f72 ; rocA</span><br><span class="line">jnz Get_Function</span><br><span class="line">cmp dword ptr[eax + 0x8], 0x65726464 ; ddre</span><br><span class="line">jnz Get_Function</span><br><span class="line">mov esi, [edx + 0x24]                ; ESI = Offset ordinals</span><br><span class="line">add esi, ebx                         ; ESI = Ordinals table</span><br><span class="line">mov cx, [esi + ecx * 2]              ; Number of function</span><br><span class="line">dec ecx</span><br><span class="line">mov esi, [edx + 0x1c]                ; Offset address table</span><br><span class="line">add esi, ebx                         ; ESI = Address table</span><br><span class="line">mov edx, [esi + ecx * 4]             ; EDX = Pointer(offset)</span><br><span class="line">add edx, ebx                         ; EDX = GetProcAddress</span><br><span class="line"></span><br><span class="line">xor ecx, ecx    ; ECX = 0</span><br><span class="line">push ebx        ; Kernel32 base address</span><br><span class="line">push edx        ; GetProcAddress</span><br><span class="line">push ecx        ; 0</span><br><span class="line">push 0x41797261 ; aryA</span><br><span class="line">push 0x7262694c ; Libr</span><br><span class="line">push 0x64616f4c ; Load</span><br><span class="line">push esp        ; &quot;LoadLibrary&quot;</span><br><span class="line">push ebx        ; Kernel32 base address</span><br><span class="line">call edx        ; GetProcAddress(LL)</span><br><span class="line"></span><br><span class="line">add esp, 0xc    ; pop &quot;LoadLibrary&quot;</span><br><span class="line">pop ecx         ; ECX = 0</span><br><span class="line">push eax        ; EAX = LoadLibrary</span><br><span class="line">push ecx</span><br><span class="line">mov cx, 0x6c6c  ; ll</span><br><span class="line">push ecx</span><br><span class="line">push 0x642e3233 ; 32.d</span><br><span class="line">push 0x72657375 ; user</span><br><span class="line">push esp        ; &quot;user32.dll&quot;</span><br><span class="line">call eax        ; LoadLibrary(&quot;user32.dll&quot;)</span><br><span class="line"></span><br><span class="line">add esp, 0x10                  ; Clean stack</span><br><span class="line">mov edx, [esp + 0x4]           ; EDX = GetProcAddress</span><br><span class="line">xor ecx, ecx                   ; ECX = 0</span><br><span class="line">push ecx</span><br><span class="line">mov ecx, 0x616E6F74            ; tona</span><br><span class="line">push ecx</span><br><span class="line">sub dword ptr[esp + 0x3], 0x61 ; Remove &quot;a&quot;</span><br><span class="line">push 0x74754265                ; eBut</span><br><span class="line">push 0x73756F4D                ; Mous</span><br><span class="line">push 0x70617753                ; Swap</span><br><span class="line">push esp                       ; &quot;SwapMouseButton&quot;</span><br><span class="line">push eax                       ; user32.dll address</span><br><span class="line">call edx                       ; GetProc(SwapMouseButton)</span><br><span class="line"></span><br><span class="line">add esp, 0x14 ; Cleanup stack</span><br><span class="line">xor ecx, ecx  ; ECX = 0</span><br><span class="line">inc ecx       ; true</span><br><span class="line">push ecx      ; 1</span><br><span class="line">call eax      ; Swap!</span><br><span class="line"></span><br><span class="line">add esp, 0x4                    ; Clean stack</span><br><span class="line">pop edx                         ; GetProcAddress</span><br><span class="line">pop ebx                         ; kernel32.dll base address</span><br><span class="line">mov ecx, 0x61737365             ; essa</span><br><span class="line">push ecx</span><br><span class="line">sub dword ptr [esp + 0x3], 0x61 ; Remove &quot;a&quot;</span><br><span class="line">push 0x636f7250                 ; Proc</span><br><span class="line">push 0x74697845                 ; Exit</span><br><span class="line">push esp</span><br><span class="line">push ebx                        ; kernel32.dll base address</span><br><span class="line">call edx                        ; GetProc(Exec)</span><br><span class="line">xor ecx, ecx                    ; ECX = 0</span><br><span class="line">push ecx                        ; Return code = 0</span><br><span class="line">call eax                        ; ExitProcess</span><br></pre></td></tr></table></figure>
+<p>这就是我们编写第一个(有用的)shellcode代码的方法!</p>
+<p><strong>测试Shellcode</strong></p>
+<p>我们以下面的代码进行测试：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;stdafx.h&quot;</span><br><span class="line">#include &lt;Windows.h&gt;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    char * shellcode = &quot;\x33\xC9\x64\x8B\x41\x30\x8B\x40\x0C\x8B\x70\x14\xAD\x96\xAD\x8B\x58\x10\x8B\x53\x3C\x03\xD3\x8B\x52\x78\x03\xD3\x8B\x72\x20\x03&quot;</span><br><span class="line">					   &quot;\xF3\x33\xC9\x41\xAD\x03\xC3\x81\x38\x47\x65\x74\x50\x75\xF4\x81\x78\x04\x72\x6F\x63\x41\x75\xEB\x81\x78\x08\x64\x64\x72\x65\x75&quot;</span><br><span class="line">                       &quot;\xE2\x8B\x72\x24\x03\xF3\x66\x8B\x0C\x4E\x49\x8B\x72\x1C\x03\xF3\x8B\x14\x8E\x03\xD3\x33\xC9\x53\x52\x51\x68\x61\x72\x79\x41\x68&quot;</span><br><span class="line">                       &quot;\x4C\x69\x62\x72\x68\x4C\x6F\x61\x64\x54\x53\xFF\xD2\x83\xC4\x0C\x59\x50\x51\x66\xB9\x6C\x6C\x51\x68\x33\x32\x2E\x64\x68\x75\x73&quot;</span><br><span class="line">                       &quot;\x65\x72\x54\xFF\xD0\x83\xC4\x10\x8B\x54\x24\x04\x33\xC9\x51\xB9\x74\x6F\x6E\x61\x51\x83\x6C\x24\x03\x61\x68\x65\x42\x75\x74\x68&quot;</span><br><span class="line">                       &quot;\x4D\x6F\x75\x73\x68\x53\x77\x61\x70\x54\x50\xFF\xD2\x83\xC4\x14\x33\xC9&quot;</span><br><span class="line">                       &quot;\x41&quot; // inc ecx - Remove this to restore the functionality</span><br><span class="line"> </span><br><span class="line">                       &quot;\x51\xFF\xD0\x83\xC4\x04\x5A\x5B\xB9\x65\x73\x73\x61&quot;</span><br><span class="line">                       &quot;\x51\x83\x6C\x24\x03\x61\x68\x50\x72\x6F\x63\x68\x45\x78\x69\x74\x54\x53\xFF\xD2\x33\xC9\x51\xFF\xD0&quot;;</span><br><span class="line">    // Set memory as executable</span><br><span class="line">    DWORD old = 0;</span><br><span class="line">    BOOL ret = VirtualProtect(shellcode, strlen(shellcode), PAGE_EXECUTE_READWRITE, &amp;old);</span><br><span class="line">    // Call the shellcode</span><br><span class="line">    __asm</span><br><span class="line">    &#123;</span><br><span class="line">        jmp shellcode;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>原文地址：<a href="https://securitycafe.ro/2016/02/15/introduction-to-windows-shellcode-development-part-3/" target="_blank" rel="external">https://securitycafe.ro/2016/02/15/introduction-to-windows-shellcode-development-part-3/</a></p>
+<p><strong>最后</strong></p>
+<p>经过Shellcode的编写思路走，一步步的编写shellcode，大致的流程也就是这样，也就是定位自己需要的函数地址，然后直接调用，当然在编写中会遇到很多问题，在本机能够编译成功，但在其他机器上无法运行的情况，还需要过ASLR等系统的防御机制，所以更深入的构造通用Shellcode,值得我们思考。</p>
+
+        </div>
+		<!--dashang-->
+        
+        <div class="post-tags">Tags：
+            
+            <a href="/tags/学习笔记/">学习笔记</a>
+            
+        </div>
+        
+    </article>
+    
+    <p>本文内容仅作为作者个人兴趣与观点,若有不恰当之处，望不吝赐教</p>
+    
+    
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        </div><!-- end #main-->
+    </div><!-- end #body -->
+    <footer class="footer">
+    <div class="footer-inner">
+        <p>
+            <a href="/about"  title="About">About</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <!-- 自定义链接 -->
+            <a href="/help" title="help" >帮助</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <a href="/links" title="友情链接">友情链接</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+        </p>
+        <p>
+            Blog by <a href="https://github.com/hucmosin" style="font-weight: bold">Coding Pages</a>
+        </p>
+        
+    </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/InsightSearch.js"></script>
+<script src="/js/SimpleCore.js"></script>
+
+</div>
+<div class="fixed-btn">
+    <a class="btn-gotop" href="javascript:"> <i class="fa fa-angle-up"></i></a>
+</div>
+<script>
+    $(function () {
+        SimpleCore.init({
+            buildingTime: '10/20/2017',
+            current: $('.post-tags').length > 0 ? 'post' : 'archive',
+            wxMpImg: '/images/weixin-mp.png',
+        });
+    });
+</script>
+</body>
+</html>

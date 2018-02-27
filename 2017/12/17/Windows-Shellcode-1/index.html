@@ -1,0 +1,286 @@
+<!DOCTYPE HTML>
+<html class="no-js" lang="zh-CN">
+<!--
+//                            _ooOoo_
+//                           o8888888o
+//                           88" . "88
+//                           (| -_- |)
+//                            O\ = /O
+//                        ____/`---'\____
+//                      .   ' \\| |// `.
+//                       / \\||| : |||// \
+//                     / _||||| -:- |||||- \
+//                       | | \\\ - /// | |
+//                     | \_| ''\---/'' | |
+//                      \ .-\__ `-` ___/-. /
+//                   ___`. .' /--.--\ `. . __
+//                ."" '< `.___\_<|>_/___.' >'"".
+//               | | : `- \`.;`\ _ /`;.`/ - ` : | |
+//                 \ \ `-. \_ __\ /__ _/ .-` / /
+//         ======`-.____`-.___\_____/___.-`____.-'======
+//                            `=---='
+//                 拦截插件累计拦截逗比攻击"1381438"次！
+//         .............................................
+//                  佛祖保佑             永无BUG
+//          佛曰:
+//                  写字楼里写字间，写字间里程序员；
+//                  程序人员写程序，又拿程序换酒钱。
+//                  酒醒只在网上坐，酒醉还来网下眠；
+//                  酒醉酒醒日复日，网上网下年复年。
+//                  但愿老死电脑间，不愿鞠躬老板前；
+//                  奔驰宝马贵者趣，公交自行程序员。
+//                  别人笑我忒疯癫，我笑自己命太贱；
+//                  不见满街漂亮妹，哪个归得程序员？
+-->
+<head>
+    <!--[if lte IE 9]>
+<meta http-equiv="refresh" content="0;url=http://github.com/hucmosin/warn.html">
+<![endif]-->
+<meta charset="utf-8">
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+<meta http-equiv="mobile-agent" content="format=html5; url=http://github.com/hucmosin">
+<meta name="author" content="Mosin">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/SimpleStyle.min.css">
+
+<link rel="shortcut icon" href="/images/favicon.png">
+
+
+<title>windows shellcode介绍(一) - Mosin&#39; Blog</title>
+
+<meta name="keywords" content="学习笔记">
+
+<meta name="description " content="Learning, summarizing, thinking, feeling and knowledge management">
+</head>
+<body>
+<div id="nav">
+    <nav class="nav-menu">
+        <a class="site-name current" href="/" title="聊">聊</a>
+        <a class="site-index current" href="/"><i class="fa fa-home"></i><span>Home</span></a>
+        <a href="/archives" title="Archives"><i class="fa fa-archives"></i><span>Archives</span></a>
+        <!-- custom single page of menus -->
+        
+        
+        <a href="/help" title="帮助">
+            <i class="fa fa-question-circle"></i>
+            <span>帮助</span>
+        </a>
+        
+    </nav>
+</div>
+
+<div class="nav-user">
+    <a class="btn-search" href="#"><i class="fa fa-search"></i></a>
+    <a class="btn-read-mode" href="#"><i class="fa fa-sun-o"></i></a>
+    <a class="btn-weixin-mp" href="javascript:"><i class="fa fa-weixin"></i></a>
+</div>
+<div id="wrapper" class="clearfix">
+    <div id="body">
+        <div class="main" id="main">
+            <div id="cover">
+    <div class="cover-img"></div>
+    <div class="cover-info">
+        
+        <h1 class="cover-siteName">Mosin&#39;s Blog</h1>
+        <h3 class="cover-siteTitle">聊技术，谈情怀</h3>
+        <p class="cover-siteDesc">一个关注技术与人文的IT博客</p>
+        <div class="cover-sns">
+            
+            <div class="btn btn-github">
+                <a href="https://github.com/hucmosin" target="_blank" title="github" ref="friend">
+                    <i class="fa fa-github"></i>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+</div>
+            <div class="page-title">
+    <ul>
+        <li><a href="/">最新</a></li>
+        
+            
+                <li class="">
+                    <a href="/categories/code-audit" data-name="审计">审计</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/technology" data-name="技术">技术</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-share" data-name="分享">分享</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-note" data-name="学习">学习</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/others-end" data-name="其他">其他</a>
+                </li>
+            
+        
+        <li class="page-search">
+    <form id="search" class="search-form">
+        <label for="s" class="sr-only">Input Search key Words Here</label>
+        <input class="search-field" type="text" name="s" class="text" placeholder="Input Search key Words Here" />
+        <button type="submit" class="search-form-submit" title="Search"><i class="fa fa-search"></i></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input"  placeholder="请输入关键字"/>   <!-- placeholder="Type something..."/>-->
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+</li>
+
+    </ul>
+</div>
+<div class="main-inner">
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+        <div class="post-header">
+            <div class="post-author clearfix">
+                <a class="avatar fleft" href="https://github.com/hucmosin" target="_blank">
+                    <img width="48" src="/images/favicon.png" alt="avatar"/>
+                </a>
+                <p><span class="label">作者</span>
+                    <a href="https://github.com/hucmosin" target="_blank">mosin</a>
+                    <span title="最后编辑于2017-12-17">2017-12-17</span>
+                </p>
+                <p>灵魂无处安放,所以选择流浪</p>
+            </div>
+            <h2 class="post-title">Windows Shellcode介绍(一)</h2>
+            <div class="post-meta">
+                本文总共2520个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+            </div>
+        </div>
+        <div class="post-content markdown-body">
+            <p><strong>本文包含shellcode的开发技术及其具体方面的概述。</strong></p>
+<p><strong>了解这些概念，允许你自己写的代码。此外，你可以修改利用现有的漏洞，包括已经取得的shellcode执行需要自定义功能。</strong></p>
+<p><strong>概述</strong></p>
+<p>让我们来看下在Internet Explorer或Flash Player打开calc.exe的漏洞。这不是很有用，是吗？您真正想要的是执行一些远程命令或执行其他有用的功能。</p>
+<p>在这种情况下，你可能想使用存在的自定义标准数据库或从Metasploit的msfvenom工具编译Shellcode。然而，你必须先了解shellcoding的基本概念，这样你可以有效地在需要利用的时候使用它们。</p>
+<p>对于那些不熟悉这个词的人来说，就像维基百科所说的：</p>
+<p>“在计算机安全，一个shellcode是一个很小的代码作为一个软件漏洞开发的有效载荷。它被称为“shellcode”因为它通常开始，攻击者可以控制被感染机器的一个命令，但任何一段代码，执行类似的任务可以被称作shellcode…Shellcode通常用机器代码。”</p>
+<p>一个shellcode是一块代码片段，我们可以使用作为一个开发有效载荷的机器代码。这是什么“机器代码”？让我们以下面的C代码为例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"> </span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    printf(&quot;Hello, World!\n&quot;);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码在ASM中为如下表示</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">_main PROC</span><br><span class="line">    push ebp</span><br><span class="line">    mov ebp, esp</span><br><span class="line">    push OFFSET HelloWorld ; &quot;Hello, World!\n&quot;</span><br><span class="line">    call _printf</span><br><span class="line">    add esp, 4</span><br><span class="line">    xor eax, eax</span><br><span class="line">    pop ebp</span><br><span class="line">    ret 0</span><br><span class="line">_main ENDP</span><br></pre></td></tr></table></figure>
+<p>在这里，最重要的是要注意，有一个主程序会调用printf函数。</p>
+<p>这个代码被组装成机器代码，正如您在调试器中看到的那样：</p>
+<p><img src="/allimage/shellcodew/1.png" alt="1"></p>
+<p>像 <code>“55 8B EC 68 00 B0 33 01 … ”</code> 这样的机器代码是我们需要的代码。</p>
+<p>如果利用shellcode来攻击呢？</p>
+<p>让我们举一个简单的例子，一个基于堆栈的缓冲区溢出漏洞。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">void exploit(char *data)</span><br><span class="line">&#123;</span><br><span class="line">    char buffer[20];      // The buffer is on stack</span><br><span class="line">    strcpy(buffer, data); // Use strcpy to copy data</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>利用此漏洞的主要思想如下：（请注意，本文的目的不是详细说明缓冲区溢出漏洞如何工作）：</p>
+<blockquote>
+<ol>
+<li>应用程序发送一个字符串大于20个字节，其中也包含你的shellcode</li>
+<li>堆栈被改写过去的静态分配的缓冲区边界的损坏。你的shellcode将放在堆栈</li>
+<li>字符串将使用自定义内存地址覆盖堆栈上的一个重要数据（例如，保存的EIP或功能函数指针）。</li>
+<li>应用程序将跳转到你的shellcode从堆栈和开始执行里面的机器代码指令。</li>
+</ol>
+</blockquote>
+<p><strong>Shellocde具体内容</strong></p>
+<p>但不是任何机器代码都可以成为shellcode。当我们在编写Shellcode时，必须考虑有一些特定的方面：</p>
+<blockquote>
+<p>1.我们不能直接使用字符串偏移。</p>
+<p>2.我们不知道函数的地址（如printf）。</p>
+<p>3.我们必须避免某些特定字节（例如空字节等坏字符）。</p>
+</blockquote>
+<p>让我们简短地讨论一下上面的每一个问题。</p>
+<p><strong>字符串的直接偏移量</strong></p>
+<p>即使在C / C++代码中，你可以定义一个全局变量，字符串值“hello,world!”或者，您可以直接将字符串作为一个参数传入到一个函数中，如在“hello，world”示例中，编译器将该字符串放在文件的特定部分中：</p>
+<p><img src="/allimage/shellcodew/2.png" alt="2"></p>
+<p>由于我们需要与位置无关的代码，所以我们希望将字符串作为代码的一部分，因此必须将字符串存储在堆栈中，正如您将在本文的后续部分中看到的那样。</p>
+<p><strong>函数地址</strong></p>
+<p>在C / C++中很容易调用一个函数。我们指定<code>#include&lt;&gt;</code>使用特定的头和调用一个函数的名字。在这种背景下，编译器和链接器需要关注的问题：他们解决函数的地址（例如，从user32. Dll得到MessageBox），我们可以方便的调用这些函数的名字。</p>
+<p><img src="/allimage/shellcodew/3.png" alt="3"></p>
+<p>在一个shellcode中，我们不能这样做。我们不知道包含我们所需函数的DLL是否加载到内存中，并且我们不知道所需函数的地址。DLL，因为ASLR（地址空间布局随机化），将不会每次加载在同一地址上。此外，DLL可能会随着每一个新的Windows更新而改变，因此我们不能依赖于DLL的特定偏移量。</p>
+<p>我们必须从内存中加载DLL，直接从shellcode中找到所需的功能函数。幸运的是，Windows API提供了两个有用的函数：LoadLibrary和GetProcAddress函数，我们可以用它们来找到我们的函数地址。</p>
+<p><strong>避免空字节</strong></p>
+<p>零字节的值0x00。在C / C++代码中空字节是一个字符串的结束符。因此，在研究这些字节的存在可能会干扰目标应用，shellcode代码的功能可能无法正确地复制到内存。</p>
+<p>即使这种情况也不是强制性的，常见的有类似的缓冲区溢出，strcpy()函数的使用。这个函数将逐字节复制一个字符串，当它遇到空字节时它将停止。所以如果shellcode代码包含一个空字节，strcpy函数会在这个字节停止复制，导致shellcode将是不完整的，它将无法正常工作。</p>
+<p><img src="/allimage/shellcodew/4.png" alt="4"></p>
+<p>上面的图片中的两个指令等价于功能，但是正如您所看到的，第一个包含空字节，而第二个则不包含空字节。即使空字节在编译代码中是常见的，但也不难避免。</p>
+<p>同时，也有具体的情况下，当shellcode必须避免字符，如\R和\n，甚至只能使用字母数字字符。</p>
+<p>原文地址：<a href="https://securitycafe.ro/2015/10/30/introduction-to-windows-shellcode-development-part1/" target="_blank" rel="external">https://securitycafe.ro/2015/10/30/introduction-to-windows-shellcode-development-part1/</a></p>
+
+        </div>
+		<!--dashang-->
+        
+        <div class="post-tags">Tags：
+            
+            <a href="/tags/学习笔记/">学习笔记</a>
+            
+        </div>
+        
+    </article>
+    
+    <p>本文内容仅作为作者个人兴趣与观点,若有不恰当之处，望不吝赐教</p>
+    
+    
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        </div><!-- end #main-->
+    </div><!-- end #body -->
+    <footer class="footer">
+    <div class="footer-inner">
+        <p>
+            <a href="/about"  title="About">About</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <!-- 自定义链接 -->
+            <a href="/help" title="help" >帮助</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <a href="/links" title="友情链接">友情链接</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+        </p>
+        <p>
+            Blog by <a href="https://github.com/hucmosin" style="font-weight: bold">Coding Pages</a>
+        </p>
+        
+    </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/InsightSearch.js"></script>
+<script src="/js/SimpleCore.js"></script>
+
+</div>
+<div class="fixed-btn">
+    <a class="btn-gotop" href="javascript:"> <i class="fa fa-angle-up"></i></a>
+</div>
+<script>
+    $(function () {
+        SimpleCore.init({
+            buildingTime: '10/20/2017',
+            current: $('.post-tags').length > 0 ? 'post' : 'archive',
+            wxMpImg: '/images/weixin-mp.png',
+        });
+    });
+</script>
+</body>
+</html>

