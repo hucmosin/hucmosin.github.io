@@ -49,9 +49,9 @@
 <link rel="shortcut icon" href="/images/favicon.png">
 
 
-<title>分类 - study-note - Mosin&#39; Blog</title>
+<title>神经网络学习之-neuroph(一)环境的搭建 - Mosin&#39; Blog</title>
 
-<meta name="keywords" content="">
+<meta name="keywords" content="学习笔记">
 
 <meta name="description " content="Learning, summarizing, thinking, feeling and knowledge management">
 </head>
@@ -100,29 +100,29 @@
 </div>
             <div class="page-title">
     <ul>
-        <li class="">
-            <a href="/" data-name="最近文章">最近</a>
-        </li>
+        <li><a href="/">最新</a></li>
         
-        <li class="">
-            <a href="/categories/code-audit" data-name="审计">审计</a>
-        </li>
-        
-        <li class="">
-            <a href="/categories/technology" data-name="技术">技术</a>
-        </li>
-        
-        <li class="">
-            <a href="/categories/study-share" data-name="分享">分享</a>
-        </li>
-        
-        <li class="">
-            <a href="/categories/study-note" data-name="学习">学习</a>
-        </li>
-        
-        <li class="">
-            <a href="/categories/others-end" data-name="其他">其他</a>
-        </li>
+            
+                <li class="">
+                    <a href="/categories/code-audit" data-name="审计">审计</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/technology" data-name="技术">技术</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-share" data-name="分享">分享</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-note" data-name="学习">学习</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/others-end" data-name="其他">其他</a>
+                </li>
+            
         
         <li class="page-search">
     <form id="search" class="search-form">
@@ -163,174 +163,57 @@
     </ul>
 </div>
 <div class="main-inner">
-    
-    
-    
-<article class="post">
-    
-    <div class="post-header">
-        <div class="post-meta">
-            <a href="https://github.com/hucmosin" target="_blank">
-                <strong>mosin</strong>
-            </a>
-            <em>·</em>2018-05-07
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+        <div class="post-header">
+            <div class="post-author clearfix">
+                <a class="avatar fleft" href="https://github.com/hucmosin" target="_blank">
+                    <img width="48" src="/images/favicon.png" alt="avatar"/>
+                </a>
+                <p><span class="label">作者</span>
+                    <a href="https://github.com/hucmosin" target="_blank">mosin</a>
+                    <span title="最后编辑于2018-05-07">2018-05-07</span>
+                </p>
+                <p>灵魂无处安放,所以选择流浪</p>
+            </div>
+            <h2 class="post-title">神经网络学习之-Neuroph(一)环境的搭建</h2>
+            <div class="post-meta">
+                本文总共688个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+            </div>
         </div>
-        <a class="post-title" href="/2018/05/07/aistudy/neuroph-1/" target="_blank" title="神经网络学习之-Neuroph(一)环境的搭建">神经网络学习之-Neuroph(一)环境的搭建</a>
-        <div class="post-meta">
-            <a href="/tags" target="_blank"><i class="fa fa-tags"></i></a>
-            
-                <em>·</em>
-                <a href="http://github.com/hucmosin/tags/学习笔记/" target="_blank">学习笔记</a>
-            
+        <div class="post-content markdown-body">
+            <p>最近开始入深度学习的坑，基于Python的深度学习框架太重了，看了下JAVA下的Neuroph框架还不错，比较轻量级，很适合初学者学习，在这里记录下自己的学习过程吧，也算是一个学习的笔记。</p>
+<p>首先还是简单介绍下这个框架：</p>
+<p>Neuroph是一个轻量级的神经网络框架,适合神经网络初学者进行简单学习。</p>
+<p>这个框架主要是基于神经网络来的，当然也有机器学习的概念。对于神经网络来讲，我们主要是靠概率来计算我们需要的结果是否正确，这里的神经网络也主要用在分类上面，所以，就目前技术而言，真正的人工智能还无法实现，只能说在已有的事物上加上人工干预，也可以说是所谓的监督学习。还有无监督学习也是扯淡，大多数都是需要人工的干预，按照人工的思想再走。</p>
+<p>不过我们一定要相信，机器有属于自己思想的那一天会到来的，这个只不过是时间问题而已。</p>
+<p>人工神经网络是一个计算结构 — 在多数情况下它是一个计算机程序，受生物网络的启发，特别是动物大脑中发现的神经网络。它由多层人工神经元（以下简称为神经元）组成，其中每一层神经元都连接到直接相邻层的神经元。—<a href="https://en.wikipedia.org/wiki/File:Colored_neural_network.svg" target="_blank" rel="external">维基百科</a></p>
+<p><img src="/allimage/neuroph/neuroph1-2.png" alt="neuroph1-2"></p>
+<p>好了，介绍完了，就该实际操作了。</p>
+<p>使用JAVA神经网络框架Neuroph有两种方式</p>
+<p>1.在一般IDE中直接使用Neuroph的神经网络学习包</p>
+<p>此IDE自带GUI模式，我们可以直接在GUI里面操作学习。</p>
+<p>2.直接使用Neuroph自带的一个Stuido</p>
+<p>在Eclipse中使用Neuroph神经网络学习框架</p>
+<p>首先新建一个Maven的工程文件,一路走下来，创建成功后</p>
+<p>之后在项目文件里面右键Bulid Path来导入我们需要的Neuroph依赖包</p>
+<p><img src="/allimage/neuroph/neuroph1-1.png" alt="neuroph1-1"></p>
+
         </div>
-    </div>
-    <div class="post-desc">
-        神经网络学习之-Neuroph(一)环境的搭建
-    </div>
-</article>
-
-
-
-    
-    
-<article class="post">
-    
-    <div class="post-header">
-        <div class="post-meta">
-            <a href="https://github.com/hucmosin" target="_blank">
-                <strong>mosin</strong>
-            </a>
-            <em>·</em>2018-04-20
-        </div>
-        <a class="post-title" href="/2018/04/20/Windows-Shellcode-5/" target="_blank" title="Windows下的Shellcode编写详解">Windows下的Shellcode编写详解</a>
-        <div class="post-meta">
-            <a href="/tags" target="_blank"><i class="fa fa-tags"></i></a>
+		<!--dashang-->
+        
+        <div class="post-tags">标签：
             
-                <em>·</em>
-                <a href="http://github.com/hucmosin/tags/学习笔记/" target="_blank">学习笔记</a>
+            <a href="/tags/学习笔记/">学习笔记</a>
             
         </div>
-    </div>
-    <div class="post-desc">
-        Windows下的Shellcode编写详解
-    </div>
-</article>
-
-
-
+        
+    </article>
     
+    <p>本文内容仅作为作者个人兴趣与观点,若有不恰当之处，望不吝赐教</p>
     
-<article class="post">
-    
-    <div class="post-header">
-        <div class="post-meta">
-            <a href="https://github.com/hucmosin" target="_blank">
-                <strong>mosin</strong>
-            </a>
-            <em>·</em>2017-12-25
-        </div>
-        <a class="post-title" href="/2017/12/25/Windows-Shellcode-4/" target="_blank" title="Windows Shellcode介绍(四)">Windows Shellcode介绍(四)</a>
-        <div class="post-meta">
-            <a href="/tags" target="_blank"><i class="fa fa-tags"></i></a>
-            
-                <em>·</em>
-                <a href="http://github.com/hucmosin/tags/学习笔记/" target="_blank">学习笔记</a>
-            
-        </div>
-    </div>
-    <div class="post-desc">
-        Windows Shellcode介绍(四)
-    </div>
-</article>
-
-
-
-    
-    
-<article class="post">
-    
-    <div class="post-header">
-        <div class="post-meta">
-            <a href="https://github.com/hucmosin" target="_blank">
-                <strong>mosin</strong>
-            </a>
-            <em>·</em>2017-12-21
-        </div>
-        <a class="post-title" href="/2017/12/21/Windows-Shellcode-3/" target="_blank" title="Windows Shellcode介绍(三)">Windows Shellcode介绍(三)</a>
-        <div class="post-meta">
-            <a href="/tags" target="_blank"><i class="fa fa-tags"></i></a>
-            
-                <em>·</em>
-                <a href="http://github.com/hucmosin/tags/学习笔记/" target="_blank">学习笔记</a>
-            
-        </div>
-    </div>
-    <div class="post-desc">
-        Windows Shellcode介绍(三)
-    </div>
-</article>
-
-
-
-    
-    
-<article class="post">
-    
-    <div class="post-header">
-        <div class="post-meta">
-            <a href="https://github.com/hucmosin" target="_blank">
-                <strong>mosin</strong>
-            </a>
-            <em>·</em>2017-12-18
-        </div>
-        <a class="post-title" href="/2017/12/18/Windows-Shellcode-2/" target="_blank" title="Windows Shellcode介绍(二)">Windows Shellcode介绍(二)</a>
-        <div class="post-meta">
-            <a href="/tags" target="_blank"><i class="fa fa-tags"></i></a>
-            
-                <em>·</em>
-                <a href="http://github.com/hucmosin/tags/学习笔记/" target="_blank">学习笔记</a>
-            
-        </div>
-    </div>
-    <div class="post-desc">
-        Windows Shellcode介绍(二)
-    </div>
-</article>
-
-
-
-    
-    
-<article class="post">
-    
-    <div class="post-header">
-        <div class="post-meta">
-            <a href="https://github.com/hucmosin" target="_blank">
-                <strong>mosin</strong>
-            </a>
-            <em>·</em>2017-12-17
-        </div>
-        <a class="post-title" href="/2017/12/17/Windows-Shellcode-1/" target="_blank" title="Windows Shellcode介绍(一)">Windows Shellcode介绍(一)</a>
-        <div class="post-meta">
-            <a href="/tags" target="_blank"><i class="fa fa-tags"></i></a>
-            
-                <em>·</em>
-                <a href="http://github.com/hucmosin/tags/学习笔记/" target="_blank">学习笔记</a>
-            
-        </div>
-    </div>
-    <div class="post-desc">
-        Windows Shellcode介绍(一)
-    </div>
-</article>
-
-
-
     
 </div>
-<!-- 分页开始 -->
-
-
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
         </div><!-- end #main-->
     </div><!-- end #body -->
     <footer class="footer">
