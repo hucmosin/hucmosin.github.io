@@ -1,0 +1,295 @@
+<!DOCTYPE HTML>
+<html class="no-js" lang="zh-CN">
+<!--
+//                            _ooOoo_
+//                           o8888888o
+//                           88" . "88
+//                           (| -_- |)
+//                            O\ = /O
+//                        ____/`---'\____
+//                      .   ' \\| |// `.
+//                       / \\||| : |||// \
+//                     / _||||| -:- |||||- \
+//                       | | \\\ - /// | |
+//                     | \_| ''\---/'' | |
+//                      \ .-\__ `-` ___/-. /
+//                   ___`. .' /--.--\ `. . __
+//                ."" '< `.___\_<|>_/___.' >'"".
+//               | | : `- \`.;`\ _ /`;.`/ - ` : | |
+//                 \ \ `-. \_ __\ /__ _/ .-` / /
+//         ======`-.____`-.___\_____/___.-`____.-'======
+//                            `=---='
+//                 拦截插件累计拦截逗比攻击"1381438"次！
+//         .............................................
+//                  佛祖保佑             永无BUG
+//          佛曰:
+//                  写字楼里写字间，写字间里程序员；
+//                  程序人员写程序，又拿程序换酒钱。
+//                  酒醒只在网上坐，酒醉还来网下眠；
+//                  酒醉酒醒日复日，网上网下年复年。
+//                  但愿老死电脑间，不愿鞠躬老板前；
+//                  奔驰宝马贵者趣，公交自行程序员。
+//                  别人笑我忒疯癫，我笑自己命太贱；
+//                  不见满街漂亮妹，哪个归得程序员？
+-->
+<head>
+    <!--[if lte IE 9]>
+<meta http-equiv="refresh" content="0;url=http://github.com/hucmosin/warn.html">
+<![endif]-->
+<meta charset="utf-8">
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+<meta http-equiv="mobile-agent" content="format=html5; url=http://github.com/hucmosin">
+<meta name="author" content="Mosin">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/SimpleStyle.min.css">
+
+<link rel="shortcut icon" href="/images/favicon.png">
+
+
+<title>逆向思维看常规web攻击检测 - Mosin&#39; Blog</title>
+
+<meta name="keywords" content="学习笔记">
+
+<meta name="description " content="Learning, summarizing, thinking, feeling and knowledge management">
+</head>
+<body>
+<div id="nav">
+    <nav class="nav-menu">
+        <a class="site-name current" href="/" title="聊">聊</a>
+        <a class="site-index current" href="/"><i class="fa fa-home"></i><span>Home</span></a>
+        <a href="/archives" title="Archives"><i class="fa fa-archives"></i><span>Archives</span></a>
+        <!-- custom single page of menus -->
+        
+        
+        <a href="/help" title="帮助">
+            <i class="fa fa-question-circle"></i>
+            <span>帮助</span>
+        </a>
+        
+    </nav>
+</div>
+
+<div class="nav-user">
+    <a class="btn-search" href="#"><i class="fa fa-search"></i></a>
+    <a class="btn-read-mode" href="#"><i class="fa fa-sun-o"></i></a>
+    <a class="btn-weixin-mp" href="javascript:"><i class="fa fa-weixin"></i></a>
+</div>
+<div id="wrapper" class="clearfix">
+    <div id="body">
+        <div class="main" id="main">
+            <div id="cover">
+    <div class="cover-img"></div>
+    <div class="cover-info">
+        
+        <h1 class="cover-siteName">Mosin&#39;s Blog</h1>
+        <h3 class="cover-siteTitle">聊技术，谈情怀</h3>
+        <p class="cover-siteDesc">一个关注技术与人文的IT博客</p>
+        <div class="cover-sns">
+            
+            <div class="btn btn-github">
+                <a href="https://github.com/hucmosin" target="_blank" title="github" ref="friend">
+                    <i class="fa fa-github"></i>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+</div>
+            <div class="page-title">
+    <ul>
+        <li><a href="/">最新</a></li>
+        
+            
+                <li class="">
+                    <a href="/categories/code-audit" data-name="审计">审计</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/technology" data-name="技术">技术</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-share" data-name="分享">分享</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-note" data-name="学习">学习</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/others-end" data-name="其他">其他</a>
+                </li>
+            
+        
+        <li class="page-search">
+    <form id="search" class="search-form">
+        <label for="s" class="sr-only">Input Search key Words Here</label>
+        <input class="search-field" type="text" name="s" class="text" placeholder="Input Search key Words Here" />
+        <button type="submit" class="search-form-submit" title="Search"><i class="fa fa-search"></i></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input"  placeholder="请输入关键字"/>   <!-- placeholder="Type something..."/>-->
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+</li>
+
+    </ul>
+</div>
+<div class="main-inner">
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+        <div class="post-header">
+            <div class="post-author clearfix">
+                <a class="avatar fleft" href="https://github.com/hucmosin" target="_blank">
+                    <img width="48" src="/images/favicon.png" alt="avatar"/>
+                </a>
+                <p><span class="label">作者</span>
+                    <a href="https://github.com/hucmosin" target="_blank">mosin</a>
+                    <span title="最后编辑于2018-11-14">2018-11-14</span>
+                </p>
+                <p>灵魂无处安放,所以选择流浪</p>
+            </div>
+            <h2 class="post-title">逆向思维看常规Web攻击检测</h2>
+            <div class="post-meta">
+                本文总共4797个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+            </div>
+        </div>
+        <div class="post-content markdown-body">
+            <p><strong>本文相关思路和语言描述可能会有些不妥，还望各位看官能批评指正，本文只提供一个小小的思路想法并不提供具体系统实施步骤和测试用例代码。本篇文章所述方法为之前做Web攻击检测系统时所提出的，现在把它发出来。</strong></p>
+<h3 id="一-背景说明"><a href="#一-背景说明" class="headerlink" title="一. 背景说明"></a>一. 背景说明</h3><p>从目前市场情况来看，大多数的Web攻击检测工具或系统都存在各种各样的缺陷，其中包括误报率和漏报率。为了解决这些问题，近年来逐渐提出了所谓的机器学习检测，机器学习需要大量的样本来学习，但是由于相关Web编程语言大多具有较强的灵活性，所以导致机器学习除了能够检测到常规的攻击外，比较非常规的就难以检测了，非常规漏洞的检测在安全检测的所有安全产品上都存在或多或少的局限，即使检测到也是误报率很大。</p>
+<h3 id="二-Web入侵检测方案"><a href="#二-Web入侵检测方案" class="headerlink" title="二. Web入侵检测方案"></a>二. Web入侵检测方案</h3><p>在大多数的安全检测系统中或多或少会根据具体的规则来检测，规则可以分为静态和动态的检测：</p>
+<p>静态检测&nbsp;&nbsp;&nbsp;&nbsp;通过制定一系列的样本攻击数据，通过精确匹配样本的中的数据，判断流量是否为攻击流量<br>动态检测&nbsp;&nbsp;&nbsp;&nbsp;一般通过正则、机器学习、Web执行结果、预执行检测等非静态数据匹配，判断流量是否为攻击流量</p>
+<p>目前大多数的Web攻击检测系统都采用和WAF相近的规则，毕竟就目前的安全检测技术情况来看，各个公司能够全量的检测攻击几乎是不可能的，比较成熟的检测也就属SQL注入了，除了SQL注入和其他具有明显攻击特征的漏洞攻击外，攻击检测系统和WAF就无能为力了（如越权等逻辑漏洞）。</p>
+<p><strong>1. 基于机器学习的Web入侵检测</strong></p>
+<p>基于机器学习技术的web入侵检测技术属于静态检测的升级版，为什么这么说？</p>
+<p>虽然机器学习这个词听起来很有专业感，但是目前还没有哪家公司可以做到完全自动无监督学习攻击流量的检测（理想状态下忽略掉误报和漏报），机器学习需要大量的样本，说到底，就是从大量的静态攻击数据中匹配攻击流量数据，再提取其特征加以学习，对于机器学习之后的所谓智能判断，我们不能说其扯蛋，有些地方还是可取的。机器学习在发展，我们不能否认其先进性，但是就目前的情况来看，机器学习应用于安全检测方面还是存在互斥性。</p>
+<p>因为静态检测的数据样本需要维护，具有一定的维护成本，还有一个缺点就是，当样本达到一定量时，检测效率会越来越低，所以在引入了机器学习后，有望弥补传统规则收集方法的不足。</p>
+<p>机器学习方法能够基于大量样本数据进行自动化学习和训练，以其智能的特性，在各个行业都有不错的应用效果。但是，机器学习应用于安全上却存在很大的挑战，对于Web攻击检测其最大的挑战就是攻击流量标签的筛选。</p>
+<p>在Web中正常情况下会有大量的正常访问流量数据，但是在受到攻击后，会出现大量与正常数据流量不同的数据，因为web攻击样本格式相对固定，机器学习的局限性且攻击数据变化多样，对机器学习识别攻击数据造成困难。</p>
+<p>因此，提高机器学习的攻击数据识别率，可以考虑反向识别。既然异常的攻击流量我们无法全量覆盖，那么我们就覆盖正常的流量。</p>
+<p><strong>2. 基于同类比较法的Web入侵检测</strong></p>
+<p>建立大量正常的数据样本用于机器学习，识别与正常数据流量不符的异常数据流量。当识别到异常数据流量后，再经过二次或三次的处理来确定数据的合法性。这样做可能会导致效率低下，但是这个时候我们需要考虑这个检测系统是防御性质的还是检测性质的。</p>
+<p>防御性质&nbsp;&nbsp;&nbsp;&nbsp;防御性质的话，对小型站点效果较好，大型站点数据维护成本高。<br>检测性质&nbsp;&nbsp;&nbsp;&nbsp;因为这个系统仅提供检测，发现攻击直接预警就行了，还可以具有收集样本或0day的能力。在攻击检测性质中“10秒内发现攻击和10分钟内发现攻击，其目的效果是一样的”，因为这短短的几秒已经可以做很多事情了，所以只要发现威胁的时间在可以接受的范围内就行了。</p>
+<p>但是在这里又会存在一个问题，异常数据流量和攻击数据流量是两种不同的概念，异常的数据可能是用户的错误输入导致的，并不是攻击数据且不会对服务器造成危害。<br>所以，在检测之初就把所有不符合正常数据流量规范的异常数据流量分离出来，再次进行更为精确的检测，分类为异常数据流量和攻击数据流量，结合静态规则和异常数据级别进行攻击数据流量的判断。</p>
+<p><img src="/allimage/egimage/Web-attack-detection-method-share.png" alt=""></p>
+<p>建立检测级别是个很好的技术手段，因为只要是异常数据就送入二次检测或三次检测，那么在一个数据量很大的情况下，效率是极低的。<br>所以建立级别后，可以很好的利用梯度模式进行混杂减负，提高效率，这里就不详细描述了，这里不是本文重点。</p>
+<h3 id="三-Web常规检测特征"><a href="#三-Web常规检测特征" class="headerlink" title="三. Web常规检测特征"></a>三. Web常规检测特征</h3><p>Web的常规检测特征有很多种，这里简单列举几例GET型判断特征。</p>
+<p><strong>特征1：参数值value长度</strong></p>
+<p>长度值分布，建立每个参数长度值差异,通过检测长度值不一致，发现异常流量<br>缺点：针对同名参数、参数值不固定等问题容易造成误报<br>应用广度：特定，不通用</p>
+<p><strong>特征2：参数缺失</strong></p>
+<p>建立参数表，检测过程中通过查表检测参数错误或缺失<br>缺点：针对同名参数和可选参数会造成误报<br>应用广度：特定，不通用</p>
+<p><strong>特征3：参数顺序</strong></p>
+<p>建立参数顺序走向图，判断是否有违规顺序关系<br>缺点：如果出现参数多样化，参数顺序灵活，就比较容易出现误报<br>应用广度：特定，不通用</p>
+<p><strong>特征4：字符分布</strong></p>
+<p>建立各参数value值表，判断值是否为[0-9]、[a-zA-Z]、[0-9a-zA-Z]、特殊字符<br>缺点：效率低，占用审计资源大<br>应用广度：通用</p>
+<p><strong>特征5：访问频率（单ip的访问频率，总访问频率）</strong></p>
+<p>记录某时间段内，该IP访问的频率。统计结果与正常访问速率进行比对<br>缺点：无法针对慢速或匀速访问，容易出现漏报（访问受网速限制）<br>应用广度：通用</p>
+<p><strong>特征6：访问时间间隔</strong></p>
+<p>记录某段时间间隔内，访问间隔时间是否为匀速访问<br>缺点：会出现误报，但情况较少（访问受网速限制）<br>应用广度：通用</p>
+<p><strong>1. 检测规则</strong><br><strong>（1）同类比较法</strong></p>
+<p>通过对大量攻击样本的分析，可以发现，在攻击数据中，通常会夹带特殊字符，无论是SQL注入还是XSS抑或是命令执行，它们或多或少都会夹带特殊字符，特殊字符包括除[A-Za-z0-9]之外的所有字符。</p>
+<p>对于一个站点来说，常规正常的数据流量，也就是正常的链接数量一定比异常链接数量多，这种算法可以在机器学习中用于概率计算，从而达到识别异常目的（单位时间内突然出现大量异常数据且访问数量大，可以判断存在两种情况：1.扫描攻击2.恶意垃圾）。</p>
+<p>我们这里不用机器学习算法，用同类比较法进行识别，其效率也不会比机器学习的差（因为和机器学习结合了）。即使一个大型站点有成千上万的链接，但是通常其URL格式固定，我们只需要提取链接规则，就可以以万化一。即使站点的url每一次都会变化，但是总体的格式不会变化。这一点在前期有点像机器学习样本，后期静态检测（精确检测）。</p>
+<p><strong>概念：</strong> 同类比较法按照理论上的操作应该算是数据的预处理，因为先对数据进行了筛选，再进行攻击分析判断，确保了不用每次都全量进行检测。<br>正常URL规则相对固定，攻击URL规则却大量变化（几乎每条都不尽相同），这个也是我们能够检测到攻击的前提。<br>提取URL规则主要分为两种，分为手动提取和自动提取：</p>
+<p>手动提取&nbsp;&nbsp;&nbsp;&nbsp;通过静态编辑URL规则到检测规则之中<br>自动提取&nbsp;&nbsp;&nbsp;&nbsp;通过数据流量进行概率性提取，以一定量的URL链接为基础，直到相同URL规则概率达到满足自身概率条件要求为止，此规则则为正常流量规则</p>
+<p>手动规则提取适用于小型站点，因为规则量不大，维护相对简单;自动规则提取利用了概率统计来进行正常流量规则提取，但是会存在一个绕过的可能性（比如当攻击者发送大量的攻击url规则流量，达到了触发正常规则概率，那么这条攻击url数据将被认定为正常规则，继而不会被判定为异常数据流量。举个例子：如果以1万条相同URL规则概率为40%为正常规则，那么当相同攻击URL规则覆盖掉正常URL规则概率为40%的时候，攻击URL规则则会被洗白成为正常规则，从而绕过检测）。那么解决的办法就是在站点上线前期进行规则收集，上线后进行规则锁死，后期规则的添加采用静态添加，维护成本不会太高，这样做就可以有效避免动态攻击数据被洗白成正常数据流量。</p>
+<p><strong>（2）应用可行性</strong></p>
+<p>我们来做这样一个实验，我们可以把除特殊字符外的所有字符全部替换为一种特定格式的字符，这个特定的字符可以自定义，本文这里用@作为特殊替换字符。当然这里并没有涉及到加解密操作，实验是在理想的思路上进行的。</p>
+<p>首先构造一个链接<a href="http://example.com/index.php?id=1，此链接为正常数据链接" target="_blank" rel="external">http://example.com/index.php?id=1，此链接为正常数据链接</a><br>构造异常链接数据并过滤掉空格字符<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">http://example.com/index.php?id=-1</span><br><span class="line">http://example.com/index.php?id=1’ select * from admin</span><br><span class="line">http://example.com/index.php?id=1’ and updatexml(1,concat(0x5e,user()),1) #</span><br><span class="line">http://example.com/index.php?id=1|whoami</span><br></pre></td></tr></table></figure></p>
+<p>通过数据转换替换，链接变为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">http://example.com/index.php?@=-@</span><br><span class="line">http://example.com/index.php?@=@’@*@</span><br><span class="line">http://example.com/index.php?@=@’@(@,@(@,@),@)#</span><br><span class="line">http://example.com/index.php?@=@ |@</span><br></pre></td></tr></table></figure></p>
+<p>答案很明显，异常数据与正常的数据一对比，我们就可以发现不同点。无论URL怎么变化，只要其规则与正常规则不符合，则判断为异常规则。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http://example.com/index.php?id=1 正常数据</span><br><span class="line">http://example.com/index.php?id=1 异常数据</span><br><span class="line">http://example.com/index.php?id=1 ’@*@ 异常数据</span><br><span class="line">http://example.com/index.php?@=@’@(@,@(@,@),@)# 异常数据</span><br><span class="line">http://example.com/index.php?id=1 |@ 异常数据</span><br></pre></td></tr></table></figure></p>
+<p>Web攻击检测系统把接收判断后的异常数据送入二次审计，通过多次异常数据审计剔除掉无关和无害的数据后，告警证实攻击数据流量。</p>
+<p>当然这里还有很多玩法，例如对于防御性质的检测来说，如果发现不符合流量直接丢弃或者返回友好异常数据页面抑或页面回滚到history(-1)处，可以完全杜绝某些常规漏洞的攻击。</p>
+<p>以上是针对GET类型的检测攻击手段，对于POST型的攻击检测，大同小异。</p>
+<p>本文所述方法在一定条件下的应用属于“脱了裤子放屁”类型，但是也并不是一点用处没有，这里列出几个场景以供参考使用</p>
+<blockquote>
+<ol>
+<li>正常流量筛选过滤</li>
+<li>异常流量筛选过滤</li>
+<li>攻击特征的收集</li>
+<li>攻击扫描识别</li>
+<li>DDOS流量清洗</li>
+</ol>
+</blockquote>
+<p>通过对所属流量的筛选，达到系统所有者想要得到的结果。</p>
+<p><strong>（3）应用场景</strong></p>
+<p>这里以文件扫描为例。<br>大量的文件扫描流量通过用例场景是不可能到达服务器并进行请求的，因为在初步预处理时就已经被过滤到其他地方去了，文件扫描的的行为必定和普通正常的流量不一致，同样，扫描用的文件url或者POC代码也必定和正常的站点规则不一致，以此确保了其站点的安全性和其规则的一致性。</p>
+<h3 id="四-结语"><a href="#四-结语" class="headerlink" title="四. 结语"></a>四. 结语</h3><p>本文所述的同类比较法适用范围为镜像流量监控、数据流量清洗、IDS/IPS等，同类比较法可以应用于大量场景，但还是会存在一定的局限，本文完整的介绍了同类比较法的核心思想，希望能够帮助到需要的朋友。正所谓“没有最好的解决方案，只要最合适解决方案”。</p>
+<h5 id="本文未经作者许可，不可转载"><a href="#本文未经作者许可，不可转载" class="headerlink" title="本文未经作者许可，不可转载!"></a>本文未经作者许可，不可转载!</h5>
+        </div>
+		<!--dashang-->
+        
+        <div class="post-tags">Tags：
+            
+            <a href="/tags/学习笔记/">学习笔记</a>
+            
+        </div>
+        
+    </article>
+    
+    <p>本文内容仅作为作者个人兴趣与观点,若有不恰当之处，望不吝赐教</p>
+    
+    
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        </div><!-- end #main-->
+    </div><!-- end #body -->
+    <footer class="footer">
+    <div class="footer-inner">
+        <p>
+            <a href="/about"  title="About">About</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <!-- 自定义链接 -->
+            <a href="/help" title="help" >帮助</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <a href="/links" title="友情链接">友情链接</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+        </p>
+        <p>
+            Blog by <a href="https://github.com/hucmosin" style="font-weight: bold">Coding Pages</a>
+        </p>
+        
+    </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/InsightSearch.js"></script>
+<script src="/js/SimpleCore.js"></script>
+
+</div>
+<div class="fixed-btn">
+    <a class="btn-gotop" href="javascript:"> <i class="fa fa-angle-up"></i></a>
+</div>
+<script>
+    $(function () {
+        SimpleCore.init({
+            buildingTime: '10/20/2017',
+            current: $('.post-tags').length > 0 ? 'post' : 'archive',
+            wxMpImg: '/images/weixin-mp.png',
+        });
+    });
+</script>
+</body>
+</html>
