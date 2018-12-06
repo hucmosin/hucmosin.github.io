@@ -49,9 +49,9 @@
 <link rel="shortcut icon" href="/images/favicon.png">
 
 
-<title>分类 - code-audit - Mosin&#39; Blog</title>
+<title>贝尔网关g-140w-mf存在后台任意文件读取漏洞 - Mosin&#39; Blog</title>
 
-<meta name="keywords" content="">
+<meta name="keywords" content="审计">
 
 <meta name="description " content="Learning, summarizing, thinking, feeling and knowledge management">
 </head>
@@ -100,29 +100,29 @@
 </div>
             <div class="page-title">
     <ul>
-        <li class="">
-            <a href="/" data-name="最近文章">最近</a>
-        </li>
+        <li><a href="/">最新</a></li>
         
-        <li class="">
-            <a href="/categories/code-audit" data-name="审计">审计</a>
-        </li>
-        
-        <li class="">
-            <a href="/categories/technology" data-name="技术">技术</a>
-        </li>
-        
-        <li class="">
-            <a href="/categories/study-share" data-name="分享">分享</a>
-        </li>
-        
-        <li class="">
-            <a href="/categories/study-note" data-name="学习">学习</a>
-        </li>
-        
-        <li class="">
-            <a href="/categories/others-end" data-name="其他">其他</a>
-        </li>
+            
+                <li class="">
+                    <a href="/categories/code-audit" data-name="审计">审计</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/technology" data-name="技术">技术</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-share" data-name="分享">分享</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-note" data-name="学习">学习</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/others-end" data-name="其他">其他</a>
+                </li>
+            
         
         <li class="page-search">
     <form id="search" class="search-form">
@@ -163,71 +163,43 @@
     </ul>
 </div>
 <div class="main-inner">
-    
-    
-    
-<article class="post">
-    
-    <div class="post-header">
-        <div class="post-meta">
-            <a href="https://github.com/hucmosin" target="_blank">
-                <strong>mosin</strong>
-            </a>
-            <em>·</em>2017-11-14
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+        <div class="post-header">
+            <div class="post-author clearfix">
+                <a class="avatar fleft" href="https://github.com/hucmosin" target="_blank">
+                    <img width="48" src="/images/favicon.png" alt="avatar"/>
+                </a>
+                <p><span class="label">作者</span>
+                    <a href="https://github.com/hucmosin" target="_blank">mosin</a>
+                    <span title="最后编辑于2018-12-06">2018-12-06</span>
+                </p>
+                <p>灵魂无处安放,所以选择流浪</p>
+            </div>
+            <h2 class="post-title">贝尔网关G-140W-MF存在后台任意文件读取漏洞</h2>
+            <div class="post-meta">
+                本文总共165个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+            </div>
         </div>
-        <a class="post-title" href="/2017/11/14/DuomiCms/" target="_blank" title="DuomiCms1.32代码执行漏洞">DuomiCms1.32代码执行漏洞</a>
-        <div class="post-meta">
-            <a href="/tags" target="_blank"><i class="fa fa-tags"></i></a>
-            
-                <em>·</em>
-                <a href="http://github.com/hucmosin/tags/代码审计/" target="_blank">代码审计</a>
-            
+        <div class="post-content markdown-body">
+            <h3 id="0x01-概述"><a href="#0x01-概述" class="headerlink" title="0x01 概述"></a>0x01 概述</h3><p>贝尔网关G-140W-MF存在后台任意文件读取漏洞,因为需要先登录，才能利用，所以没什么卵用，但是读取超管帐号还是有用处的。</p>
+<h3 id="0x02-漏洞分析"><a href="#0x02-漏洞分析" class="headerlink" title="0x02 漏洞分析"></a>0x02 漏洞分析</h3><p>漏洞存在文件up_down_file.cgi中，首先，cgi获取环境变量和提交方式<br><img src="/allimage/fenxi/b1.jpg" alt="1"><br>Get或者POST方式，获取参数file的值<br><img src="/allimage/fenxi/b2.jpg" alt="1"><br>Fopen()函数打开文件并返回信息<br><img src="/allimage/fenxi/b3.jpg" alt="1"><br><img src="/allimage/fenxi/b4.jpg" alt="1"><br>漏洞测试<br><img src="/allimage/fenxi/b5.jpg" alt="1"></p>
+
         </div>
-    </div>
-    <div class="post-desc">
-        DuomiCms1.32代码执行漏洞
-    </div>
-</article>
-
-
-
-    
-    
-<article class="post">
-    
-    <div class="post-header">
-        <div class="post-meta">
-            <a href="https://github.com/hucmosin" target="_blank">
-                <strong>mosin</strong>
-            </a>
-            <em>·</em>2017-10-29
-        </div>
-        <a class="post-title" href="/2017/10/29/soure1.0/" target="_blank" title="Source音乐分享系统1.02代码审计">Source音乐分享系统1.02代码审计</a>
-        <div class="post-meta">
-            <a href="/tags" target="_blank"><i class="fa fa-tags"></i></a>
+		<!--dashang-->
+        
+        <div class="post-tags">Tags：
             
-                <em>·</em>
-                <a href="http://github.com/hucmosin/tags/代码审计/" target="_blank">代码审计</a>
+            <a href="/tags/代码审计/">代码审计</a>
             
         </div>
-    </div>
-    <div class="post-desc">
-        Source音乐分享系统1.02代码审计
-    </div>
-</article>
-
-
-
+        
+    </article>
+    
+    <p>本文内容仅作为作者个人兴趣与观点,若有不恰当之处，望不吝赐教</p>
+    
     
 </div>
-<!-- 分页开始 -->
-
-<div id="btn-pager">
-    
-    <a class="extend prev" rel="prev" href="/categories/code-audit/">Prev</a><a class="page-number" href="/categories/code-audit/">1</a><span class="page-number current">2</span>
-</div>
-
-
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
         </div><!-- end #main-->
     </div><!-- end #body -->
     <footer class="footer">
