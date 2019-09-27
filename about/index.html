@@ -59,8 +59,8 @@
 <div id="nav">
     <nav class="nav-menu">
         <a class="site-name current" href="/" title="聊">聊</a>
-        <a class="site-index current" href="/"><i class="fa fa-home"></i><span>Home</span></a>
-        <a href="/archives" title="Archives"><i class="fa fa-archives"></i><span>Archives</span></a>
+        <a class="site-index current" href="/"><i class="fa fa-home"></i><span>首页</span></a>
+        <a href="/archives" title="归档"><i class="fa fa-archives"></i><span>归档</span></a>
         <!-- custom single page of menus -->
         
         
@@ -103,15 +103,15 @@
         <li><a href="/">最近文章</a></li>
         <li class="page-search">
     <form id="search" class="search-form">
-        <label for="s" class="sr-only">Input Search key Words Here</label>
-        <input class="search-field" type="text" name="s" class="text" placeholder="Input Search key Words Here" />
-        <button type="submit" class="search-form-submit" title="Search"><i class="fa fa-search"></i></button>
+        <label for="s" class="sr-only">请输入关键字</label>
+        <input class="search-field" type="text" name="s" class="text" placeholder="请输入关键字" />
+        <button type="submit" class="search-form-submit" title="搜索"><i class="fa fa-search"></i></button>
     </form>
     <div class="ins-search">
     <div class="ins-search-mask"></div>
     <div class="ins-search-container">
         <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input"  placeholder="请输入关键字"/>   <!-- placeholder="Type something..."/>-->
+            <input type="text" class="ins-search-input"  placeholder="请输入关键字"/>   <!-- placeholder="请输入关键词..."/>-->
             <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
         </div>
         <div class="ins-section-wrapper">
@@ -123,11 +123,11 @@
 (function (window) {
     var INSIGHT_CONFIG = {
         TRANSLATION: {
-            POSTS: 'Posts',
-            PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
-            UNTITLED: '(Untitled)',
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(无标题)',
         },
         ROOT_URL: '/',
         CONTENT_URL: '/content.json',
@@ -154,17 +154,15 @@
             </div>
             <h2 class="post-title">关于我</h2>
             <div class="post-meta">
-                本文总共339个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+                本文总共343个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
             </div>
         </div>
         <div class="post-content markdown-body">
-            <p>我总是一个人，你从来不曾离开过，我总是习惯着思念着，你的笑容在忧伤的回忆里慢慢碎去，回首看一次灯火阑珊般的夜空，那是视线葬下了夜空，还是夜空埋没了视线，被灯光刺瞎的耳目，我盲目眺望远处的夜景，阴沉忧郁寡欢无言。</p>
-<p>黑夜倾吐着满幕的悲凉，独与我成伤，但有几人能看？月光哭诉着漫天的清冷，独与我成眠，又有几人能懂？谁又能了解无人共语，沉郁悲抑的无奈？</p>
-<p>曾几何时，冰淇淋般的笑脸不在，曾几何时，我只能默默流泪，却无法放声大哭。</p>
-<p>淋过雨的空气， 疲倦了的伤心，我记忆里的童话已经慢慢的融化。</p>
-<p>小时候抓住了一只蝉，以为抓住了整个夏天，小时候淋了一场雪，以为拥有了整片天，到了儿时羡慕的年纪，确没有成为儿时羡慕的人。</p>
-<p>天道有轮回，人生饶过谁。</p>
-<p>也许我所失去的，正是我生命中绝不该放手的东西。</p>
+            <h4 id="自我介绍"><a href="#自我介绍" class="headerlink" title="自我介绍"></a>自我介绍</h4><p>带头并组建花茶安全团队，就职于某安全公司，主要负责IOT漏洞挖掘、渗透测试、Web漏洞挖掘、工控安全研究、威胁情报及前沿攻防技术研究等。</p>
+<h4 id="团队介绍"><a href="#团队介绍" class="headerlink" title="团队介绍"></a>团队介绍</h4><p>组建花茶安全团队的初衷是为了把一帮热爱安全技术的朋友聚集到一起，远离安全圈浮躁的氛围，大家一起学习共同进步。我们一直低调，所以网上搜不到。</p>
+<p>我总是一个人，你从来不曾离开过，我总是习惯着思念着，你的笑容在忧伤的回忆里慢慢碎去，回首看一次灯火阑珊般的夜空，那是视线葬下了夜空，还是夜空埋没了视线，被灯光刺瞎的耳目，我盲目眺望远处的夜景，阴沉忧郁寡欢无言。</p>
+<p>小时候抓住了一只蝉，以为抓住了整个夏天，小时候淋了一场雪，以为拥有了整片天，到了儿时羡慕的年纪，却没有成为儿时羡慕的人。</p>
+<p>往事回首，也许我所失去的，正是我生命中绝不该放手的东西。</p>
 
         </div>
 		<!--dashang-->
@@ -179,7 +177,7 @@
     <footer class="footer">
     <div class="footer-inner">
         <p>
-            <a href="/about"  title="About">About</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <a href="/about"  title="关于本站">关于本站</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
             <!-- 自定义链接 -->
             <a href="/help" title="help" >帮助</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
             <a href="/links" title="友情链接">友情链接</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
