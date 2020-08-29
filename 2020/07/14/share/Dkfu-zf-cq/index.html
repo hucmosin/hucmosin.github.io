@@ -49,9 +49,9 @@
 <link rel="shortcut icon" href="/images/favicon.png">
 
 
-<title>分类 - technology - Mosin&#39; Blog</title>
+<title>端口复用重定向 - Mosin&#39; Blog</title>
 
-<meta name="keywords" content="">
+<meta name="keywords" content="端口">
 
 <meta name="description " content="Learning, summarizing, thinking, feeling and knowledge management">
 </head>
@@ -100,29 +100,29 @@
 </div>
             <div class="page-title">
     <ul>
-        <li class="">
-            <a href="/" data-name="最近文章">最近</a>
-        </li>
+        <li><a href="/">最新</a></li>
         
-        <li class="">
-            <a href="/categories/code-audit" data-name="审计">审计</a>
-        </li>
-        
-        <li class="">
-            <a href="/categories/technology" data-name="技术">技术</a>
-        </li>
-        
-        <li class="">
-            <a href="/categories/study-share" data-name="分享">分享</a>
-        </li>
-        
-        <li class="">
-            <a href="/categories/study-note" data-name="学习">学习</a>
-        </li>
-        
-        <li class="">
-            <a href="/categories/others-end" data-name="其他">其他</a>
-        </li>
+            
+                <li class="">
+                    <a href="/categories/code-audit" data-name="审计">审计</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/technology" data-name="技术">技术</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-share" data-name="分享">分享</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/study-note" data-name="学习">学习</a>
+                </li>
+            
+                <li class="">
+                    <a href="/categories/others-end" data-name="其他">其他</a>
+                </li>
+            
         
         <li class="page-search">
     <form id="search" class="search-form">
@@ -163,201 +163,57 @@
     </ul>
 </div>
 <div class="main-inner">
-    
-    
-    
-<article class="post">
-    
-    <div class="post-header">
-        <div class="post-meta">
-            <a href="https://github.com/hucmosin" target="_blank">
-                <strong>mosin</strong>
-            </a>
-            <em>·</em>2020-07-14
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+        <div class="post-header">
+            <div class="post-author clearfix">
+                <a class="avatar fleft" href="https://github.com/hucmosin" target="_blank">
+                    <img width="48" src="/images/favicon.png" alt="avatar"/>
+                </a>
+                <p><span class="label">作者</span>
+                    <a href="https://github.com/hucmosin" target="_blank">mosin</a>
+                    <span title="最后编辑于2020-07-14">2020-07-14</span>
+                </p>
+                <p>灵魂无处安放,所以选择流浪</p>
+            </div>
+            <h2 class="post-title">端口复用重定向</h2>
+            <div class="post-meta">
+                本文总共1258个字 | 您是第<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>位看到它们的小伙伴
+            </div>
         </div>
-        <a class="post-title" href="/2020/07/14/share/Dkfu-zf-cq/" target="_blank" title="端口复用重定向">端口复用重定向</a>
-        <div class="post-meta">
-            <a href="/tags" target="_blank"><i class="fa fa-tags"></i></a>
-            
-                <em>·</em>
-                <a href="http://github.com/hucmosin/tags/学习笔记/" target="_blank">学习笔记</a>
-            
+        <div class="post-content markdown-body">
+            <p><strong>在之前我的一篇文章中，探讨过端口复用的一些坑点，这篇文章算是填上其中的一个坑吧，因为在实战中，遇到得比较多，所以就发出来吧。<br>端口复用技术在不出网得环境中，我们要想进内网，就必须要通过一些技巧，比如HTTP代理，当然这个http代理不是普通HTTP代理，而是利用web脚本来进行代理，比如我们常见得reGeorg、reDuh、冰蝎等。<br>在之前的文章中，我只讨论了普通端口复用实现的一些坑点，那么今天来讨论的就是之前遗留的一个点：端口复用重定向</strong></p>
+<p>这里放上之前文章的图<br><img src="/allimage/portfu/dkcdx.png" alt="dkcdx"><br>原理：在本地建立两个套接字 sock1 、 scok2 ， scok1 监听80端口，当有连接来到时， Sock2 连接重定向端口，将 Sock1 接收到的数据加以判断并通过 Sock2 转发。这样就能通过访问目标机80端口来连接重定向端口了。</p>
+<p>那么，如果我们使用的是普通的监听，那么，就可能会失败，演示如下<br>我们先监听起80端口<br><img src="/allimage/portfu/cq-1.png" alt="cq1"><br>然后再利用nc监听80端口</p>
+<p><img src="/allimage/portfu/cq-2.png" alt="cq2"><br>这个时候，我们可以发现，即使我们把本机能用IP都给监听起了，也是不起作用的，但是，如果我们利用windows自带的工具，就可以监听成功<br>命令如下：</p>
+<blockquote>
+<p>netsh interface portproxy add v4tov4 listenport=80 listenaddress=10.10.10.1 connectport=2222 connectaddress=10.10.10.1</p>
+</blockquote>
+<p>Netsh简介：<br>自Windows XP开始，Windows中就内置网络端口转发的功能。任何传入到本地端口的TCP连接（IPv4或IPv6）都可以被重定向到另一个本地端口，或远程计算机上的端口，并且系统不需要有一个专门用于侦听该端口的服务。</p>
+<p>这个工具可以说是可以代替我们常用的lcx的，但是如果我们思想再活跃一点，那么他的用法可以用在端口复用重定向上面去。</p>
+<p>那么，netsh工具的使用即是本篇文章能演示成功的关键及灵魂。<br>具体的实现原理已在上文中具体说明，那么我们现在就以工具来作演示</p>
+<p>工具原理：</p>
+<blockquote>
+<p>1.本机监听8888端口，数据判断是否为http数据<br>2.是http数据，则转发到本机80端口进行处理并返回<br>3.如果是其他数据(如：sock5、Telent或自定义协议)则转发相应监听端口并返回数据</p>
+</blockquote>
+<p>实验演示：<br>我们先启动工具，并用nc监听4444端口作为我们的后门程序<br><img src="/allimage/portfu/cq-3.png" alt="cq3"><br>在监听好了之后，我们在虚拟机里面访问本机端口192.168.1.167，修改index.php为如下<br><img src="/allimage/portfu/cq-4.png" alt="cq4"><br><img src="/allimage/portfu/cq-5.png" alt="cq5"><br>可以看到我们可以正常访问，那么现在我们利用netsh工具来进行端口重定向<br><img src="/allimage/portfu/cq-6.png" alt="cq6"><br>再次访问，可以看到我们的8888端口已经监听到了80端口过来的数据并进行了转发<br><img src="/allimage/portfu/cq-7.png" alt="cq7"><br>因为我们在这里判断了过来的数据是http数据，所以，我们会把数据原封不动的发送给web服务器端口，那么如果 我们所接受的不是http数据呢，那么当然会直接发送到我们的后门程序(nc)进行处理。<br><img src="/allimage/portfu/cq-8.png" alt="cq8"></p>
+<p>到这里呢，整个端口复用重定向的方法大概就是这样，任何一种技术，只要思维再发散一点，就可以有不同的用法。</p>
+
         </div>
-    </div>
-    <div class="post-desc">
-        端口复用重定向
-    </div>
-</article>
-
-
-
-    
-    
-<article class="post">
-    
-    <div class="post-header">
-        <div class="post-meta">
-            <a href="https://github.com/hucmosin" target="_blank">
-                <strong>mosin</strong>
-            </a>
-            <em>·</em>2018-02-02
-        </div>
-        <a class="post-title" href="/2018/02/02/MemoryLoad/" target="_blank" title="内存动态执行DLL的介绍与实践应用">内存动态执行DLL的介绍与实践应用</a>
-        <div class="post-meta">
-            <a href="/tags" target="_blank"><i class="fa fa-tags"></i></a>
+		<!--dashang-->
+        
+        <div class="post-tags">Tags：
             
-                <em>·</em>
-                <a href="http://github.com/hucmosin/tags/技术/" target="_blank">技术</a>
+            <a href="/tags/学习笔记/">学习笔记</a>
             
         </div>
-    </div>
-    <div class="post-desc">
-        内存动态执行DLL的介绍与实践应用
-    </div>
-</article>
-
-
-
+        
+    </article>
     
+    <p>本文内容仅作为作者个人兴趣与观点,若有不恰当之处，望不吝赐教</p>
     
-<article class="post">
-    
-    <div class="post-header">
-        <div class="post-meta">
-            <a href="https://github.com/hucmosin" target="_blank">
-                <strong>mosin</strong>
-            </a>
-            <em>·</em>2017-12-22
-        </div>
-        <a class="post-title" href="/2017/12/22/meterpreter-think/" target="_blank" title="Meterpreter载荷执行原理分析">Meterpreter载荷执行原理分析</a>
-        <div class="post-meta">
-            <a href="/tags" target="_blank"><i class="fa fa-tags"></i></a>
-            
-                <em>·</em>
-                <a href="http://github.com/hucmosin/tags/技术/" target="_blank">技术</a>
-            
-        </div>
-    </div>
-    <div class="post-desc">
-        Meterpreter载荷执行原理分析
-    </div>
-</article>
-
-
-
-    
-    
-<article class="post">
-    
-    <div class="post-header">
-        <div class="post-meta">
-            <a href="https://github.com/hucmosin" target="_blank">
-                <strong>mosin</strong>
-            </a>
-            <em>·</em>2017-11-27
-        </div>
-        <a class="post-title" href="/2017/11/27/yunceng-virus/" target="_blank" title="新型病毒之云层病毒构想">新型病毒之云层病毒构想</a>
-        <div class="post-meta">
-            <a href="/tags" target="_blank"><i class="fa fa-tags"></i></a>
-            
-                <em>·</em>
-                <a href="http://github.com/hucmosin/tags/技术/" target="_blank">技术</a>
-            
-        </div>
-    </div>
-    <div class="post-desc">
-        新型病毒之云层病毒构想
-    </div>
-</article>
-
-
-
-    
-    
-<article class="post">
-    
-    <div class="post-header">
-        <div class="post-meta">
-            <a href="https://github.com/hucmosin" target="_blank">
-                <strong>mosin</strong>
-            </a>
-            <em>·</em>2017-11-21
-        </div>
-        <a class="post-title" href="/2017/11/21/MemoryLoadDll/" target="_blank" title="译-内存加载DLL">译-内存加载DLL</a>
-        <div class="post-meta">
-            <a href="/tags" target="_blank"><i class="fa fa-tags"></i></a>
-            
-                <em>·</em>
-                <a href="http://github.com/hucmosin/tags/技术/" target="_blank">技术</a>
-            
-        </div>
-    </div>
-    <div class="post-desc">
-        译-内存加载DLL
-    </div>
-</article>
-
-
-
-    
-    
-<article class="post">
-    
-    <div class="post-header">
-        <div class="post-meta">
-            <a href="https://github.com/hucmosin" target="_blank">
-                <strong>mosin</strong>
-            </a>
-            <em>·</em>2017-11-14
-        </div>
-        <a class="post-title" href="/2017/11/14/port-multiplexing/" target="_blank" title="聊聊端口复用的实现与坑点">聊聊端口复用的实现与坑点</a>
-        <div class="post-meta">
-            <a href="/tags" target="_blank"><i class="fa fa-tags"></i></a>
-            
-                <em>·</em>
-                <a href="http://github.com/hucmosin/tags/端口复用/" target="_blank">端口复用</a>
-            
-        </div>
-    </div>
-    <div class="post-desc">
-        聊聊端口复用的实现与坑点
-    </div>
-</article>
-
-
-
-    
-    
-<article class="post">
-    
-    <div class="post-header">
-        <div class="post-meta">
-            <a href="https://github.com/hucmosin" target="_blank">
-                <strong>mosin</strong>
-            </a>
-            <em>·</em>2017-10-22
-        </div>
-        <a class="post-title" href="/2017/10/22/shellcode-used/" target="_blank" title="Shellcode的另类使用方式">Shellcode的另类使用方式</a>
-        <div class="post-meta">
-            <a href="/tags" target="_blank"><i class="fa fa-tags"></i></a>
-            
-                <em>·</em>
-                <a href="http://github.com/hucmosin/tags/技术/" target="_blank">技术</a>
-            
-        </div>
-    </div>
-    <div class="post-desc">
-        Shellcode的另类使用方式
-    </div>
-</article>
-
-
-
     
 </div>
-<!-- 分页开始 -->
-
-
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
         </div><!-- end #main-->
     </div><!-- end #body -->
     <footer class="footer">
